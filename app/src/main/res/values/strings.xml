@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="login_btn_google">구글 계정 로그인</string>
+</resources>
