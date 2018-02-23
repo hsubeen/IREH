@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         android:background="@color/white">
 
         <com.github.siyamed.shapeimageview.CircularImageView
@@ -19,6 +20,35 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/user_profile_default"/>
+        
+        <TextView
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:id="@+id/user_name"
+            android:text="네임"
+            android:textColor="@color/maincolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/maincolor"
+            android:text="예약조회"
+            android:textStyle="bold"/>
+
+        <ListView
+            android:layout_gravity="center"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_reservation"
+            android:background="@drawable/listview_background"
+            android:dividerHeight="1dp"
+            android:divider="@color/black"
+           />
+
     </LinearLayout>
 
 
