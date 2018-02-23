@@ -1,6 +1,8 @@
 package com.example.ghd_t.myapplication;
 
 
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,7 +26,15 @@ public class AboutUserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about_user, container, false);
+
+        // fragment에서 findViewById 사용하기
+        View view = inflater.inflate(R.layout.fragment_about_user, container, false);
+        //ImageView imageView = (ImageView) view.findViewById(R.id.user_profile);
+
+
+
+
+        return view;
     }
 
 }
