@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class ListAdapterHomeBrand extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null){
             view =inflater.inflate(layout,viewGroup,false);
+            view.setClickable(true);
         }
         BrandListItemData listviewitem = data.get(i);
 
@@ -60,18 +62,22 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_info = (TextView) view.findViewById(R.id.brand_info);
         final TextView brand_priceinfo = (TextView) view.findViewById(R.id.brand_priceinfo);
 
+
         brand_photo.setImageDrawable(data.get(i).getIcon());
         brand_title.setText(data.get(i).getBrand_title());
         brand_areaname.setText(data.get(i).getBrand_areaname());
         brand_info.setText(data.get(i).getBrand_fieldname());
         brand_priceinfo.setText(data.get(i).getBrand_priceinfo());
 
-        brand_photo.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        // layout 자체에 대한 클릭 이벤트.
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
                 Toast.makeText(v.getContext(), brand_title.getText().toString(),Toast.LENGTH_SHORT).show();
-            }
 
+            }
         });
+
 
         return view;
     }
