@@ -6,10 +6,10 @@
     
     <LinearLayout
         android:layout_gravity="center"
-        android:layout_width="340dp"
+        android:layout_width="370dp"
         android:layout_height="90dp"
         android:orientation="horizontal"
-        android:background="#A6A6A6">
+        android:background="#E3E3E3">
 
         <ImageView
             android:layout_width="90dp"

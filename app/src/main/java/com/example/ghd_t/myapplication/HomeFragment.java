@@ -33,7 +33,16 @@ public class HomeFragment extends Fragment {
         ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
         BrandListItemData data_brandlist_1 = new BrandListItemData(temp, "엔플레노", "서울시 노원구", "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000~" );
+        BrandListItemData data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000");
+        BrandListItemData data_brandlist_3 = new BrandListItemData(temp, "브레드엔케이크","서울시 양천구","빵만들러와요!", "20,000~");
+
         data_brandlist.add(data_brandlist_1);
+        data_brandlist.add(data_brandlist_2);
+        data_brandlist.add(data_brandlist_3);
+
+        data_brandlist.add(data_brandlist_1);
+        data_brandlist.add(data_brandlist_2);
+        data_brandlist.add(data_brandlist_3);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
 
