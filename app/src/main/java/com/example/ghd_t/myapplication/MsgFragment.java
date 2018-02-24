@@ -43,6 +43,12 @@ public class MsgFragment extends Fragment {
         data_msg.add(data_msg_1);
         data_msg.add(data_msg_2);
         data_msg.add(data_msg_3);
+        data_msg.add(data_msg_1);
+        data_msg.add(data_msg_2);
+        data_msg.add(data_msg_3);
+        data_msg.add(data_msg_1);
+        data_msg.add(data_msg_2);
+        data_msg.add(data_msg_3);
 
         ListAdapterMsg adapter_msg = new ListAdapterMsg(getContext(), R.layout.msg_listview_item, data_msg);
         msg_list.setAdapter(adapter_msg);
