@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
-        BrandListItemData data_brandlist_1 = new BrandListItemData(temp, "엔플레노", "서울시 노원구", "요리, 베이킹", "80,000" );
+        BrandListItemData data_brandlist_1 = new BrandListItemData(temp, "엔플레노", "서울시 노원구", "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000~" );
         data_brandlist.add(data_brandlist_1);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);

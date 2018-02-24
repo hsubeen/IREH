@@ -57,13 +57,13 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final ImageView brand_photo = (ImageView) view.findViewById(R.id.brand_photo);
         final TextView brand_title = (TextView) view.findViewById(R.id.brand_title);
         final TextView brand_areaname = (TextView) view.findViewById(R.id.brand_areaname);
-        final TextView brand_fieldname = (TextView) view.findViewById(R.id.brand_fieldname);
+        final TextView brand_info = (TextView) view.findViewById(R.id.brand_info);
         final TextView brand_priceinfo = (TextView) view.findViewById(R.id.brand_priceinfo);
 
         brand_photo.setImageDrawable(data.get(i).getIcon());
         brand_title.setText(data.get(i).getBrand_title());
         brand_areaname.setText(data.get(i).getBrand_areaname());
-        brand_fieldname.setText(data.get(i).getBrand_fieldname());
+        brand_info.setText(data.get(i).getBrand_fieldname());
         brand_priceinfo.setText(data.get(i).getBrand_priceinfo());
 
         brand_photo.setOnClickListener(new View.OnClickListener(){
