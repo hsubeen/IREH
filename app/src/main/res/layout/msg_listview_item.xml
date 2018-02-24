@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="390dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#DEDEDE">
+
+        <ImageView
+            android:paddingLeft="10dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/msg_photo"
+            android:src="@drawable/user_profile_default"/>
+
+        <LinearLayout
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="임시이름"
+                android:id="@+id/msg_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:text="임시내용입니다."
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/msg_content"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

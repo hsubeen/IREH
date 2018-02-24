@@ -2,6 +2,7 @@ package com.example.ghd_t.myapplication;
 
 import android.content.Context;
 import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class ListAdapterHomeBrand extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), brand_title.getText().toString(),Toast.LENGTH_SHORT).show();
-
+                Log.v("알림", "home_brandlist 클릭");
             }
         });
 
