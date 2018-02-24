@@ -1,13 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.ghd_t.myapplication.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="fragment_home" />
 
-</FrameLayout>
+    <!-- TODO: 임시. ViewPager로 변경할 부분 -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/login_logo"/>
+
+    <ListView
+        android:layout_gravity="center"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/home_brandlist"
+        android:divider="@color/black"
+        android:dividerHeight="0.5dp" />
+</LinearLayout>

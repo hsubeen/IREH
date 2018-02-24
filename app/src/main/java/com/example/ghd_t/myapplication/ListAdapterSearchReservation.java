@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
@@ -15,12 +16,12 @@ import java.util.zip.Inflater;
  * Created by ghd-t on 2018-02-24.
  */
 
-public class ListAdapter extends BaseAdapter {
+public class ListAdapterSearchReservation extends BaseAdapter {
     private ArrayList<SearchReservationItemData> data = new ArrayList<>();
     private LayoutInflater inflater;
     private int layout;
 
-    public ListAdapter(Context context, int layout, ArrayList<SearchReservationItemData> data){
+    public ListAdapterSearchReservation(Context context, int layout, ArrayList<SearchReservationItemData> data){
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.data=data;
         this.layout=layout;
@@ -42,14 +43,21 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
 
        if(view == null){
            view =inflater.inflate(layout,viewGroup,false);
        }
        SearchReservationItemData listviewitem = data.get(i);
-       TextView listItem = (TextView) view.findViewById(R.id.reservation_list);
+       final TextView listItem = (TextView) view.findViewById(R.id.reservation_list);
        listItem.setText(data.get(i).getMenu_title());
+
+       listItem.setOnClickListener(new View.OnClickListener(){
+               public void onClick(View v){
+                   Toast.makeText(v.getContext(), listItem.getText().toString(),Toast.LENGTH_SHORT).show();
+        }
+
+       });
 
         return view;
     }

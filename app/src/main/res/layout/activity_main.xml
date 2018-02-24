@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -19,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/activity_main"/>
+
+
     </LinearLayout>
 
     <LinearLayout
