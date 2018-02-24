@@ -1,13 +1,112 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.example.ghd_t.myapplication.RegClassFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="fragment_reg_class" />
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
 
-</FrameLayout>
+        <TextView
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="클래스 추가를 위해 인증이 필요합니다."
+            android:textSize="15dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/maincolor"
+            android:text="브랜드 이름"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_brand_name"
+            android:text="브랜드 이름을 입력하세요."
+            android:textColor="@color/black"
+            android:maxLength="25"
+            android:background="@drawable/editbox"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/maincolor"
+            android:text="웹사이트"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_brand_web"
+            android:text="웹사이트를 입력하세요."
+            android:textColor="@color/black"
+            android:maxLength="25"
+            android:background="@drawable/editbox"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/maincolor"
+            android:text="연락처"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_phone"
+            android:inputType="phone"
+            android:text="연락처를 입력해주세요."
+            android:textColor="@color/black"
+            android:maxLength="13"
+            android:background="@drawable/editbox"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/maincolor"
+            android:text="주소"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_address"
+            android:text="주소를 입력하세요."
+            android:textColor="@color/black"
+            android:maxLength="25"
+            android:background="@drawable/editbox"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

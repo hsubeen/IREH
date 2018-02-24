@@ -9,8 +9,8 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:layout_width="390dp"
         android:layout_height="wrap_content"
         android:textColor="@color/maincolor"
         android:text="채팅"
