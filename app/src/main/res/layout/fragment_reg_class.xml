@@ -12,7 +12,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="30dp"
-        android:paddingRight="30dp">
+        android:paddingRight="30dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <TextView
             android:paddingTop="20dp"
@@ -36,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_brand_name"
-            android:text="브랜드 이름을 입력하세요."
+            android:hint="브랜드 이름을 입력하세요."
+            android:textColorHint="@color/black"
             android:textColor="@color/black"
             android:maxLength="25"
             android:background="@drawable/editbox"
@@ -57,7 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_brand_web"
-            android:text="웹사이트를 입력하세요."
+            android:textColorHint="@color/black"
+            android:hint="웹사이트를 입력하세요."
             android:textColor="@color/black"
             android:maxLength="25"
             android:background="@drawable/editbox"
@@ -79,7 +83,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/edit_phone"
             android:inputType="phone"
-            android:text="연락처를 입력해주세요."
+            android:textColorHint="@color/black"
+            android:hint="연락처를 입력해주세요."
             android:textColor="@color/black"
             android:maxLength="13"
             android:background="@drawable/editbox"
@@ -96,16 +101,29 @@
             android:textStyle="bold"
             android:paddingBottom="8dp"/>
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_address"
-            android:text="주소를 입력하세요."
-            android:textColor="@color/black"
-            android:maxLength="25"
-            android:background="@drawable/editbox"
-            android:padding="8dp"
-            />
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_weight="7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_address"
+                android:hint="주소"
+                android:textColorHint="@color/black"
+                android:textColor="@color/black"
+                android:maxLength="25"
+                android:background="@drawable/editbox"
+                android:padding="8dp"/>
+
+            <ImageButton
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_address"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 
