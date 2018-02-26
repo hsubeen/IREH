@@ -20,7 +20,6 @@ public class DaumWebViewActivity extends AppCompatActivity {
     private WebView daum_webView;
     private TextView daum_result;
     private Handler handler;
-
     String address;
 
 
@@ -63,7 +62,11 @@ public class DaumWebViewActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     address = String.format(" %s %s,(%s)", arg2, arg3, arg1);
-                    Log.v("알림","주소 저장 완료 : " + address);
+                    AddressData.getInstance().setAddress(address);
+
+                    //ad.setAddress(address);
+
+                    Log.v("알림","주소 저장 완료 : " + AddressData.getInstance().getAddress());
                     //daum_result.setText(String.format("(%s) %s %s", arg1, arg2, arg3));
                     // WebView를 초기화 하지않으면 재사용할 수 없음
                     init_webView();
