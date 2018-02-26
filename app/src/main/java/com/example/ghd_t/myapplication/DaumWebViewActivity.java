@@ -27,8 +27,6 @@ public class DaumWebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daum_web_view);
-        daum_result = (TextView) findViewById(R.id.daum_result);
-
         // WebView 초기화
         init_webView();
 
@@ -61,7 +59,7 @@ public class DaumWebViewActivity extends AppCompatActivity {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    address = String.format(" %s %s,(%s)", arg2, arg3, arg1);
+                    address = String.format(" %s %s", arg2, arg3);
                     AddressData.getInstance().setAddress(address);
 
                     //ad.setAddress(address);
