@@ -1,13 +1,18 @@
 package com.example.ghd_t.myapplication;
 
-import android.app.Activity;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+import java.security.MessageDigest;
 
 public class MainActivity extends FragmentActivity {
     BottomNavigationView bottomNavigationView;
@@ -33,12 +38,14 @@ public class MainActivity extends FragmentActivity {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);  //클릭 시 움직이는 모양 없애기. 하단 네비게이션 바 고정
 
+
+
         menu_here = R.id.action_home;   //처음 페이지를 home으로 지정
         viewpager = (ViewPager) findViewById(R.id.mainViewPager);
         viewpager.setOffscreenPageLimit(4);
         setViewpager(viewpager); //view pager에 fragment 등록
         menu_prev = bottomNavigationView.getMenu().getItem(0);
-
+        getAppKeyHash();        // API 사용 위한 Hash key 구하기
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -106,4 +113,24 @@ public class MainActivity extends FragmentActivity {
         viewpager.setAdapter(adapter);
     }
 
+
+
+
+
+
+    private void getAppKeyHash() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.d("Hash key", something);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("name not found", e.toString());
+        }
+    }
 }
