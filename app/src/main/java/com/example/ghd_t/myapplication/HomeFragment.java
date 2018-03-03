@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,7 +41,9 @@ public class HomeFragment extends Fragment {
 
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
+        final ImageView img = (ImageView) view.findViewById(R.id.home_image);
+
+        final ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
         BrandListItemData data_brandlist_1 = new BrandListItemData(temp, "엔플레노", "서울시 노원구", "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000~" );
         BrandListItemData data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000");
@@ -51,10 +56,43 @@ public class HomeFragment extends Fragment {
         data_brandlist.add(data_brandlist_1);
         data_brandlist.add(data_brandlist_2);
         data_brandlist.add(data_brandlist_3);
+
+        data_brandlist.add(data_brandlist_1);
+        data_brandlist.add(data_brandlist_2);
+        data_brandlist.add(data_brandlist_3);
+
+        data_brandlist.add(data_brandlist_1);
+        data_brandlist.add(data_brandlist_2);
+        data_brandlist.add(data_brandlist_3);
+
+
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
 
+        // 리스트뷰 스크롤 상태에 따른 imageview visibility 조절
+        home_brand_list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                if (!home_brand_list.canScrollVertically(-1)) {
+                    //최상단
+                    img.setVisibility(View.VISIBLE);
+                    Log.v("알림","home list 최상단. image띄우기");
+                } else if (!home_brand_list.canScrollVertically(1)) {
+                    //최하단
+                    img.setVisibility(View.GONE);
+                    Log.v("알림","home list 최하단. image없애기");
+                } else {
+                    //idle
+                    img.setVisibility(View.GONE);
+                    Log.v("알림","home list idle. image없애기");
+                }
+            }
 
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+            }
+        });
 
         return view;
     }

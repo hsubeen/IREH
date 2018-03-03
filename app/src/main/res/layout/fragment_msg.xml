@@ -9,21 +9,26 @@
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:paddingTop="20dp"
-        android:paddingLeft="10dp"
-        android:layout_width="390dp"
+        android:paddingLeft="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/maincolor"
         android:text="채팅"
         android:textSize="20dp"
         android:textStyle="bold"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_gravity="center" />
+
     <ListView
-        android:paddingTop="10dp"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/msglist"
-        android:divider="@color/white"
-        android:dividerHeight="10dp" />
+        android:divider="@color/black"
+        android:dividerHeight="0.5dp" />
 
 </LinearLayout>

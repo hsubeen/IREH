@@ -4,10 +4,13 @@ package com.example.ghd_t.myapplication;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -52,6 +55,9 @@ public class MsgFragment extends Fragment {
 
         ListAdapterMsg adapter_msg = new ListAdapterMsg(getContext(), R.layout.msg_listview_item, data_msg);
         msg_list.setAdapter(adapter_msg);
+
+
+
 
         return view;
     }

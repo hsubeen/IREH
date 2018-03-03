@@ -6,11 +6,11 @@
 
     <LinearLayout
         android:layout_gravity="center"
-        android:layout_width="390dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingLeft="20dp"
-        android:orientation="horizontal"
-        android:background="#DEDEDE">
+        android:paddingRight="20dp"
+        android:orientation="horizontal">
 
         <com.github.siyamed.shapeimageview.CircularImageView
             android:layout_gravity="center"
