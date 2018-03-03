@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -60,24 +61,20 @@ public class RegClassFragment extends Fragment {
         EditText brand_web = (EditText) view.findViewById(R.id.edit_brand_web);
         EditText brand_phone = (EditText) view.findViewById(R.id.edit_phone);
         brand_address_content = (TextView) view.findViewById(R.id.address);
-        ImageButton brand_address = (ImageButton) view.findViewById(R.id.edit_address);
+        Button brand_address = (Button) view.findViewById(R.id.edit_address);
 
 
         // 분야 선택하는 Spinner선언과 event listener 구현
         final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
-
         String[] str = getResources().getStringArray(R.array.spinnerArray);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
 
-
-
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                if(spinner_field.getSelectedItemPosition()>0){
-
                    Log.v("알림",spinner_field.getSelectedItem().toString()+ "is selected");
                }
             }
