@@ -49,7 +49,7 @@ public class DaumWebViewActivity extends AppCompatActivity {
         // web client 를 chrome 으로 설정
         daum_webView.setWebChromeClient(new WebChromeClient());
         // webview url load
-        daum_webView.loadUrl("http://192.168.0.31:80/daum_address.php");
+        daum_webView.loadUrl("http://192.168.25.60:80/daum_address.php");
     }
 
 
