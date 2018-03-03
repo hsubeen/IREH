@@ -19,13 +19,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/login_logo"/>
-        <ImageButton
+        <Button
             android:layout_marginTop="60dp"
             android:id="@+id/login_google"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/login_btn_google"
+            android:background="@drawable/btn_redcolor"
+            android:text="구글 계정 로그인"
             />
 
 

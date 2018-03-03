@@ -39,7 +39,7 @@ public class AboutUserFragment extends Fragment {
         SearchReservationItemData data_reservation_2 = new SearchReservationItemData("다른 클래스 예약 현황");
 
         UserInfoItemData data_userinfo1 = new UserInfoItemData("프로필 이미지 변경");
-        UserInfoItemData data_userinfo2 = new UserInfoItemData("브랜드 인증하기");
+        UserInfoItemData data_userinfo2 = new UserInfoItemData("브랜드 정보");
         UserInfoItemData data_userinfo3 = new UserInfoItemData("닉네임 변경");
         UserInfoItemData data_userinfo4 = new UserInfoItemData("로그아웃");
 

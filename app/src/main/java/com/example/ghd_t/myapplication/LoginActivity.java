@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 public class LoginActivity extends Activity {
@@ -15,7 +16,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ImageButton login_btn_google= (ImageButton) findViewById(R.id.login_google);
+        Button login_btn_google= (Button) findViewById(R.id.login_google);
         login_btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
