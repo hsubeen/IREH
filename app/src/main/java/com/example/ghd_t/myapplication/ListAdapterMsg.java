@@ -1,6 +1,8 @@
 package com.example.ghd_t.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,10 +46,12 @@ public class ListAdapterMsg extends BaseAdapter {
         return i;
     }
 
+
+
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i,  View view, ViewGroup viewGroup) {
         if(view == null){
-            view =inflater.inflate(layout,viewGroup,false);
+            view = inflater.inflate(layout,viewGroup,false);
             view.setClickable(true);
         }
         MsgItemData listviewitem = data.get(i);
@@ -55,7 +59,7 @@ public class ListAdapterMsg extends BaseAdapter {
         final ImageView msg_photo = (ImageView) view.findViewById(R.id.msg_photo);
         final TextView msg_name = (TextView) view.findViewById(R.id.msg_name);
         final TextView msg_content = (TextView) view.findViewById(R.id.msg_content);
-
+        final View v = view;
         msg_photo.setImageDrawable(data.get(i).getMsg_photo());
         msg_name.setText(data.get(i).getMsg_name());
         msg_content.setText(data.get(i).getMsg_content());
@@ -67,6 +71,9 @@ public class ListAdapterMsg extends BaseAdapter {
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), msg_name.getText().toString(),Toast.LENGTH_SHORT).show();
                 Log.v("알림", "msg 내용 클릭");
+
+                // list 클릭 시 채팅창으로 넘어감
+                v.getContext().startActivity(new Intent(v.getContext(),ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 
