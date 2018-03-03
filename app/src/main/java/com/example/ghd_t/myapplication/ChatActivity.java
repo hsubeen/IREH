@@ -20,12 +20,18 @@ public class ChatActivity extends Activity {
         chatList = (ListView)findViewById(R.id.chat_list);
 
         chatList.setAdapter(chatAdapter);
-
+        chatAdapter.add("2017/03/02",2);
         chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ 나ㅗㅇㄹ까 어디까지 길어질까??????!!!",0);
         chatAdapter.add("안녕",1);
         chatAdapter.add("ㅋㅋㅋ",1);
         chatAdapter.add("안녕하세요!!!",0);
-        chatAdapter.add("2017/3/03",2);
+        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",0);
+        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ",0);
+        chatAdapter.add("안녕",1);
+        chatAdapter.add("ㅋㅋㅋ",1);
+        chatAdapter.add("안녕하세요!!!",0);
+        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",0);
+        chatAdapter.add("2017/03/03",2);
 
     }
 }

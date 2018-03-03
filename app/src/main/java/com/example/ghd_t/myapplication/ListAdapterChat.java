@@ -98,13 +98,15 @@ public class ListAdapterChat extends BaseAdapter{
 
         if(arrayList.get(position).type == 0){
             // 받은메세지
-            text.setBackgroundResource(R.drawable.btn_maincolor);
+            text.setBackgroundResource(R.drawable.yellowmsg);
+            text.setTextColor(view.getResources().getColor(R.color.black));
             layout.setGravity(Gravity.LEFT);
             rightView.setVisibility(View.GONE);
             leftView.setVisibility(View.GONE);
         } else if(arrayList.get(position).type ==1 ){
             // 보낸메세지
-            text.setBackgroundResource(R.drawable.btn_redcolor);
+            text.setBackgroundResource(R.drawable.bluemsg);
+            text.setTextColor(view.getResources().getColor(R.color.white));
             layout.setGravity(Gravity.RIGHT);
             rightView.setVisibility(View.GONE);
             leftView.setVisibility(View.GONE);
