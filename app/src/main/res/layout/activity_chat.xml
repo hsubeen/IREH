@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_gravity="center"
@@ -21,6 +22,7 @@
 
         <TextView
             android:textSize="15dp"
+            android:paddingLeft="15dp"
             android:textColor="@color/black"
             android:text="임시이름"
             android:id="@+id/msg_name"
@@ -41,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ListView
-                android:id="@+id/listView1"
+                android:id="@+id/chat_list"
                 android:listSelector="#00000000"
                 android:cacheColorHint="#00000000"
                 android:divider="#000000"
@@ -54,6 +56,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_below="@id/im1"
         android:orientation="horizontal">
 
@@ -73,7 +76,7 @@
             android:id="@+id/chat_btn"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="전송" />
 
     </LinearLayout>

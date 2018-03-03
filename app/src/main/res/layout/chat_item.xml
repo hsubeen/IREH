@@ -11,22 +11,24 @@
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:id="@+id/imageViewleft"
+        android:id="@+id/view_left"
         android:background="#888888"
         android:layout_weight="1"
         android:layout_margin="10dp" />
 
     <TextView
-        android:id="@+id/text"
+        android:layout_margin="5dp"
+        android:id="@+id/chat_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:text ="text"        />
 
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:id="@+id/imageViewright"
+        android:id="@+id/view_right"
         android:background="#888888"
         android:layout_weight="1"
         android:layout_margin="10dp" />
