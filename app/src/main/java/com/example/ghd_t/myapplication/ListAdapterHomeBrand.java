@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,6 +77,9 @@ public class ListAdapterHomeBrand extends BaseAdapter{
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), brand_title.getText().toString(),Toast.LENGTH_SHORT).show();
                 Log.v("알림", "home_brandlist 클릭");
+
+                //리스트 클릭 시 DetailClassActivity로 전환
+                v.getContext().startActivity(new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
 

@@ -6,25 +6,54 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/detail_class_photo"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="200dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/temp"/>
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
 
     <LinearLayout
-        android:padding="30dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
             android:layout_marginBottom="10dp"
             android:textStyle="bold"
-            android:textSize="16dp"
+            android:textSize="17dp"
             android:textColor="@color/black"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/class_title"
             android:text="제목"/>
@@ -33,7 +62,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/class_detail"
-            android:text="안녕하세요~~~! 낄낄"/>
+            android:text="안녕하세요~~~! 낄낄 길게 길게ㅔ 적어볼게요.
+            슈퍼맨이 돌아왔다!! 승재네 이야기 히히. 파프리카 또띠아를 사오라고 하셨어요.
+            네네 그런거 같네요..ㅎㅎㅎ.."/>
 
         <LinearLayout
             android:padding="10dp"
@@ -95,26 +126,26 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <Button
-                android:layout_width="150dp"
+                android:layout_alignParentLeft="true"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_reservation"
                 android:background="@drawable/btn_maincolor"
                 android:text="예약"/>
             <Button
-                android:layout_marginLeft="50dp"
-                android:layout_width="150dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity=""
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_chat"
                 android:background="@drawable/btn_redcolor"
                 android:text="1:1 문의"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
