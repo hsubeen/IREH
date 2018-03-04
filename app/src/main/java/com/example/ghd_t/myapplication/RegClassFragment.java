@@ -2,9 +2,13 @@ package com.example.ghd_t.myapplication;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -13,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -62,7 +67,7 @@ public class RegClassFragment extends Fragment {
         EditText brand_phone = (EditText) view.findViewById(R.id.edit_phone);
         brand_address_content = (TextView) view.findViewById(R.id.address);
         Button brand_address = (Button) view.findViewById(R.id.edit_address);
-
+        Button send_class_info = (Button) view.findViewById(R.id.btn_send_class_info);
 
         // 분야 선택하는 Spinner선언과 event listener 구현
         final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
@@ -99,6 +104,52 @@ public class RegClassFragment extends Fragment {
         });
 
 
+        // 인증요청 버튼 클릭 이벤트 리스너
+        send_class_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeDialog();
+            }
+        });
+
         return view;
     }
+
+
+
+    private void makeDialog(){
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext());
+        alt_bld.setMessage("입력하신 정보로 브랜드 인증 요청하시겠습니까?").setCancelable(
+                false).setPositiveButton("네",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 네 클릭
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 아니오 클릭. dialog 닫기.
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alt_bld.create();
+
+        // 대화창 클릭시 뒷 배경 어두워지는 것 막기
+        //alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+        // 대화창 제목 설정
+        alert.setTitle("인증 요청");
+
+        // 대화창 아이콘 설정
+        alert.setIcon(R.drawable.check_dialog_64);
+
+        // 대화창 배경 색 설정
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
+
+
+        alert.show();
+    }
+
+
+
 }
