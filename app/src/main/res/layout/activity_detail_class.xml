@@ -7,11 +7,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <HorizontalScrollView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="200dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
                 android:layout_width="200dp"
@@ -29,18 +29,9 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/temp"/>
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/temp"/>
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/temp"/>
         </LinearLayout>
-
-
     </HorizontalScrollView>
+
 
     <LinearLayout
         android:paddingLeft="30dp"
@@ -49,6 +40,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <TextView
+            android:paddingTop="10dp"
             android:layout_marginBottom="10dp"
             android:textStyle="bold"
             android:textSize="17dp"
@@ -92,6 +84,21 @@
                     android:id="@+id/class_name"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="분야 : "/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="분야 내용"
+                    android:id="@+id/class_field"/>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "238952738543",
+    "firebase_url": "https://ireh-950523.firebaseio.com",
+    "project_id": "ireh-950523",
+    "storage_bucket": "ireh-950523.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238952738543:android:346cbdb0cbff9d92",
+        "android_client_info": {
+          "package_name": "com.example.ghd_t.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "238952738543-29o961bu98e51mu2saejl6nb95qd870m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZSnqD0qz918fwpWbmOGskLbqvBr8qIQE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
