@@ -31,7 +31,8 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".DaumWebViewActivity" />
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".DetailClassActivity"></activity>
     </application>
 
 </manifest>
