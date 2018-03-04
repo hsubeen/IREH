@@ -28,6 +28,16 @@
             android:background="@drawable/btn_redcolor"
             android:text="구글 계정 로그인"
             />
+        <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/logout_google"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:background="@drawable/btn_yellowcolor"
+            android:text="로그아웃"
+            />
 
 
     </LinearLayout>

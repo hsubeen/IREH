@@ -30,7 +30,7 @@ public class AboutUserFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_about_user, container, false);
         ListView search_reservation_list = (ListView) view.findViewById(R.id.search_reservation);
-        ListView user_info_list = (ListView) view.findViewById(R.id.user_info);
+        final ListView user_info_list = (ListView) view.findViewById(R.id.user_info);
 
         ArrayList<SearchReservationItemData> data_reservation = new ArrayList<>();
         ArrayList<UserInfoItemData> data_userinfo = new ArrayList<>();
@@ -56,6 +56,7 @@ public class AboutUserFragment extends Fragment {
 
         ListAdapterUserInfo adapter_userinfo = new ListAdapterUserInfo(getContext(), R.layout.search_reservation_listview_item, data_userinfo);
         user_info_list.setAdapter(adapter_userinfo);
+
 
         return view;
     }
