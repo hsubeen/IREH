@@ -1,35 +1,23 @@
 package com.example.ghd_t.myapplication;
 
 
-import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
-
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 
@@ -40,6 +28,7 @@ public class AboutUserFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     Bitmap bitmap;
+
     public AboutUserFragment() {
         // Required empty public constructor
     }
@@ -50,7 +39,6 @@ public class AboutUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
 
@@ -58,12 +46,15 @@ public class AboutUserFragment extends Fragment {
         ListView search_reservation_list = (ListView) view.findViewById(R.id.search_reservation);
         final ListView user_info_list = (ListView) view.findViewById(R.id.user_info);
 
+
+        //접속한 사용자 프로필 이미지띄우기
         CircularImageView user_profile = view.findViewById(R.id.user_profile);
 
         Thread mThread= new Thread(){
             @Override
             public void run() {
                 try{
+                    //uri정보를 통해 Bitmap으로 변환하여 보여줌
                     URL url = new URL(user.getPhotoUrl().toString());
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setDoInput(true);
@@ -82,14 +73,14 @@ public class AboutUserFragment extends Fragment {
 
         try{
             mThread.join();
+            //변환한 bitmap이미지로 setting
             user_profile.setImageBitmap(bitmap);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
-        //user_profile.setImageBitmap(getBitmap(user.getPhotoUrl().toString()));
-
 
         TextView user_name = view.findViewById(R.id.user_name);
+        //현재 로그인한 사용자 이름으로 setting
         user_name.setText(user.getDisplayName());
 
         ArrayList<SearchReservationItemData> data_reservation = new ArrayList<>();
@@ -118,30 +109,7 @@ public class AboutUserFragment extends Fragment {
 
         return view;
     }
-    private Bitmap getBitmap(String url) {
-        URL imgUrl = null;
-        HttpURLConnection connection = null;
-        InputStream is = null;
 
-        Bitmap retBitmap = null;
-
-        try{
-            imgUrl = new URL(url);
-            connection = (HttpURLConnection) imgUrl.openConnection();
-            connection.setDoInput(true); //url로 input받는 flag 허용
-            connection.connect(); //연결
-            is = connection.getInputStream(); // get inputstream
-            retBitmap = BitmapFactory.decodeStream(is);
-        }catch(Exception e) {
-            e.printStackTrace();
-            return null;
-        }finally {
-            if(connection!=null) {
-                connection.disconnect();
-            }
-            return retBitmap;
-        }
-    }
 
 
 }
