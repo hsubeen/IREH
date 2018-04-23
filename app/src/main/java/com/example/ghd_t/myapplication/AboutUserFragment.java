@@ -41,7 +41,6 @@ public class AboutUserFragment extends Fragment {
         UserInfoItemData data_userinfo1 = new UserInfoItemData("프로필 이미지 변경");
         UserInfoItemData data_userinfo2 = new UserInfoItemData("브랜드 정보");
         UserInfoItemData data_userinfo3 = new UserInfoItemData("닉네임 변경");
-        UserInfoItemData data_userinfo4 = new UserInfoItemData("로그아웃");
 
         data_reservation.add(data_reservation_1);
         data_reservation.add(data_reservation_2);
@@ -49,7 +48,6 @@ public class AboutUserFragment extends Fragment {
         data_userinfo.add(data_userinfo1);
         data_userinfo.add(data_userinfo2);
         data_userinfo.add(data_userinfo3);
-        data_userinfo.add(data_userinfo4);
 
         ListAdapterSearchReservation adapter_reservation = new ListAdapterSearchReservation(getContext(), R.layout.search_reservation_listview_item, data_reservation);
         search_reservation_list.setAdapter(adapter_reservation);
