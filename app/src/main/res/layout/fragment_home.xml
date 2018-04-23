@@ -16,6 +16,32 @@
         android:layout_height="wrap_content"
         android:src="@drawable/temp_main" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/gps"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="37dp"
+            android:text="내위치"
+            android:background="@drawable/btn_maincolor"/>
+
+            />
+        <Spinner
+            android:layout_gravity="right"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_field"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/editbox"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
     <ListView
         android:paddingTop="10dp"
         android:layout_gravity="center"
