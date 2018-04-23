@@ -33,9 +33,17 @@
             />
         <Spinner
             android:layout_gravity="right"
-            android:layout_width="135dp"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:id="@+id/spinner_field"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/editbox"
+            android:textColor="@color/black"/>
+        <Spinner
+            android:layout_gravity="right"
+                android:layout_width="105dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_field2"
             android:spinnerMode="dropdown"
             android:background="@drawable/editbox"
             android:textColor="@color/black"/>

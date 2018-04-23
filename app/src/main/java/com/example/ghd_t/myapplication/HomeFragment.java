@@ -1,8 +1,6 @@
 package com.example.ghd_t.myapplication;
 
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -11,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,17 +44,14 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         final ImageView img = (ImageView) view.findViewById(R.id.home_image);
-
 
         Button btn_gps = view.findViewById(R.id.gps);
         btn_gps.setOnClickListener(new View.OnClickListener() {
@@ -80,17 +70,14 @@ public class HomeFragment extends Fragment {
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
 
-
                     Geocoder gCoder = new Geocoder(getContext(), Locale.getDefault());
                     List<Address> addr = null;
                     try{
                         addr = gCoder.getFromLocation(latitude,longitude,1);
                         Address a = addr.get(0);
-                        String temp = "";
                         for (int i=0;i <= a.getMaxAddressLineIndex();i++) {
                             Log.v("알림", "AddressLine(" + i + ")" + a.getAddressLine(i) + "\n");
                         }
-                        Toast.makeText(getContext(),  a.getLocality() + " "  + " "+ a.getThoroughfare(), Toast.LENGTH_LONG).show();
 
                     } catch (IOException e){
                         e.printStackTrace();
@@ -112,7 +99,7 @@ public class HomeFragment extends Fragment {
 
         // 분야 선택하는 Spinner선언과 event listener 구현
         final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
-        String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);
+        String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);   //지역
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
@@ -121,7 +108,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(spinner_field.getSelectedItemPosition()>0){
-                    Log.v("알림",spinner_field.getSelectedItem().toString()+ "is selected");
+                    Log.v("알림",spinner_field.getSelectedItem().toString()+ " is selected");
                 }
             }
             @Override
@@ -129,6 +116,28 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+        // 분야 선택하는 Spinner선언과 event listener 구현
+        final Spinner spinner_field2 = (Spinner) view.findViewById(R.id.spinner_field2);
+        String[] str2 = getResources().getStringArray(R.array.spinnerArray_forSearch2);
+        final ArrayAdapter<String> adapter2= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str2);
+        adapter2.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner_field2.setAdapter(adapter2);
+
+        spinner_field2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(spinner_field2.getSelectedItemPosition()>0){
+                    Log.v("알림",spinner_field2.getSelectedItem().toString()+ " is selected");
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
 
         final ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();

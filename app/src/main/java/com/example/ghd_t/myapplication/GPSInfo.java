@@ -11,14 +11,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 
 /**
@@ -44,7 +43,7 @@ public class GPSInfo extends Service implements LocationListener{
     // 최소 GPS 정보 업데이트 거리 10미터
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
-    // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1분
+    // 최소 GPS 정보 업데이트 시간 밀리세컨(1분)
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
 
     protected LocationManager locationManager;
@@ -97,6 +96,8 @@ public class GPSInfo extends Service implements LocationListener{
                             // 위도 경도 저장
                             lat = location.getLatitude();
                             lon = location.getLongitude();
+
+                            Log.v("알림", "위도 : " + lat + "경도 " + lon);
                         }
                     }
                 }
@@ -182,6 +183,7 @@ public class GPSInfo extends Service implements LocationListener{
         // TODO Auto-generated method stub
 
     }
+
     private void makeDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
         alt_bld.setMessage("GPS 사용이 필요합니다. \n설정창으로 가시겠습니까?").setCancelable(
@@ -212,7 +214,6 @@ public class GPSInfo extends Service implements LocationListener{
 
         // 대화창 배경 색 설정
         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
-
 
         alert.show();
     }
