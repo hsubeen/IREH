@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
 
-
+        Button login_btn_google= (Button) findViewById(R.id.login_google);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder
                 (GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("238952738543-29o961bu98e51mu2saejl6nb95qd870m.apps.googleusercontent.com")
@@ -74,7 +75,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-        Button login_btn_google= (Button) findViewById(R.id.login_google);
+        if(mAuth.getCurrentUser() != null){
+            FirebaseUser user = mAuth.getCurrentUser();
+            String email = user.getEmail() + "으로 로그인";
+            login_btn_google.setText(email);
+            login_btn_google.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.v("알림", "구글 LOGIN");
+                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                }
+            });
+        }
+
+
         login_btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
 
-                
+
             } else {
                 // Google Sign In failed, update UI appropriately
                 Log.v("알림", result.isSuccess() +" Google Sign In failed. Because : " + result.getStatus().toString());
@@ -157,15 +172,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.v("알림", "!task.isSuccessful()");
-
                             Toast.makeText(LoginActivity.this, "인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         }else {
                             Log.v("알림", "task.isSuccessful()");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             String cu = mAuth.getUid();
-                            Log.v("알림", "현재로그인한 유저" + cu);
-                            UserData userdata = new UserData("유저이름","닉네임");
+                            String name = user.getDisplayName();
+                            String email = user.getEmail();
+                            String photoUrl = user.getPhotoUrl().toString();
+                            String phone = user.getPhoneNumber();
+
+                            Log.v("알림", "현재로그인한 유저 " + cu);
+                            Log.v("알림", "현재로그인한 이메일 " + email);
+                            Log.v("알림", "유저 이름 " + name);
+                            Log.v("알림", "유저 사진 " + photoUrl);
+                            Log.v("알림", "유저 폰 " + phone);
+
+                            UserData userdata = new UserData(name, photoUrl);
                             mDatabase.child("users").child(cu).setValue(userdata);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);

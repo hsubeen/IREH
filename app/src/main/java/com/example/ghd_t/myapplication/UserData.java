@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 /**
  * Created by ghd-t on 2018-04-23.
@@ -8,12 +9,11 @@ import android.graphics.drawable.Drawable;
 
 public class UserData {
     private String userName;
-    private String nickName;
-    private Drawable profile;
+    private String profile;
 
-    public UserData(String userName, String nickName) {
+    public UserData(String userName, String profile) {
         this.userName = userName;
-        this.nickName = nickName;
+        this.profile = profile;
     }
 
     public String getUserName() {
@@ -24,19 +24,11 @@ public class UserData {
         this.userName = userName;
     }
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public Drawable getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(Drawable profile) {
+    public void setProfile(String profile) {
         this.profile = profile;
     }
 }
