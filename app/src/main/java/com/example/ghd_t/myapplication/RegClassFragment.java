@@ -29,6 +29,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -40,8 +44,12 @@ import java.util.zip.Inflater;
  * A simple {@link Fragment} subclass.
  */
 public class RegClassFragment extends Fragment {
-
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     private TextView brand_address_content;
+    private EditText brand_name, brand_web, brand_phone;
+    private Button brand_address,send_class_info;
+    private Spinner spinner_field;
 
     public RegClassFragment() {
         // Required empty public constructor
@@ -62,15 +70,18 @@ public class RegClassFragment extends Fragment {
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
         View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
 
-        EditText brand_name = (EditText) view.findViewById(R.id.edit_brand_name);
-        EditText brand_web = (EditText) view.findViewById(R.id.edit_brand_web);
-        EditText brand_phone = (EditText) view.findViewById(R.id.edit_phone);
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        brand_name = (EditText) view.findViewById(R.id.edit_brand_name);
+        brand_web = (EditText) view.findViewById(R.id.edit_brand_web);
+        brand_phone = (EditText) view.findViewById(R.id.edit_phone);
         brand_address_content = (TextView) view.findViewById(R.id.address);
-        Button brand_address = (Button) view.findViewById(R.id.edit_address);
-        Button send_class_info = (Button) view.findViewById(R.id.btn_send_class_info);
+        brand_address = (Button) view.findViewById(R.id.edit_address);
+        send_class_info = (Button) view.findViewById(R.id.btn_send_class_info);
 
         // 분야 선택하는 Spinner선언과 event listener 구현
-        final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
+        spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
         String[] str = getResources().getStringArray(R.array.spinnerArray);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -124,6 +135,15 @@ public class RegClassFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // 네 클릭
+
+                        // 현재 로그인한 사용자의 Uid
+                        String cu = mAuth.getUid();
+                        // 작성한 클래스정보를 RegClassData에 담기
+                        RegClassData regClassData = new RegClassData(brand_name.getText().toString(), brand_web.getText().toString(), brand_phone.getText().toString(),
+                                spinner_field.getSelectedItem().toString(), brand_address_content.getText().toString());
+
+                        // DB에 등록
+                        mDatabase.child("Regclass").child(cu).setValue(regClassData);
                     }
                 }).setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {

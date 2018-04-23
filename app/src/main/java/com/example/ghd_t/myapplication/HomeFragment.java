@@ -97,9 +97,9 @@ public class HomeFragment extends Fragment {
         callPermission();  // 권한 요청을 해야 함
 
 
-        // 분야 선택하는 Spinner선언과 event listener 구현
+        // 분야 선택하는 Spinner선언과 event listener 구현 -> 지역 선택
         final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
-        String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);   //지역
+        String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // 분야 선택하는 Spinner선언과 event listener 구현
+        // 분야 선택하는 Spinner선언과 event listener 구현 -> 분야 선택
         final Spinner spinner_field2 = (Spinner) view.findViewById(R.id.spinner_field2);
         String[] str2 = getResources().getStringArray(R.array.spinnerArray_forSearch2);
         final ArrayAdapter<String> adapter2= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str2);

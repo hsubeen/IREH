@@ -37,11 +37,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
-
     private DatabaseReference mDatabase;
-
-
-
 
     @Override
     public void onStart() {
