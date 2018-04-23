@@ -1,6 +1,5 @@
 package com.example.ghd_t.myapplication;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,22 +7,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -37,11 +29,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
+
+    private DatabaseReference mDatabase;
+
 
 
 
@@ -73,6 +70,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         mAuth = FirebaseAuth.getInstance();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
         Button login_btn_google= (Button) findViewById(R.id.login_google);
@@ -135,8 +134,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.v("알림", "google sign 성공, FireBase와 Auth.");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+
+                
             } else {
                 // Google Sign In failed, update UI appropriately
                 Log.v("알림", result.isSuccess() +" Google Sign In failed. Because : " + result.getStatus().toString());
@@ -164,6 +163,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.v("알림", "task.isSuccessful()");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            String cu = mAuth.getUid();
+                            Log.v("알림", "현재로그인한 유저" + cu);
+                            UserData userdata = new UserData("유저이름","닉네임");
+                            mDatabase.child("users").child(cu).setValue(userdata);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
                             Toast.makeText(LoginActivity.this, "FireBase 아이디 생성이 완료 되었습니다", Toast.LENGTH_SHORT).show();
                         }
 
