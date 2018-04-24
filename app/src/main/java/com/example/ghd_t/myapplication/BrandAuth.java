@@ -7,18 +7,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +51,7 @@ public class BrandAuth extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_reg_class);
+        setContentView(R.layout.activity_brand_auth);
         // Inflate the layout for this fragment
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
 
@@ -137,7 +135,7 @@ public class BrandAuth extends Activity{
 
     private void makeDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this);
-        alt_bld.setMessage("입력하신 정보로 브랜드 인증 요청하시겠습니까?").setCancelable(
+        alt_bld.setMessage("입력하신 정보로 브랜드 인증을 요청합니다.\n사실과 일치하지 않을 시 삭제조치 될 수 있습니다.").setCancelable(
                 false).setPositiveButton("네",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -151,6 +149,21 @@ public class BrandAuth extends Activity{
 
                         // DB에 등록
                         mDatabase.child("Regclass").child(cu).setValue(regClassData);
+
+                        AlertDialog.Builder alt_bld2 = new AlertDialog.Builder(BrandAuth.this);
+                        alt_bld2.setMessage("\n\n              인증되었습니다\n\n");
+                        AlertDialog alert2 = alt_bld2.create();
+                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
+                        alt_bld2.show();
+                        new Handler().postDelayed(new Runnable()
+                        {
+                            @Override public void run()
+                            {
+                                // DB등록 성공 2초 후 MainActivity로 전환
+                                Intent intent = new Intent(BrandAuth.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }, 2000);
                     }
                 }).setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
@@ -172,7 +185,6 @@ public class BrandAuth extends Activity{
 
         // 대화창 배경 색 설정
         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
-
 
         alert.show();
     }

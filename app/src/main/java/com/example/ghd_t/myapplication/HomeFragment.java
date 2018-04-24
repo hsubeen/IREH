@@ -21,11 +21,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +37,10 @@ public class HomeFragment extends Fragment {
     private boolean isAccessFineLocation = false;
     private boolean isAccessCoarseLocation = false;
     private boolean isPermission = false;
-
+    private ImageView img;
+    private Button btn_gps;
     private GPSInfo gps;
-
+    private Spinner spinner_field, spinner_field2;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -59,9 +55,9 @@ public class HomeFragment extends Fragment {
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        final ImageView img = (ImageView) view.findViewById(R.id.home_image);
+        img = (ImageView) view.findViewById(R.id.home_image);
 
-        Button btn_gps = view.findViewById(R.id.gps);
+        btn_gps = view.findViewById(R.id.gps);
         btn_gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +102,7 @@ public class HomeFragment extends Fragment {
 
 
         // 분야 선택하는 Spinner선언과 event listener 구현 -> 지역 선택
-        final Spinner spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
+        spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
         String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -126,7 +122,7 @@ public class HomeFragment extends Fragment {
         });
 
         // 분야 선택하는 Spinner선언과 event listener 구현 -> 분야 선택
-        final Spinner spinner_field2 = (Spinner) view.findViewById(R.id.spinner_field2);
+        spinner_field2 = (Spinner) view.findViewById(R.id.spinner_field2);
         String[] str2 = getResources().getStringArray(R.array.spinnerArray_forSearch2);
         final ArrayAdapter<String> adapter2= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str2);
         adapter2.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -179,14 +175,23 @@ public class HomeFragment extends Fragment {
             public void onScrollStateChanged(AbsListView absListView, int i) {
                 if (!home_brand_list.canScrollVertically(-1)) {
                     //최상단
+                    btn_gps.setVisibility(View.VISIBLE);
+                    spinner_field.setVisibility(View.VISIBLE);
+                    spinner_field2.setVisibility(View.VISIBLE);
                     img.setVisibility(View.VISIBLE);
                     Log.v("알림","home list 최상단. image띄우기");
                 } else if (!home_brand_list.canScrollVertically(1)) {
                     //최하단
+                    btn_gps.setVisibility(View.GONE);
+                    spinner_field.setVisibility(View.GONE);
+                    spinner_field2.setVisibility(View.GONE);
                     img.setVisibility(View.GONE);
                     Log.v("알림","home list 최하단. image없애기");
                 } else {
                     //idle
+                    btn_gps.setVisibility(View.GONE);
+                    spinner_field.setVisibility(View.GONE);
+                    spinner_field2.setVisibility(View.GONE);
                     img.setVisibility(View.GONE);
                     Log.v("알림","home list idle. image없애기");
                 }

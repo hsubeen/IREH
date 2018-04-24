@@ -57,7 +57,7 @@ public class RegClassFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
-        View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
+        View view = inflater.inflate(R.layout.activity_brand_auth, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
