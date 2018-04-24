@@ -12,6 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.security.MessageDigest;
 
 public class MainActivity extends FragmentActivity {
@@ -28,17 +36,19 @@ public class MainActivity extends FragmentActivity {
     private ViewPager viewpager;
     ViewpagerAdapter adapter;
 
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);  //클릭 시 움직이는 모양 없애기. 하단 네비게이션 바 고정
-
-
 
         menu_here = R.id.action_home;   //처음 페이지를 home으로 지정
         viewpager = (ViewPager) findViewById(R.id.mainViewPager);
@@ -75,6 +85,7 @@ public class MainActivity extends FragmentActivity {
                 return true;
             }
         });
+
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -86,7 +97,6 @@ public class MainActivity extends FragmentActivity {
                 menu_here = bottomNavigationView.getMenu().getItem(position).getItemId();
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 menu_prev = bottomNavigationView.getMenu().getItem(position);
-
             }
 
             @Override
@@ -107,16 +117,34 @@ public class MainActivity extends FragmentActivity {
 
         adapter.addFragment(homeFragment);
         adapter.addFragment(msgFragment);
+
+//
+//        //클래스 추가 정보가 있으면 게시글 작성페이지로 전환
+//        mDatabase.child("Regclass").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                dataSnapshot.getValue();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Log.v("알림", "Single ValueEventListener : " + snapshot.getValue());
+//                    if(snapshot.getValue() == null){
+//                        //브랜드를 추가한 정보가 없음
+//                        adapter.addFragment(regclassFragment);
+//                    }else{
+//                        //브랜드를 추가한 정보가 있음
+//                        Log.v("알림", "정보있음" + snapshot.getValue());
+//                        adapter.addFragment(homeFragment);
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+
         adapter.addFragment(regclassFragment);
         adapter.addFragment(aboutuserFragment);
-
         viewpager.setAdapter(adapter);
     }
-
-
-
-
-
 
     private void getAppKeyHash() {
         try {

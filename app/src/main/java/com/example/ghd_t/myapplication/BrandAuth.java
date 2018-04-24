@@ -1,13 +1,12 @@
 package com.example.ghd_t.myapplication;
 
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,11 +26,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by ghd-t on 2018-04-24.
  */
-public class RegClassFragment extends Fragment {
+
+public class BrandAuth extends Activity{
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private TextView brand_address_content;
@@ -40,7 +38,7 @@ public class RegClassFragment extends Fragment {
     private Button brand_address,send_class_info;
     private Spinner spinner_field;
 
-    public RegClassFragment() {
+    public BrandAuth() {
         // Required empty public constructor
     }
 
@@ -53,11 +51,11 @@ public class RegClassFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_reg_class);
         // Inflate the layout for this fragment
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
-        View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -85,26 +83,26 @@ public class RegClassFragment extends Fragment {
             }
         });
 
-        brand_name = (EditText) view.findViewById(R.id.edit_brand_name);
-        brand_web = (EditText) view.findViewById(R.id.edit_brand_web);
-        brand_phone = (EditText) view.findViewById(R.id.edit_phone);
-        brand_address_content = (TextView) view.findViewById(R.id.address);
-        brand_address = (Button) view.findViewById(R.id.edit_address);
-        send_class_info = (Button) view.findViewById(R.id.btn_send_class_info);
+        brand_name = (EditText) findViewById(R.id.edit_brand_name);
+        brand_web = (EditText) findViewById(R.id.edit_brand_web);
+        brand_phone = (EditText) findViewById(R.id.edit_phone);
+        brand_address_content = (TextView) findViewById(R.id.address);
+        brand_address = (Button) findViewById(R.id.edit_address);
+        send_class_info = (Button) findViewById(R.id.btn_send_class_info);
 
         // 분야 선택하는 Spinner선언과 event listener 구현
-        spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
+        spinner_field = (Spinner) findViewById(R.id.spinner_field);
         String[] str = getResources().getStringArray(R.array.spinnerArray);
-        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
+        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(BrandAuth.this,R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
 
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-               if(spinner_field.getSelectedItemPosition()>0){
-                   Log.v("알림",spinner_field.getSelectedItem().toString()+ "is selected");
-               }
+                if(spinner_field.getSelectedItemPosition()>0){
+                    Log.v("알림",spinner_field.getSelectedItem().toString()+ "is selected");
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -135,11 +133,10 @@ public class RegClassFragment extends Fragment {
             }
         });
 
-        return view;
     }
 
     private void makeDialog(){
-        AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this);
         alt_bld.setMessage("입력하신 정보로 브랜드 인증 요청하시겠습니까?").setCancelable(
                 false).setPositiveButton("네",
                 new DialogInterface.OnClickListener() {

@@ -59,13 +59,12 @@ public class ListAdapterUserInfo extends BaseAdapter {
         final TextView listItem = (TextView) view.findViewById(R.id.reservation_list);
         listItem.setText(data.get(i).getMenu_title());
 
-
-        listItem.setOnClickListener(new View.OnClickListener(){
-            public void onClick(final View v){
-                Toast.makeText(v.getContext(), listItem.getText().toString(),Toast.LENGTH_SHORT).show();
-            }
-
-        });
+//        listItem.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(final View v){
+//                Toast.makeText(v.getContext(), listItem.getText().toString(),Toast.LENGTH_SHORT).show();
+//            }
+//
+//        });
      return view;
     }
 

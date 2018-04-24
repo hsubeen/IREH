@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,12 +53,15 @@ public class ListAdapterSearchReservation extends BaseAdapter {
        final TextView listItem = (TextView) view.findViewById(R.id.reservation_list);
        listItem.setText(data.get(i).getMenu_title());
 
-       listItem.setOnClickListener(new View.OnClickListener(){
-               public void onClick(View v){
-                   Toast.makeText(v.getContext(), listItem.getText().toString(),Toast.LENGTH_SHORT).show();
-        }
 
-       });
+
+//       listItem.setOnClickListener(new View.OnClickListener(){
+//           public void onClick(View v){
+//               Toast.makeText(v.getContext(), listItem.getText(),Toast.LENGTH_SHORT).show();
+//            }
+//       });
+
+
 
         return view;
     }

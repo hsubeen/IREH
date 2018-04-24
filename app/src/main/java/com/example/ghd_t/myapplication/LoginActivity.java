@@ -186,7 +186,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.v("알림", "유저 폰 " + phone);
 
                             UserData userdata = new UserData(name, photoUrl);
-                            mDatabase.child("users").child(cu).setValue(userdata);
+                            mDatabase.child("Users").child(cu).setValue(userdata);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             Toast.makeText(LoginActivity.this, "FireBase 아이디 생성이 완료 되었습니다", Toast.LENGTH_SHORT).show();

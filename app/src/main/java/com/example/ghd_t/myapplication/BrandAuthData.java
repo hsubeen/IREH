@@ -4,13 +4,13 @@ package com.example.ghd_t.myapplication;
  * Created by ghd-t on 2018-04-24.
  */
 
-public class RegClassData {
+public class BrandAuthData {
     String brandname;
     String weburl;
     String phone;
     String field;
     String address;
-    public RegClassData(String brandname, String weburl, String phone, String field, String address) {
+    public BrandAuthData(String brandname, String weburl, String phone, String field, String address) {
         this.brandname = brandname;
         this.weburl = weburl;
         this.phone = phone;

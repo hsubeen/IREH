@@ -21,6 +21,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,7 @@ public class HomeFragment extends Fragment {
 
     private GPSInfo gps;
 
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -48,6 +54,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
