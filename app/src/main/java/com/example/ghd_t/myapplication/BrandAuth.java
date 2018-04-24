@@ -134,8 +134,8 @@ public class BrandAuth extends Activity{
     }
 
     private void makeDialog(){
-        AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this);
-        alt_bld.setMessage("입력하신 정보로 브랜드 인증을 요청합니다.\n사실과 일치하지 않을 시 삭제조치 될 수 있습니다.").setCancelable(
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this,R.style.MyAlertDialogStyle);
+        alt_bld.setTitle("인증 요청").setIcon(R.drawable.check_dialog_64).setMessage("입력하신 정보로 브랜드 인증을 요청합니다.\n사실과 일치하지 않을 시 삭제조치 될 수 있습니다.").setCancelable(
                 false).setPositiveButton("네",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -149,21 +149,8 @@ public class BrandAuth extends Activity{
 
                         // DB에 등록
                         mDatabase.child("Regclass").child(cu).setValue(regClassData);
-
-                        AlertDialog.Builder alt_bld2 = new AlertDialog.Builder(BrandAuth.this);
-                        alt_bld2.setMessage("\n\n              인증되었습니다\n\n");
-                        AlertDialog alert2 = alt_bld2.create();
-                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
-                        alt_bld2.show();
-                        new Handler().postDelayed(new Runnable()
-                        {
-                            @Override public void run()
-                            {
-                                // DB등록 성공 2초 후 MainActivity로 전환
-                                Intent intent = new Intent(BrandAuth.this, MainActivity.class);
-                                startActivity(intent);
-                            }
-                        }, 2000);
+                        // 등록완료 알림창 발생
+                        makeConfirmDialog();
                     }
                 }).setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
@@ -173,22 +160,30 @@ public class BrandAuth extends Activity{
                     }
                 });
         AlertDialog alert = alt_bld.create();
-
-        // 대화창 클릭시 뒷 배경 어두워지는 것 막기
-        //alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-        // 대화창 제목 설정
-        alert.setTitle("인증 요청");
-
-        // 대화창 아이콘 설정
-        alert.setIcon(R.drawable.check_dialog_64);
-
-        // 대화창 배경 색 설정
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
-
         alert.show();
     }
 
+    // DB등록 완료 후 알림창
+    private void makeConfirmDialog(){
+        AlertDialog.Builder alt_bld2 = new AlertDialog.Builder(BrandAuth.this,R.style.MyAlertDialogStyle);
+        //alt_bld2.setMessage("\n\n                  인증되었습니다\n\n");
 
+        alt_bld2.setIcon(R.drawable.check_dialog_64).setTitle("인증요청 성공").setMessage("인증되었습니다").setCancelable(
+                false);
+
+        AlertDialog alert2 = alt_bld2.create();
+
+        alt_bld2.show();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override public void run()
+            {
+                // DB등록 성공 1.5초 후 MainActivity로 전환
+                Intent intent = new Intent(BrandAuth.this, MainActivity.class);
+                Log.v("알림","클래스정보 추가 완료, MainActivity로 이동");
+                startActivity(intent);
+            }
+        }, 1500);
+    }
 
 }
