@@ -185,8 +185,8 @@ public class GPSInfo extends Service implements LocationListener{
     }
 
     private void makeDialog(){
-        AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
-        alt_bld.setMessage("GPS 사용이 필요합니다. \n설정창으로 가시겠습니까?").setCancelable(
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle);
+        alt_bld.setTitle("GPS 사용 허가").setIcon(R.drawable.check_dialog_64).setMessage("GPS 사용이 필요합니다. \n설정창으로 가시겠습니까?").setCancelable(
                 false).setPositiveButton("네",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -202,18 +202,6 @@ public class GPSInfo extends Service implements LocationListener{
                     }
                 });
         AlertDialog alert = alt_bld.create();
-
-        // 대화창 클릭시 뒷 배경 어두워지는 것 막기
-        //alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-        // 대화창 제목 설정
-        alert.setTitle("GPS 사용 허가");
-
-        // 대화창 아이콘 설정
-        alert.setIcon(R.drawable.check_dialog_64);
-
-        // 대화창 배경 색 설정
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
 
         alert.show();
     }

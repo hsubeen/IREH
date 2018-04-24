@@ -58,28 +58,6 @@ public class BrandAuth extends Activity{
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        //클래스 추가 정보가 있으면 게시글 작성페이지로 전환
-        mDatabase.child("Regclass").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getValue();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.v("알림", "Single ValueEventListener : " + snapshot.getValue());
-                    if(snapshot.getValue() == null){
-                        //브랜드를 추가한 정보가 없음
-
-                    }else{
-                        //브랜드를 추가한 정보가 있음
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         brand_name = (EditText) findViewById(R.id.edit_brand_name);
         brand_web = (EditText) findViewById(R.id.edit_brand_web);
@@ -135,7 +113,7 @@ public class BrandAuth extends Activity{
 
     private void makeDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this,R.style.MyAlertDialogStyle);
-        alt_bld.setTitle("인증 요청").setIcon(R.drawable.check_dialog_64).setMessage("입력하신 정보로 브랜드 인증을 요청합니다.\n사실과 일치하지 않을 시 삭제조치 될 수 있습니다.").setCancelable(
+        alt_bld.setTitle("인증요청").setIcon(R.drawable.check_dialog_64).setMessage("입력하신 정보로 브랜드 인증을 요청 합니다.\n사실과 일치하지 않을 시 삭제조치 될 수 있습니다.").setCancelable(
                 false).setPositiveButton("네",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
