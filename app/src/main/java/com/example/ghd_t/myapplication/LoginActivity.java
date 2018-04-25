@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // 현재 로그인되어있는 유저 확인
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
     }
@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         Button login_btn_google= (Button) findViewById(R.id.login_google);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder
@@ -67,14 +66,27 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         mAuth = FirebaseAuth.getInstance();
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
+        //이미 로그인 되어있는 상태라면
         if(mAuth.getCurrentUser() != null){
             FirebaseUser user = mAuth.getCurrentUser();
+
+            //로그인화면 버튼에 현재 로그인되어있는 계정 표시하기
             String email = user.getEmail() + "으로 로그인";
             login_btn_google.setText(email);
+
+            login_btn_google.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.v("알림", "구글 LOGIN");
+                    //로그인버튼 클릭시, 로그인되어있는 계정 그대로
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            //로그인되어있지 않은 상태라면
             login_btn_google.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -84,17 +96,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             });
         }
-
-
-        login_btn_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.v("알림", "구글 LOGIN");
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
-        });
-
         Button logout_btn_google = (Button) findViewById(R.id.logout_google);
         logout_btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
