@@ -203,6 +203,7 @@ public class GPSInfo extends Service implements LocationListener{
                 });
         AlertDialog alert = alt_bld.create();
 
+
         alert.show();
     }
 

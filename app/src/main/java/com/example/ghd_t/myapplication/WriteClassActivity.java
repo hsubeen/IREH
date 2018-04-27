@@ -4,8 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.Manifest;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -15,12 +15,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
-
-import java.io.BufferedInputStream;
+import android.widget.Toast;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
@@ -32,11 +33,32 @@ public class WriteClassActivity extends AppCompatActivity {
     private static final int CROP_IMAGE = 2;
 
 
-    private String outFilePath = Environment.getExternalStorageDirectory() + "/tmp.jpg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_class);
+
+
+        //TedPermission 라이브러리 -> 카메라 권한 획득
+        PermissionListener permissionlistener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                Toast.makeText(WriteClassActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                Toast.makeText(WriteClassActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+        };
+
+        new TedPermission(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
+
 
         spinner_money_min = findViewById(R.id.spinner_money_min);
         spinner_money_max = findViewById(R.id.spinner_money_max);
@@ -51,7 +73,8 @@ public class WriteClassActivity extends AppCompatActivity {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeDialog();
+
+               makeDialog();
             }
         });
         String[] str = getResources().getStringArray(R.array.spinnerArray_forWrite_money);
@@ -162,6 +185,11 @@ public class WriteClassActivity extends AppCompatActivity {
                 if(extras!=null){
 
                     //crop된 비트맵
+                    //String c = imgUri.getPath();
+                    //Bitmap bitmap = BitmapFactory.decodeFile(c);
+                   // img1.setImageBitmap(bitmap);
+
+
 
                     Bitmap bitmap = extras.getParcelable("data");
 
@@ -187,8 +215,10 @@ public class WriteClassActivity extends AppCompatActivity {
 
     //crop한 비트맵 저장
     private void storeCropImage(Bitmap bitmap, String filePath){
-        String directory_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IREH";
+        //String directory_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IREH";
+        String directory_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/IREH";
         File directory_IREH = new File(directory_path);
+
         if(!directory_IREH.exists()){
             //IREH폴더 없을 시 생성
             directory_IREH.mkdir();
@@ -198,7 +228,9 @@ public class WriteClassActivity extends AppCompatActivity {
         BufferedOutputStream out = null;
 
         try{
-            copyFile.createNewFile();
+            if(!copyFile.createNewFile()){
+                Log.v("알림", "file already exists");
+            }
             out = new BufferedOutputStream(new FileOutputStream(copyFile));
             bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
 
@@ -210,4 +242,7 @@ public class WriteClassActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
 }
