@@ -66,7 +66,10 @@ public class RegClassFragment extends Fragment {
         btn_write_class.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("알림","글쓰기 버튼 클릭");
+
+                Intent intent = new Intent(view.getContext(), WriteClassActivity.class);
+                startActivity(intent);
+                Log.v("알림","글쓰기 창");
             }
         });
         Drawable temp = getResources().getDrawable(R.drawable.temp);

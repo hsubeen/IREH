@@ -53,6 +53,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
 
         Button login_btn_google= (Button) findViewById(R.id.login_google);
+        Button logout_btn_google = (Button) findViewById(R.id.logout_google);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder
                 (GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("238952738543-29o961bu98e51mu2saejl6nb95qd870m.apps.googleusercontent.com")
@@ -96,21 +98,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 }
             });
         }
-        Button logout_btn_google = (Button) findViewById(R.id.logout_google);
+
+
         logout_btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
                 Log.v("알림", "구글 LOGOUT");
-                AlertDialog.Builder alt_bld = new AlertDialog.Builder(view.getContext());
-                alt_bld.setMessage("로그아웃 하시겠습니까?").setCancelable(false)
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(view.getContext(),R.style.MyAlertDialogStyle);
+                alt_bld.setTitle("로그아웃").setIcon(R.drawable.check_dialog_64).setMessage("로그아웃 하시겠습니까?").setCancelable(false)
                         .setPositiveButton("네",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // 네 클릭
                                 // 로그아웃 함수 call
                                 signOut();
- }
-                        }).setNegativeButton("아니오",
+                        }}).setNegativeButton("아니오",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // 아니오 클릭. dialog 닫기.
@@ -118,20 +120,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             }
                         });
                 AlertDialog alert = alt_bld.create();
-
-                // 대화창 클릭시 뒷 배경 어두워지는 것 막기
-                //alert.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-                // 대화창 제목 설정
-                alert.setTitle("로그아웃");
-
-                // 대화창 아이콘 설정
-                alert.setIcon(R.drawable.check_dialog_64);
-
-                // 대화창 배경 색 설정
-                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255,62,79,92)));
                 alert.show();
-
             }
         });
     }
@@ -141,18 +130,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            //정보를 받아와 firebaseAuthWithGoogle 에서 인증함
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
+                //Google SignIn 성공
                 Log.v("알림", "google sign 성공, FireBase와 Auth.");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-
-
             } else {
-                // Google Sign In failed, update UI appropriately
+               //Google SignIn 실패
                 Log.v("알림", result.isSuccess() +" Google Sign In failed. Because : " + result.getStatus().toString());
-
-                // ...
             }
         }
     }
@@ -163,15 +149,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.v("알림", "ONCOMPLETE");
+                        Log.v("알림", "Google Auth와 Firebase 통신");
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.v("알림", "!task.isSuccessful()");
+                            Log.v("알림", "Firebase 인증 실패");
                             Toast.makeText(LoginActivity.this, "인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         }else {
-                            Log.v("알림", "task.isSuccessful()");
+                            Log.v("알림", "Firebase 인증 성공");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             String cu = mAuth.getUid();
@@ -196,7 +182,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
 
-    }
+     }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.v("알림", "onConnectionFailed");
@@ -219,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             } else {
                                 setResult(0);
                             }
+                            //로그아웃 후 app 종료
                             finish();
                         }
                     });

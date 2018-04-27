@@ -1,9 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.example.ghd_t.myapplication.WriteClassActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/write_class_title"
+        android:textSize="15dp"
+        android:inputType="phone"
+        android:textColorHint="@color/black"
+        android:hint="글 제목을 입력해주세요."
+        android:textColor="@color/black"
+        android:maxLength="20"
+        android:background="@drawable/editbox2"
+        android:padding="8dp"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/write_class_content"
+        android:textSize="15dp"
+        android:inputType="phone"
+        android:textColorHint="@color/black"
+        android:hint="글 내용을 입력해주세요."
+        android:textColor="@color/black"
+        android:maxLength="20"
+        android:background="@drawable/editbox2"
+        android:padding="8dp"
+        />
+
+    <LinearLayout
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/maincolor"
+                android:text="인원"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"
+                android:layout_marginRight="10dp"/>
+            <EditText
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/write_class_person"
+                android:textSize="15dp"
+                android:inputType="phone"
+                android:textColorHint="@color/black"
+                android:hint="명"
+                android:textColor="@color/black"
+                android:maxLength="13"
+                android:background="@drawable/editbox"
+                android:padding="8dp"
+                android:layout_marginRight="10dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/maincolor"
+                android:text="요금"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"
+                android:layout_marginRight="10dp"/>
+            <Spinner
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_money_min"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/editbox"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/maincolor"
+                android:text="~"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"
+                android:layout_marginRight="10dp"/>
+            <Spinner
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_money_max"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/editbox"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/btn_write_class"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textColor="@color/black"
+        android:background="@drawable/btn_yellowcolor"
+        android:text="작성 완료"
+        />
+
+</LinearLayout>

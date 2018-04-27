@@ -8,7 +8,7 @@
                 android:width="2.3dp"
                 android:color="#DEDEDE" />
             <corners
-                android:radius="6dp" />
+                android:radius="0dp" />
         </shape>
     </item>
 
@@ -19,7 +19,7 @@
                 android:width="2.3dp"
                 android:color="#DEDEDE" />
             <corners
-                android:radius="6dp" />
+                android:radius="0dp" />
         </shape>
     </item>
 
@@ -30,7 +30,7 @@
                 android:width="2.3dp"
                 android:color="#DEDEDE" />
             <corners
-                android:radius="6dp" />
+                android:radius="0dp" />
         </shape>
     </item>
 
@@ -46,7 +46,7 @@
                 android:width="0.7dp"
                 android:color="#BDBDBD" />
             <corners
-                android:radius="6dp" />
+                android:radius="0dp" />
         </shape>
     </item>
 
