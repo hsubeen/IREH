@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -29,6 +30,9 @@ public class WriteClassActivity extends AppCompatActivity {
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private static final int CROP_IMAGE = 2;
+
+
+    private String outFilePath = Environment.getExternalStorageDirectory() + "/tmp.jpg";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,17 +69,20 @@ public class WriteClassActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // 사진 촬영 클릭
+                        Log.v("알림", "다이얼로그 > 사진촬영 선택");
                         takePhoto();
                     }
                 }).setNeutralButton("앨범선택",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int id) {
+                        Log.v("알림", "다이얼로그 > 앨범선택 선택");
                         //앨범에서 선택
                         selectAlbum();
                 }
                 }).setNegativeButton("취소   ",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        Log.v("알림", "다이얼로그 > 취소 선택");
                         // 취소 클릭. dialog 닫기.
                         dialog.cancel();
                     }
@@ -127,8 +134,8 @@ public class WriteClassActivity extends AppCompatActivity {
                 intent.setDataAndType(imgUri, "image/*");
 
                 //crop 할 이미지 크기 조정
-                intent.putExtra("outputX", 400);    //x축 크기
-                intent.putExtra("outputY", 400);    //y축 크기
+                intent.putExtra("outputX", 1000);    //x축 크기
+                intent.putExtra("outputY", 1000);    //y축 크기
                 intent.putExtra("aspectX", 1);      //x축 비율
                 intent.putExtra("aspectY",1);       //y축 비율
                 intent.putExtra("scale", true);
@@ -155,10 +162,13 @@ public class WriteClassActivity extends AppCompatActivity {
                 if(extras!=null){
 
                     //crop된 비트맵
+
                     Bitmap bitmap = extras.getParcelable("data");
 
                     //ImageView에 비트맵 설정
                     img1.setImageBitmap(bitmap);
+
+                    Log.v("알림", "ImageView에 로드 완료");
 
                     //crop된 이미지 갤러리에 저장
                     storeCropImage(bitmap,filePath);
