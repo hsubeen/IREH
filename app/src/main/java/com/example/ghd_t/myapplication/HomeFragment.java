@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         img = (ImageView) view.findViewById(R.id.home_image);
-
+        
         btn_gps = view.findViewById(R.id.gps);
         btn_gps.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,4 +14,19 @@
         <item name="android:typeface">monospace</item>
         <item name="android:background">@color/maincolor</item>
     </style>
+
+    <style name="CustomTextView" parent="@android:style/Widget.DeviceDefault.TextView">
+        <item name="android:fontFamily">@font/nanumsquareb</item>
+    </style>
+
+    <style name="CustomButton" parent="@android:style/Widget.DeviceDefault.Button">
+        <item name="android:fontFamily">@font/nanumsquareb</item>
+    </style>
+    <style name="CustomActionBar" parent="@android:style/Widget.DeviceDefault.ActionBar">
+        <item name="android:fontFamily">@font/nanumsquareb</item>
+    </style>
+
+    <style name="Custom" parent="@android:style/Theme.Dialog">
+        <item name="android:fontFamily">@font/nanumsquareb</item>
+    </style>
 </resources>
