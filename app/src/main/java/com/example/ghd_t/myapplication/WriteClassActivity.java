@@ -8,15 +8,23 @@ import android.net.Uri;
 import android.Manifest;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import java.io.BufferedOutputStream;
@@ -32,7 +40,10 @@ public class WriteClassActivity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
-
+    private Button btn_write_class;
+    private EditText write_class_title, write_class_content, write_class_person;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +72,33 @@ public class WriteClassActivity extends AppCompatActivity {
                 .check();
 
 
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = mAuth.getCurrentUser();
+
+
+
         spinner_money_min = findViewById(R.id.spinner_money_min);
         spinner_money_max = findViewById(R.id.spinner_money_max);
+
+        write_class_person = findViewById(R.id.write_class_person);
+        write_class_title = findViewById(R.id.write_class_title);
+        write_class_content = findViewById(R.id.write_class_content);
 
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
 
+        btn_write_class = findViewById(R.id.btn_write_class);
+        //작성 완료 버튼 클릭
+        btn_write_class.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //다이얼로그생성
+                makeConfirmDialog();
+            }
+        });
 
         //앨범선택, 사진촬영, 취소 다이얼로그 생성
         img1.setOnClickListener(new View.OnClickListener() {
@@ -228,4 +258,40 @@ public class WriteClassActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public void makeConfirmDialog(){
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
+        alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시하시겠습니까?").setCancelable(
+                false).setPositiveButton("네",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 네 클릭
+                        if(write_class_title.getText().length()==0
+                                || write_class_content.getText().length() == 0
+                                || write_class_person.getText().length() == 0){
+                            Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
+                        }else{
+                            //DB에 등록하기
+
+                            String cu = mAuth.getUid();
+                            String tmp ="임시유알엘";
+                            WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
+                                    write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
+                                    tmp,tmp,tmp,tmp);
+                            mDatabase.child("WriteClass").child(cu).setValue(writeClassData);
+                        }
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 아니오 클릭. dialog 닫기.
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alt_bld.create();
+
+
+        alert.show();
+    }
 }
