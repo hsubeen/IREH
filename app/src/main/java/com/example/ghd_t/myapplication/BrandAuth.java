@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -55,6 +56,25 @@ public class BrandAuth extends Activity{
         Log.v("알림","받은 데이터 : " + AddressData.getInstance().getAddress());
     }
 
+    //브랜드인증 글 작성 중 뒤로가기 버튼 눌렸을 때
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch(keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(BrandAuth.this,R.style.MyAlertDialogStyle);
+                alt_bld.setTitle("글을 작성중입니다.").setMessage("작성을 중지하시겠습니까?").setIcon(R.drawable.check_dialog_64).setCancelable(
+                        false).setPositiveButton("네",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //현재 액티비티 종료
+                                finish();
+                            }
+                        }).setNegativeButton("아니오", null);
+                AlertDialog alert = alt_bld.create();
+                alert.show();
+        }
+        return true;
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
