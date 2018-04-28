@@ -9,7 +9,7 @@
     tools:context="com.example.ghd_t.myapplication.WriteClassActivity">
 
     <LinearLayout
-        android:layout_weight="15"
+        android:layout_weight="14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -40,7 +40,7 @@
             />
 
     <LinearLayout
-        android:padding="15dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -99,7 +99,7 @@
                 android:paddingTop="10dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/maincolor"
-                android:text="~"
+                android:text=" ~"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:paddingBottom="8dp"
@@ -125,22 +125,22 @@
                 android:id="@+id/img1"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/temp"/>
+                android:src="@drawable/add"/>
             <ImageView
                 android:id="@+id/img2"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/temp"/>
+                android:src="@drawable/add"/>
             <ImageView
                 android:id="@+id/img3"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/temp"/>
+                android:src="@drawable/add"/>
             <ImageView
                 android:id="@+id/img4"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:src="@drawable/temp"/>
+                android:src="@drawable/add"/>
         </LinearLayout>
     </HorizontalScrollView>
 

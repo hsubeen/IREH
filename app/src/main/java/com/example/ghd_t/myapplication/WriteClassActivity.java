@@ -29,10 +29,9 @@ public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
     private Uri imgUri, photoURI, albumURI;
-    private String absolutePath,mCurrentPhotoPath;
+    private String mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
-    private static final int CROP_IMAGE = 2;
 
 
     @Override
@@ -194,7 +193,7 @@ public class WriteClassActivity extends AppCompatActivity {
         }
         switch (requestCode){
             case FROM_ALBUM : {
-                //imgUri = data.getData();
+                //앨범에서 가져오기
                 if(data.getData()!=null){
                     try{
                         File albumFile = null;
@@ -215,7 +214,7 @@ public class WriteClassActivity extends AppCompatActivity {
             }
 
             case FROM_CAMERA : {
-
+                //카메라 촬영
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
@@ -226,13 +225,6 @@ public class WriteClassActivity extends AppCompatActivity {
                 break;
             }
 
-            case CROP_IMAGE : {
-                galleryAddPic();
-                img1.setImageURI(albumURI);
-                Log.v("알림", "img1 이미지 셋팅 완료 " +albumURI);
-                break;
-
-            }
         }
     }
 
