@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.Manifest;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,13 +22,14 @@ import com.gun0912.tedpermission.TedPermission;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
-    private Uri imgUri;
-    private String absolutePath;
+    private Uri imgUri, photoURI, albumURI;
+    private String absolutePath,mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private static final int CROP_IMAGE = 2;
@@ -56,7 +58,7 @@ public class WriteClassActivity extends AppCompatActivity {
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
 
@@ -117,16 +119,48 @@ public class WriteClassActivity extends AppCompatActivity {
     //사진 찍기 클릭
     public void takePhoto(){
         // 촬영 후 이미지 가져옴
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String state = Environment.getExternalStorageState();
+        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        // 임시 파일 경로 생성
-        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-        imgUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),url));
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(intent.resolveActivity(getPackageManager())!=null){
+                File photoFile = null;
+                try{
+                    photoFile = createImageFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                if(photoFile!=null){
+                    Uri providerURI = FileProvider.getUriForFile(this,getPackageName(),photoFile);
+                    imgUri = providerURI;
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, providerURI);
+                    startActivityForResult(intent, FROM_CAMERA);
+                }
+            }
+        }else{
+            Log.v("알림", "저장공간에 접근 불가능");
+            return;
+        }
 
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imgUri);
-        startActivityForResult(intent, FROM_CAMERA);
     }
 
+    public File createImageFile() throws IOException{
+        String imgFileName = System.currentTimeMillis() + ".jpg";
+        File imageFile= null;
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
+
+
+        if(!storageDir.exists()){
+            Log.v("알림","storageDir 존재 x " + storageDir.toString());
+            storageDir.mkdirs();
+        }
+        Log.v("알림","storageDir 존재함 " + storageDir.toString());
+        imageFile = new File(storageDir,imgFileName);
+        mCurrentPhotoPath = imageFile.getAbsolutePath();
+
+        return imageFile;
+    }
 
     //앨범 선택 클릭
     public void selectAlbum(){
@@ -135,8 +169,21 @@ public class WriteClassActivity extends AppCompatActivity {
         //앨범 열기
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+
+        intent.setType("image/*");
+
         startActivityForResult(intent, FROM_ALBUM);
     }
+
+    public void galleryAddPic(){
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+        Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -147,102 +194,46 @@ public class WriteClassActivity extends AppCompatActivity {
         }
         switch (requestCode){
             case FROM_ALBUM : {
-                imgUri = data.getData();
-                Log.v("알림", "앨범 선택 " + imgUri.getPath().toString());
+                //imgUri = data.getData();
+                if(data.getData()!=null){
+                    try{
+                        File albumFile = null;
+                        albumFile = createImageFile();
+
+                        photoURI = data.getData();
+                        albumURI = Uri.fromFile(albumFile);
+
+                        galleryAddPic();
+                        img1.setImageURI(photoURI);
+                        //cropImage();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Log.v("알림","앨범에서 가져오기 에러");
+                    }
+                }
+                break;
             }
 
             case FROM_CAMERA : {
-                //이미지를 가져온 후 리사이즈할 이미지 크기 설정
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(imgUri, "image/*");
 
-                //crop 할 이미지 크기 조정
-                intent.putExtra("outputX", 1000);    //x축 크기
-                intent.putExtra("outputY", 1000);    //y축 크기
-                intent.putExtra("aspectX", 1);      //x축 비율
-                intent.putExtra("aspectY",1);       //y축 비율
-                intent.putExtra("scale", true);
-                intent.putExtra("return-data", true);
-
-                startActivityForResult(intent, CROP_IMAGE);
-                Log.v("알림", "사진촬영 후 CROP");
+                try{
+                    Log.v("알림", "FROM_CAMERA 처리");
+                    galleryAddPic();
+                    img1.setImageURI(imgUri);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             }
 
             case CROP_IMAGE : {
+                galleryAddPic();
+                img1.setImageURI(albumURI);
+                Log.v("알림", "img1 이미지 셋팅 완료 " +albumURI);
+                break;
 
-                //크롭 후 이미지 받는 부분
-                if(resultCode != RESULT_OK){
-                    return;
-                }
-
-                final Bundle extras = data.getExtras();
-
-                //crop한 이미지 저장 위한 경로
-                String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/IREH/" + System.currentTimeMillis() + ".jpg";
-
-                if(extras!=null){
-
-                    //crop된 비트맵
-                    //String c = imgUri.getPath();
-                    //Bitmap bitmap = BitmapFactory.decodeFile(c);
-                   // img1.setImageBitmap(bitmap);
-
-
-
-                    Bitmap bitmap = extras.getParcelable("data");
-
-                    //ImageView에 비트맵 설정
-                    img1.setImageBitmap(bitmap);
-
-                    Log.v("알림", "ImageView에 로드 완료");
-
-                    //crop된 이미지 갤러리에 저장
-                    storeCropImage(bitmap,filePath);
-                    absolutePath = filePath;
-                    break;
-                }
-
-                // 카메라로 촬영한 임시 파일 삭제
-                File file = new File(imgUri.getPath());
-                if(file.exists()){
-                    file.delete();
-                }
             }
         }
     }
-
-    //crop한 비트맵 저장
-    private void storeCropImage(Bitmap bitmap, String filePath){
-        //String directory_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IREH";
-        String directory_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/IREH";
-        File directory_IREH = new File(directory_path);
-
-        if(!directory_IREH.exists()){
-            //IREH폴더 없을 시 생성
-            directory_IREH.mkdir();
-        }
-
-        File copyFile = new File(filePath);
-        BufferedOutputStream out = null;
-
-        try{
-            if(!copyFile.createNewFile()){
-                Log.v("알림", "file already exists");
-            }
-            out = new BufferedOutputStream(new FileOutputStream(copyFile));
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
-
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(copyFile)));
-
-            out.flush();
-            out.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
 
 }

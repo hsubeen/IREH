@@ -107,6 +107,7 @@ public class HomeFragment extends Fragment {
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
+        spinner_field.setAdapter(adapter);
 
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
