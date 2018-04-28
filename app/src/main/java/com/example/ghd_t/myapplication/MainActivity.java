@@ -1,6 +1,8 @@
 package com.example.ghd_t.myapplication;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -11,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +42,25 @@ public class MainActivity extends FragmentActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch(keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this,R.style.MyAlertDialogStyle);
+                alt_bld.setTitle("IREH").setMessage("종료하시겠습니까?").setIcon(R.drawable.check_dialog_64).setCancelable(
+                        false).setPositiveButton("네",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //앱 종료
+                                moveTaskToBack(true);
+                                finish();
+                            }
+                        }).setNegativeButton("아니오", null);
+                AlertDialog alert = alt_bld.create();
+                alert.show();
+        }
+        return true;
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
     private DatabaseReference mDatabase;
-
+    private ProgressDialog progressDialog;
     @Override
     public void onStart() {
         super.onStart();
@@ -83,8 +84,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 public void onClick(View view) {
                     Log.v("알림", "구글 LOGIN");
                     //로그인버튼 클릭시, 로그인되어있는 계정 그대로
+
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+
                 }
             });
         }else {
@@ -133,6 +137,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             //정보를 받아와 firebaseAuthWithGoogle 에서 인증함
             if (result.isSuccess()) {
                 //Google SignIn 성공
+
+                progressDialog = new ProgressDialog(LoginActivity.this,R.style.MyAlertDialogStyle);
+                progressDialog.setMessage("환영합니다");
+                progressDialog.show();
+
                 Log.v("알림", "google sign 성공, FireBase와 Auth.");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
@@ -157,6 +166,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.v("알림", "Firebase 인증 실패");
                             Toast.makeText(LoginActivity.this, "인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         }else {
+
+
                             Log.v("알림", "Firebase 인증 성공");
                             FirebaseUser user = mAuth.getCurrentUser();
 
@@ -175,6 +186,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             UserData userdata = new UserData(name, photoUrl);
                             mDatabase.child("Users").child(cu).setValue(userdata);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
                             startActivity(intent);
                             Toast.makeText(LoginActivity.this, "FireBase 아이디 생성이 완료 되었습니다", Toast.LENGTH_SHORT).show();
                         }

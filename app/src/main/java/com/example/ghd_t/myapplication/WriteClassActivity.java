@@ -15,6 +15,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,6 +53,9 @@ public class WriteClassActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseStorage storage;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +82,11 @@ public class WriteClassActivity extends AppCompatActivity {
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
-        //Firebase
+        //FOR Firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-
 
 
         spinner_money_min = findViewById(R.id.spinner_money_min);
@@ -103,7 +106,7 @@ public class WriteClassActivity extends AppCompatActivity {
         btn_write_class.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //다이얼로그생성
+                //업로드 하시겠습니까? 다이얼로그 생성
                 makeConfirmDialog();
             }
         });
@@ -151,6 +154,27 @@ public class WriteClassActivity extends AppCompatActivity {
                 });
         AlertDialog alert = alt_bld.create();
         alert.show();
+    }
+
+
+    //모집 글 작성 중 뒤로가기 버튼 눌렸을 때
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        switch(keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this,R.style.MyAlertDialogStyle);
+                alt_bld.setTitle("글을 작성중입니다.").setMessage("작성을 중지하시겠습니까?").setIcon(R.drawable.check_dialog_64).setCancelable(
+                        false).setPositiveButton("네",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //현재 액티비티 종료
+                                finish();
+                            }
+                        }).setNegativeButton("아니오", null);
+                AlertDialog alert = alt_bld.create();
+                alert.show();
+        }
+        return true;
+
     }
 
     //사진 찍기 클릭
@@ -284,7 +308,7 @@ public class WriteClassActivity extends AppCompatActivity {
                                 || write_class_content.getText().length() == 0
                                 || write_class_person.getText().length() == 0){
                             Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
-                        }else{
+                        }else {
                             //DB에 등록하기
 
                             final String cu = mAuth.getUid();
@@ -299,7 +323,7 @@ public class WriteClassActivity extends AppCompatActivity {
                             uploadTask = storageRef.putFile(file);
 
 
-                            final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this);
+                            final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
                             progressDialog.setTitle("업로드중...");
                             progressDialog.show();
 
