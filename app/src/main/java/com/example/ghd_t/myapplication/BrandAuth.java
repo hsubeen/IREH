@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -119,6 +121,14 @@ public class BrandAuth extends Activity{
                     public void onClick(DialogInterface dialog, int id) {
                         // 네 클릭
 
+                        if(brand_name.getText().length()==0
+                                || brand_web.getText().length() == 0
+                                || brand_phone.getText().length() == 0
+                                || brand_address_content.getText().length() == 0
+                                || spinner_field.getSelectedItemId() == 0){
+                            Log.v("알림","선택된 spinner item id : " + spinner_field.getSelectedItemId());
+                            Toast.makeText(BrandAuth.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
+                        }else{
                         // 현재 로그인한 사용자의 Uid
                         String cu = mAuth.getUid();
                         // 작성한 클래스정보를 RegClassData에 담기
@@ -129,6 +139,7 @@ public class BrandAuth extends Activity{
                         mDatabase.child("Regclass").child(cu).setValue(regClassData);
                         // 등록완료 알림창 발생
                         makeConfirmDialog();
+                        }
                     }
                 }).setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {

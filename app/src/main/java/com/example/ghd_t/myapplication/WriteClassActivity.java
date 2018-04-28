@@ -324,7 +324,7 @@ public class WriteClassActivity extends AppCompatActivity {
 
 
                             final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
-                            progressDialog.setTitle("업로드중...");
+                            progressDialog.setMessage("업로드중...");
                             progressDialog.show();
 
                             // Register observers to listen for when the download is done or if it fails
