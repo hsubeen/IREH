@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
-    private Uri imgUri, photoURI, albumURI;
+    private Uri imgUri, photoURI, albumURI, downloadUrl;
     private String mCurrentPhotoPath, img1Uri;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
@@ -285,14 +286,22 @@ public class WriteClassActivity extends AppCompatActivity {
                             Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else{
                             //DB에 등록하기
-                            String cu = mAuth.getUid();
+
+                            final String cu = mAuth.getUid();
                             //1. 사진을 storage에 저장하고 그 url을 알아내야함..
                             String filename = cu + "_" + System.currentTimeMillis();
-                            StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("images/" + filename);
+                            StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
                             UploadTask uploadTask;
+
+                            //카메라에서 방금 찍은 사진 Uri 구하여 Storage에 저장
                             Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
                             //StorageReference riversRef = storageRef.child("Pictures/"+file.getLastPathSegment());
                             uploadTask = storageRef.putFile(file);
+
+
+                            final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this);
+                            progressDialog.setTitle("업로드중...");
+                            progressDialog.show();
 
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -305,21 +314,28 @@ public class WriteClassActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.v("알림", "사진 업로드 성공");
+
+                                    downloadUrl = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공 " + downloadUrl);
+
+                                    long ct = System.currentTimeMillis();
+                                    //현재시간
+                                    String ct_str = Long.toString(ct);
+
+                                    String tmp ="임시유알엘";
+                                    WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
+                                            write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
+                                            downloadUrl.toString(),tmp,tmp,tmp);
+                                    mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
+                                    Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
+                                    progressDialog.dismiss();
+                                    Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    Log.v("알림","작성 완료 homeFragment로 이동");
+
                                 }
                             });
 
-
-                            long ct = System.currentTimeMillis();
-                            //현재시간
-                            String ct_str = Long.toString(ct);
-
-                            String tmp ="임시유알엘";
-                            WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
-                                    write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
-                                    photoURI.toString(),tmp,tmp,tmp);
-                            mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
                         }
                     }
                 }).setNegativeButton("아니오",
