@@ -9,6 +9,7 @@ import android.Manifest;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,10 +22,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import java.io.BufferedOutputStream;
@@ -37,14 +43,14 @@ public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
     private Uri imgUri, photoURI, albumURI;
-    private String mCurrentPhotoPath;
+    private String mCurrentPhotoPath, img1Uri;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private Button btn_write_class;
     private EditText write_class_title, write_class_content, write_class_person;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-
+    private FirebaseStorage storage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +77,10 @@ public class WriteClassActivity extends AppCompatActivity {
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
 
-
+        //Firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        storage = FirebaseStorage.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
 
@@ -234,6 +241,9 @@ public class WriteClassActivity extends AppCompatActivity {
 
                         galleryAddPic();
                         img1.setImageURI(photoURI);
+
+                        img1Uri = photoURI.toString();
+                        Log.v("알림", "FROM_ALBUM : imgUri = " + img1Uri);
                         //cropImage();
                     }catch (Exception e){
                         e.printStackTrace();
@@ -249,6 +259,8 @@ public class WriteClassActivity extends AppCompatActivity {
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
                     img1.setImageURI(imgUri);
+                    img1Uri = img1Uri;
+                    Log.v("알림", "FROM_CAMERA : imgUri = " + img1Uri);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -273,13 +285,41 @@ public class WriteClassActivity extends AppCompatActivity {
                             Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else{
                             //DB에 등록하기
-
                             String cu = mAuth.getUid();
+                            //1. 사진을 storage에 저장하고 그 url을 알아내야함..
+                            String filename = cu + "_" + System.currentTimeMillis();
+                            StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("images/" + filename);
+                            UploadTask uploadTask;
+                            Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
+                            //StorageReference riversRef = storageRef.child("Pictures/"+file.getLastPathSegment());
+                            uploadTask = storageRef.putFile(file);
+
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("알림", "사진 업로드 실패");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공");
+                                }
+                            });
+
+
+                            long ct = System.currentTimeMillis();
+                            //현재시간
+                            String ct_str = Long.toString(ct);
+
                             String tmp ="임시유알엘";
                             WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
                                     write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
-                                    tmp,tmp,tmp,tmp);
-                            mDatabase.child("WriteClass").child(cu).setValue(writeClassData);
+                                    photoURI.toString(),tmp,tmp,tmp);
+                            mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
                         }
                     }
                 }).setNegativeButton("아니오",
