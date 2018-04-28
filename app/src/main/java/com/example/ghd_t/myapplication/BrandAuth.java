@@ -5,12 +5,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 public class BrandAuth extends Activity{
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private TextView brand_address_content;
+    private TextView brand_address_content, brandname, brandweb, brandphone, brandaddr, brandfield, info_text;
     private EditText brand_name, brand_web, brand_phone;
     private Button brand_address,send_class_info;
     private Spinner spinner_field;
@@ -60,6 +65,12 @@ public class BrandAuth extends Activity{
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        brandname = (TextView) findViewById(R.id.brand_name_text);
+        brandweb = (TextView) findViewById(R.id.brand_web_text);
+        brandaddr = (TextView)findViewById(R.id.addr_text);
+        brandfield = (TextView) findViewById(R.id.field_text);
+        brandphone = (TextView) findViewById(R.id.phone_text);
+        info_text = (TextView) findViewById(R.id.info_text);
 
         brand_name = (EditText) findViewById(R.id.edit_brand_name);
         brand_web = (EditText) findViewById(R.id.edit_brand_web);
@@ -67,11 +78,49 @@ public class BrandAuth extends Activity{
         brand_address_content = (TextView) findViewById(R.id.address);
         brand_address = (Button) findViewById(R.id.edit_address);
         send_class_info = (Button) findViewById(R.id.btn_send_class_info);
-
-        // 분야 선택하는 Spinner선언과 event listener 구현
         spinner_field = (Spinner) findViewById(R.id.spinner_field);
+
+        //폰트적용
+        Typeface typeface = ResourcesCompat.getFont(this,R.font.nanumsquarel);
+        brand_name.setTypeface(typeface);
+        brand_web.setTypeface(typeface);
+        brand_phone.setTypeface(typeface);
+        brand_address_content.setTypeface(typeface);
+        brand_address.setTypeface(typeface);
+        send_class_info.setTypeface(typeface);
+
+        typeface = ResourcesCompat.getFont(this,R.font.nanumsquareb);
+        brandname.setTypeface(typeface);
+        brandweb.setTypeface(typeface);
+        brandphone.setTypeface(typeface);
+        brandaddr.setTypeface(typeface);
+        brandfield.setTypeface(typeface);
+        info_text.setTypeface(typeface);
+
+
+        // 분야 선택하는 Spinner event listener 구현
         String[] str = getResources().getStringArray(R.array.spinnerArray);
-        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(BrandAuth.this,R.layout.spinner_item,str);
+        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(BrandAuth.this,R.layout.spinner_item,str){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                Typeface externalFont=Typeface.createFromAsset(getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+
+                return v;
+            }
+            public View getDropDownView(int position,  View convertView,  ViewGroup parent) {
+                View v =super.getDropDownView(position, convertView, parent);
+
+                Typeface externalFont=Typeface.createFromAsset(getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+                v.setBackgroundColor(Color.WHITE);
+                ((TextView) v).setTextColor(Color.BLACK);
+
+                return v;
+            }
+        };
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
 
