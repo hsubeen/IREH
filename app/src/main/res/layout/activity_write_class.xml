@@ -28,6 +28,7 @@
             />
 
         <EditText
+            android:fontFamily="@font/nanumsquarel"
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:id="@+id/write_class_content"
@@ -99,7 +100,7 @@
                 android:paddingTop="10dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/maincolor"
-                android:text=" ~"
+                android:text="  ~"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:paddingBottom="8dp"
