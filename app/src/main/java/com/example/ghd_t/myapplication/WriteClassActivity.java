@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
-    private Uri imgUri, photoURI, albumURI, downloadUrl, filePath;
+    private Uri imgUri, photoURI, downloadUrl;
     private String mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
@@ -54,7 +54,7 @@ public class WriteClassActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseStorage storage;
-
+    private int flag = -1, containerImageView = -1;
 
 
     @Override
@@ -116,10 +116,38 @@ public class WriteClassActivity extends AppCompatActivity {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               containerImageView = 1;
                makeDialog();
             }
         });
+
+        //앨범선택, 사진촬영, 취소 다이얼로그 생성
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                containerImageView = 2;
+                makeDialog();
+            }
+        });
+
+        //앨범선택, 사진촬영, 취소 다이얼로그 생성
+        img3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                containerImageView = 3;
+                makeDialog();
+            }
+        });
+
+        //앨범선택, 사진촬영, 취소 다이얼로그 생성
+        img4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                containerImageView = 4;
+                makeDialog();
+            }
+        });
+
         String[] str = getResources().getStringArray(R.array.spinnerArray_forWrite_money);
         final ArrayAdapter<String> adapter= new ArrayAdapter<String>(WriteClassActivity.this,R.layout.spinner_item,str);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -131,17 +159,19 @@ public class WriteClassActivity extends AppCompatActivity {
     private void makeDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this,R.style.MyAlertDialogStyle);
         alt_bld.setTitle("사진 업로드").setIcon(R.drawable.check_dialog_64).setCancelable(
-                false).setPositiveButton("사진촬영",
+                true).setPositiveButton("사진촬영",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // 사진 촬영 클릭
                         Log.v("알림", "다이얼로그 > 사진촬영 선택");
+                        flag = 0;
                         takePhoto();
                     }
                 }).setNeutralButton("앨범선택",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int id) {
                         Log.v("알림", "다이얼로그 > 앨범선택 선택");
+                        flag = 1;
                         //앨범에서 선택
                         selectAlbum();
                 }
@@ -175,14 +205,12 @@ public class WriteClassActivity extends AppCompatActivity {
                 alert.show();
         }
         return true;
-
     }
 
     //사진 찍기 클릭
     public void takePhoto(){
         // 촬영 후 이미지 가져옴
         String state = Environment.getExternalStorageState();
-        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if(Environment.MEDIA_MOUNTED.equals(state)){
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -206,10 +234,10 @@ public class WriteClassActivity extends AppCompatActivity {
         }
 
     }
-    File imageFile;
+
     public File createImageFile() throws IOException{
         String imgFileName = System.currentTimeMillis() + ".jpg";
-        imageFile= null;
+        File imageFile= null;
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
 
         if(!storageDir.exists()){
@@ -231,9 +259,7 @@ public class WriteClassActivity extends AppCompatActivity {
         //앨범 열기
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-
         intent.setType("image/*");
-
         startActivityForResult(intent, FROM_ALBUM);
     }
 
@@ -259,19 +285,23 @@ public class WriteClassActivity extends AppCompatActivity {
                 //앨범에서 가져오기
                 if(data.getData()!=null){
                     try{
-                        //File albumFile = null;
-                        //albumFile = createImageFile();
-
                         photoURI = data.getData();
-                        //albumURI = Uri.fromFile(albumFile);
-
-                        //galleryAddPic();
-                        //img1.setImageURI(photoURI);
-
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
-                        img1.setImageBitmap(bitmap);
-
-                        Log.v("알림", "FROM_ALBUM : imgURI = " + photoURI);
+                        switch (containerImageView){
+                            case 1:
+                                img1.setImageBitmap(bitmap);
+                                break;
+                            case 2:
+                                img2.setImageBitmap(bitmap);
+                                break;
+                            case 3:
+                                img3.setImageBitmap(bitmap);
+                                break;
+                            case 4:
+                                img4.setImageBitmap(bitmap);
+                                break;
+                        }
+                        //img1.setImageBitmap(bitmap);
                     }catch (Exception e){
                         e.printStackTrace();
                         Log.v("알림","앨범에서 가져오기 에러");
@@ -285,16 +315,28 @@ public class WriteClassActivity extends AppCompatActivity {
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
-                    img1.setImageURI(imgUri);
+
+                    switch (containerImageView){
+                        case 1:
+                            img1.setImageURI(imgUri);
+                            break;
+                        case 2:
+                            img2.setImageURI(imgUri);
+                            break;
+                        case 3:
+                            img3.setImageURI(imgUri);
+                            break;
+                        case 4:
+                            img4.setImageURI(imgUri);
+                            break;
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
                 break;
             }
-
         }
     }
-
 
     public void makeConfirmDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
@@ -309,18 +351,20 @@ public class WriteClassActivity extends AppCompatActivity {
                             Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else {
                             //DB에 등록하기
-
                             final String cu = mAuth.getUid();
-                            //1. 사진을 storage에 저장하고 그 url을 알아내야함..
                             String filename = cu + "_" + System.currentTimeMillis();
                             StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
 
                             UploadTask uploadTask;
-                            //카메라에서 방금 찍은 사진 Uri 구하여 Storage에 저장
-                            //Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
-                            uploadTask = storageRef.putFile(photoURI);
-
-                            Log.v("알림", "mCurrentPhotoPath = "+ mCurrentPhotoPath);
+                            Uri file = null;
+                            if(flag ==0){
+                                //사진촬영
+                                 file = Uri.fromFile(new File(mCurrentPhotoPath));
+                            }else if(flag==1){
+                                //앨범선택
+                               file = photoURI;
+                            }
+                            uploadTask = storageRef.putFile(file);
 
                             final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
                             progressDialog.setMessage("업로드중...");
@@ -345,21 +389,20 @@ public class WriteClassActivity extends AppCompatActivity {
                                     long ct = System.currentTimeMillis();
                                     //현재시간
                                     String ct_str = Long.toString(ct);
-
                                     String tmp ="임시유알엘";
                                     WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
                                             write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
                                             downloadUrl.toString(),tmp,tmp,tmp);
                                     mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
                                     Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
+
+                                    //저장 성공 후 프로그레스 창 종료
                                     progressDialog.dismiss();
                                     Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     Log.v("알림","작성 완료 homeFragment로 이동");
-
                                 }
                             });
-
                         }
                     }
                 }).setNegativeButton("아니오",
@@ -370,8 +413,6 @@ public class WriteClassActivity extends AppCompatActivity {
                     }
                 });
         AlertDialog alert = alt_bld.create();
-
-
         alert.show();
     }
 }
