@@ -102,13 +102,52 @@ public class RegClassFragment extends Fragment {
             }
         });
 
+
+        /*
+*
+* mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
+        mDatabase2.child(cu).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
+                title = dataSnapshot.child("title").getValue(String.class);
+                contents = dataSnapshot.child("contents").getValue(String.class);
+                money_min = dataSnapshot.child("money_min").getValue(String.class);
+                money_max = dataSnapshot.child("money_max").getValue(String.class);
+
+
+                Log.v("알림", "title " + title);
+                Log.v("알림", "contents " + contents);
+                Log.v("알림", "money_min " + money_min);
+                Log.v("알림", "money_max " + money_max);
+                if(flag==1)
+                    makeData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("에러", "Read failed");
+            }
+        });
+*/
+
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
         mDatabase2.child(cu).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
+                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
 
+                title = dataSnapshot.child("title").getValue(String.class);
+                contents = dataSnapshot.child("contents").getValue(String.class);
+                money_min = dataSnapshot.child("money_min").getValue(String.class);
+                money_max = dataSnapshot.child("money_max").getValue(String.class);
+
+
+                Log.v("알림", "title " + title);
+                Log.v("알림", "contents " + contents);
+                Log.v("알림", "money_min " + money_min);
+                Log.v("알림", "money_max " + money_max);
             }
 
             @Override

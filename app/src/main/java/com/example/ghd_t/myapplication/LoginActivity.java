@@ -145,6 +145,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.v("알림", "google sign 성공, FireBase와 Auth.");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
             } else {
                //Google SignIn 실패
                 Log.v("알림", result.isSuccess() +" Google Sign In failed. Because : " + result.getStatus().toString());
@@ -182,7 +183,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.v("알림", "유저 이름 " + name);
                             Log.v("알림", "유저 사진 " + photoUrl);
                             Log.v("알림", "유저 폰 " + phone);
-
+                            //환영합니다 창 삭제
+                            progressDialog.dismiss();
                             UserData userdata = new UserData(name, photoUrl);
                             mDatabase.child("Users").child(cu).setValue(userdata);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
