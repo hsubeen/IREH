@@ -84,6 +84,9 @@ public class RegClassFragment extends Fragment {
                 phone = dataSnapshot.child("phone").getValue(String.class);
                 weburl = dataSnapshot.child("weburl").getValue(String.class);
 
+                //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+                String address_arr[] = address.split(" ");
+                address = address_arr[1] + " " + address_arr[2];
                 Log.v("알림", "address " + address);
                 Log.v("알림", "brandname " + brandname);
                 Log.v("알림", "field " + field);
