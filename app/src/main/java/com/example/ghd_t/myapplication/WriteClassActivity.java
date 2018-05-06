@@ -300,7 +300,7 @@ public class WriteClassActivity extends AppCompatActivity {
         contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
-        Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"사진이 갤러리에 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -527,7 +527,7 @@ public class WriteClassActivity extends AppCompatActivity {
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
             alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시했습니다.").setCancelable(
                     false);
-            AlertDialog alert = alt_bld.create();
+            final AlertDialog alert = alt_bld.create();
             alert.show();
 
             new Handler().postDelayed(new Runnable()
@@ -537,9 +537,11 @@ public class WriteClassActivity extends AppCompatActivity {
                     // DB등록 성공 1.5초 후 MainActivity로 전환
                     Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
                     Log.v("알림","클래스 모집 글 게시 완료, MainActivity로 이동");
+                    alert.dismiss();
                     startActivity(intent);
                 }
             }, 1500);
+
         }else{
             Log.v("알림", "NULL인 항목이 있음 " + img1.getDrawable());
             if(flag[1]==-1 || flag[2] ==-1 || flag[3]==-1 || flag[4] == -1){
