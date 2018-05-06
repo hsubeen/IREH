@@ -70,10 +70,23 @@
 
                 <TextView
                     android:textColor="@color/black"
-                    android:id="@+id/brand_priceinfo"
+                    android:id="@+id/brand_priceinfo_min"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="80,000~" />
+                    android:text="80,000" />
+
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="~" />
+
+                <TextView
+                    android:textColor="@color/black"
+                    android:id="@+id/brand_priceinfo_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="80,000" />
             </LinearLayout>
 
         </LinearLayout>

@@ -62,14 +62,15 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_title = (TextView) view.findViewById(R.id.brand_title);
         final TextView brand_areaname = (TextView) view.findViewById(R.id.brand_areaname);
         final TextView brand_info = (TextView) view.findViewById(R.id.brand_info);
-        final TextView brand_priceinfo = (TextView) view.findViewById(R.id.brand_priceinfo);
-
+        final TextView brand_priceinfo_min = (TextView) view.findViewById(R.id.brand_priceinfo_min);
+        final TextView brand_priceinfo_max = (TextView) view.findViewById(R.id.brand_priceinfo_max);
 
         brand_photo.setImageDrawable(listviewitem.getIcon());
         brand_title.setText(listviewitem.getBrand_title());
         brand_areaname.setText(listviewitem.getBrand_areaname());
         brand_info.setText(listviewitem.getBrand_fieldname());
-        brand_priceinfo.setText(listviewitem.getBrand_priceinfo());
+        brand_priceinfo_min.setText(listviewitem.getBrand_priceinfo_min());
+        brand_priceinfo_max.setText(listviewitem.getBrand_priceinfo_max());
 
         // layout 자체에 대한 클릭 이벤트.
         view.setOnClickListener(new View.OnClickListener(){

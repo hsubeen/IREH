@@ -46,7 +46,7 @@ public class RegClassFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase1, mDatabase2;
     private Button btn_write_class;
-    private String address,brandname,field,phone,weburl;
+    private String address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_brandlist_1,data_brandlist_2,data_brandlist_3;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
@@ -87,12 +87,13 @@ public class RegClassFragment extends Fragment {
                 //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
                 String address_arr[] = address.split(" ");
                 address = address_arr[1] + " " + address_arr[2];
+
                 Log.v("알림", "address " + address);
                 Log.v("알림", "brandname " + brandname);
                 Log.v("알림", "field " + field);
                 Log.v("알림", "phone " + phone);
                 Log.v("알림", "weburl " + weburl);
-                makeBrandData();
+                makeData();
             }
 
             @Override
@@ -148,18 +149,16 @@ public class RegClassFragment extends Fragment {
         return view;
     }
 
-    void makeBrandData(){
+    void makeData(){
         Drawable temp = getResources().getDrawable(R.drawable.temp);
-        data_brandlist_1 = new BrandListItemData(temp, brandname, address, "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000~" );
-        data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000");
-        data_brandlist_3 = new BrandListItemData(temp, "브레드엔케이크","서울시 양천구","빵만들러와요!", "20,000~");
+        data_brandlist_1 = new BrandListItemData(temp, brandname, address, "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000" ,"90,000");
+        data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000","90,000");
+        data_brandlist_3 = new BrandListItemData(temp, "브레드엔케이크","서울시 양천구","빵만들러와요!", "20,000","90,000");
 
         data_brandlist.add(data_brandlist_1);
         data_brandlist.add(data_brandlist_2);
         data_brandlist.add(data_brandlist_3);
-
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
-
     }
 }
