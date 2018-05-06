@@ -87,7 +87,6 @@ public class WriteClassActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
 
 
         spinner_money_min = findViewById(R.id.spinner_money_min);
@@ -541,13 +540,11 @@ public class WriteClassActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }, 1500);
-
         }else{
             Log.v("알림", "NULL인 항목이 있음 ");
             //progressDialog.dismiss();
             Toast.makeText(WriteClassActivity.this, "서버에 사진을 업로드중입니다. 잠시 후 시도해주세요.", Toast.LENGTH_LONG).show();
         }
-
     }
 
     public void makeConfirmDialog(){

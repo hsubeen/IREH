@@ -65,11 +65,11 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_priceinfo = (TextView) view.findViewById(R.id.brand_priceinfo);
 
 
-        brand_photo.setImageDrawable(data.get(i).getIcon());
-        brand_title.setText(data.get(i).getBrand_title());
-        brand_areaname.setText(data.get(i).getBrand_areaname());
-        brand_info.setText(data.get(i).getBrand_fieldname());
-        brand_priceinfo.setText(data.get(i).getBrand_priceinfo());
+        brand_photo.setImageDrawable(listviewitem.getIcon());
+        brand_title.setText(listviewitem.getBrand_title());
+        brand_areaname.setText(listviewitem.getBrand_areaname());
+        brand_info.setText(listviewitem.getBrand_fieldname());
+        brand_priceinfo.setText(listviewitem.getBrand_priceinfo());
 
         // layout 자체에 대한 클릭 이벤트.
         view.setOnClickListener(new View.OnClickListener(){
@@ -82,7 +82,6 @@ public class ListAdapterHomeBrand extends BaseAdapter{
                 v.getContext().startActivity(new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
         });
-
 
         return view;
     }
