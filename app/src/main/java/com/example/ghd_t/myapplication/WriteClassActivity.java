@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.Manifest;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -260,6 +261,7 @@ public class WriteClassActivity extends AppCompatActivity {
 
     }
 
+    //사진 새로운 이미지로 만들기
     public File createImageFile() throws IOException{
         String imgFileName = System.currentTimeMillis() + ".jpg";
         File imageFile= null;
@@ -289,6 +291,7 @@ public class WriteClassActivity extends AppCompatActivity {
         startActivityForResult(intent, FROM_ALBUM);
     }
 
+    //촬영한 사진 설정한 경로에 저장하기
     public void galleryAddPic(){
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File  f = null;
@@ -306,7 +309,7 @@ public class WriteClassActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
+        //DB업로드 절차
         final String cu = mAuth.getUid();
         String filename = cu + "_" + System.currentTimeMillis();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
@@ -322,10 +325,13 @@ public class WriteClassActivity extends AppCompatActivity {
                 if(data.getData()!=null){
                     try{
                         Bitmap bitmap;
+                        //받은 URI를 photoURI에 저장 한 후, Bitmap을 받아 각 이미지뷰에 설정.
                         photoURI = data.getData();
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
                         file = photoURI;
                         uploadTask = storageRef.putFile(file);
+
+                        //이미지뷰에 따라 처리
                         switch (containerImageView){
                             case 1:
                                 img1.setImageBitmap(bitmap);
@@ -412,10 +418,12 @@ public class WriteClassActivity extends AppCompatActivity {
                 //카메라 촬영
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
+                    //촬영한 사진 갤러리에 저장
                     galleryAddPic();
                     file = Uri.fromFile(new File(mCurrentPhotoPath));
                     uploadTask = storageRef.putFile(file);
 
+                    //이미지뷰에 따라 처리
                     switch (containerImageView){
                         case 1:
                             img1.setImageURI(imgUri);
@@ -498,11 +506,12 @@ public class WriteClassActivity extends AppCompatActivity {
         }
     }
 
+    //입력한 모든 정보를 한번에 DB로 전송 -> 모집 글 작성 완료
     public void sendDB(){
         final String cu = mAuth.getUid();
-        final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
-        progressDialog.setMessage("업로드중...");
-        progressDialog.show();
+        //final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
+        //progressDialog.setMessage("업로드중...");
+        //progressDialog.show();
 
         long ct = System.currentTimeMillis();
         //현재시간
@@ -514,15 +523,29 @@ public class WriteClassActivity extends AppCompatActivity {
                     downloadUrl1.toString(),downloadUrl2.toString(),downloadUrl3.toString(),downloadUrl4.toString());
             mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
             Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
-            //저장 성공 후 프로그레스 창 종료
-            progressDialog.dismiss();
-            Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
-            startActivity(intent);
-            Log.v("알림","작성 완료 homeFragment로 이동");
+
+
+            AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
+            alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시했습니다.").setCancelable(
+                    false);
+            AlertDialog alert = alt_bld.create();
+            alert.show();
+
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override public void run()
+                {
+                    // DB등록 성공 1.5초 후 MainActivity로 전환
+                    Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
+                    Log.v("알림","클래스 모집 글 게시 완료, MainActivity로 이동");
+                    startActivity(intent);
+                }
+            }, 1500);
+
         }else{
             Log.v("알림", "NULL인 항목이 있음 ");
-            progressDialog.dismiss();
-            Toast.makeText(WriteClassActivity.this, "모든 사진을 업로드해주세요", Toast.LENGTH_LONG).show();
+            //progressDialog.dismiss();
+            Toast.makeText(WriteClassActivity.this, "서버에 사진을 업로드중입니다. 잠시 후 시도해주세요.", Toast.LENGTH_LONG).show();
         }
 
     }
