@@ -46,7 +46,7 @@ public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
     private Uri imgUri, photoURI, downloadUrl1, downloadUrl2, downloadUrl3,downloadUrl4;
-    private String mCurrentPhotoPath1, mCurrentPhotoPath2,mCurrentPhotoPath3,mCurrentPhotoPath4;
+    private String mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private Button btn_write_class;
@@ -273,20 +273,8 @@ public class WriteClassActivity extends AppCompatActivity {
         Log.v("알림","storageDir 존재함 " + storageDir.toString());
         imageFile = new File(storageDir,imgFileName);
 
-        switch (containerImageView){
-            case 1:
-                mCurrentPhotoPath1 = imageFile.getAbsolutePath();
-                break;
-            case 2:
-                mCurrentPhotoPath2 = imageFile.getAbsolutePath();
-                break;
-            case 3:
-                mCurrentPhotoPath3 = imageFile.getAbsolutePath();
-                break;
-            case 4:
-                mCurrentPhotoPath4 = imageFile.getAbsolutePath();
-                break;
-        }
+        mCurrentPhotoPath = imageFile.getAbsolutePath();
+
         return imageFile;
     }
 
@@ -303,31 +291,12 @@ public class WriteClassActivity extends AppCompatActivity {
 
     public void galleryAddPic(){
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f1, f2, f3,f4 = null;
-        Uri contentUri1, contentUri2, contentUri3,contentUri4;
-        switch (containerImageView){
-            case 1:
-                f1 = new File(mCurrentPhotoPath1);
-                contentUri1 = Uri.fromFile(f1);
-                mediaScanIntent.setData(contentUri1);
-                break;
-            case 2:
-                f2 = new File(mCurrentPhotoPath2);
-                contentUri2 = Uri.fromFile(f2);
-                mediaScanIntent.setData(contentUri2);
-                break;
-            case 3:
-                f3 = new File(mCurrentPhotoPath3);
-                contentUri3 = Uri.fromFile(f3);
-                mediaScanIntent.setData(contentUri3);
-                break;
-            case 4:
-                f4 = new File(mCurrentPhotoPath4);
-                contentUri4 = Uri.fromFile(f4);
-                mediaScanIntent.setData(contentUri4);
-                break;
-        }
+        File  f = null;
+        Uri contentUri;
 
+        f = new File(mCurrentPhotoPath);
+        contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
         Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
@@ -444,19 +413,81 @@ public class WriteClassActivity extends AppCompatActivity {
                 try{
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
+                    file = Uri.fromFile(new File(mCurrentPhotoPath));
+                    uploadTask = storageRef.putFile(file);
 
                     switch (containerImageView){
                         case 1:
                             img1.setImageURI(imgUri);
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("알림", "사진 업로드 실패1");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    downloadUrl1 = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공1 " + downloadUrl1);
+                                }
+                            });
                             break;
                         case 2:
                             img2.setImageURI(imgUri);
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("알림", "사진 업로드 실패2");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    downloadUrl2 = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공2 " + downloadUrl2);
+                                }
+                            });
                             break;
                         case 3:
                             img3.setImageURI(imgUri);
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("알림", "사진 업로드 실패3");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    downloadUrl3 = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공3 " + downloadUrl3);
+                                }
+                            });
                             break;
                         case 4:
                             img4.setImageURI(imgUri);
+                            // Register observers to listen for when the download is done or if it fails
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle unsuccessful uploads
+                                    Log.v("알림", "사진 업로드 실패4");
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                                    downloadUrl4 = taskSnapshot.getDownloadUrl();
+                                    Log.v("알림", "사진 업로드 성공4 " + downloadUrl4);
+                                }
+                            });
                             break;
                     }
                 }catch (Exception e){
@@ -491,7 +522,7 @@ public class WriteClassActivity extends AppCompatActivity {
         }else{
             Log.v("알림", "NULL인 항목이 있음 ");
             progressDialog.dismiss();
-            Toast.makeText(WriteClassActivity.this, "정보를 확인해주세요", Toast.LENGTH_LONG).show();
+            Toast.makeText(WriteClassActivity.this, "모든 사진을 업로드해주세요", Toast.LENGTH_LONG).show();
         }
 
     }
