@@ -37,6 +37,7 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ import java.util.ArrayList;
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
-    private Uri imgUri, photoURI, albumURI, downloadUrl;
-    private String mCurrentPhotoPath, img1Uri;
+    private Uri imgUri, photoURI, albumURI, downloadUrl, filePath;
+    private String mCurrentPhotoPath;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private Button btn_write_class;
@@ -79,7 +80,7 @@ public class WriteClassActivity extends AppCompatActivity {
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .check();
 
         //FOR Firebase
@@ -205,14 +206,14 @@ public class WriteClassActivity extends AppCompatActivity {
         }
 
     }
-
+    File imageFile;
     public File createImageFile() throws IOException{
         String imgFileName = System.currentTimeMillis() + ".jpg";
-        File imageFile= null;
+        imageFile= null;
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
 
-
         if(!storageDir.exists()){
+            //없으면 만들기
             Log.v("알림","storageDir 존재 x " + storageDir.toString());
             storageDir.mkdirs();
         }
@@ -258,18 +259,19 @@ public class WriteClassActivity extends AppCompatActivity {
                 //앨범에서 가져오기
                 if(data.getData()!=null){
                     try{
-                        File albumFile = null;
-                        albumFile = createImageFile();
+                        //File albumFile = null;
+                        //albumFile = createImageFile();
 
                         photoURI = data.getData();
-                        albumURI = Uri.fromFile(albumFile);
+                        //albumURI = Uri.fromFile(albumFile);
 
-                        galleryAddPic();
-                        img1.setImageURI(photoURI);
+                        //galleryAddPic();
+                        //img1.setImageURI(photoURI);
 
-                        img1Uri = photoURI.toString();
-                        Log.v("알림", "FROM_ALBUM : imgUri = " + img1Uri);
-                        //cropImage();
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                        img1.setImageBitmap(bitmap);
+
+                        Log.v("알림", "FROM_ALBUM : imgURI = " + photoURI);
                     }catch (Exception e){
                         e.printStackTrace();
                         Log.v("알림","앨범에서 가져오기 에러");
@@ -284,8 +286,6 @@ public class WriteClassActivity extends AppCompatActivity {
                     Log.v("알림", "FROM_CAMERA 처리");
                     galleryAddPic();
                     img1.setImageURI(imgUri);
-                    img1Uri = img1Uri;
-                    Log.v("알림", "FROM_CAMERA : imgUri = " + img1Uri);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -294,7 +294,6 @@ public class WriteClassActivity extends AppCompatActivity {
 
         }
     }
-
 
 
     public void makeConfirmDialog(){
@@ -315,13 +314,13 @@ public class WriteClassActivity extends AppCompatActivity {
                             //1. 사진을 storage에 저장하고 그 url을 알아내야함..
                             String filename = cu + "_" + System.currentTimeMillis();
                             StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
+
                             UploadTask uploadTask;
-
                             //카메라에서 방금 찍은 사진 Uri 구하여 Storage에 저장
-                            Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
-                            //StorageReference riversRef = storageRef.child("Pictures/"+file.getLastPathSegment());
-                            uploadTask = storageRef.putFile(file);
+                            //Uri file = Uri.fromFile(new File(mCurrentPhotoPath));
+                            uploadTask = storageRef.putFile(photoURI);
 
+                            Log.v("알림", "mCurrentPhotoPath = "+ mCurrentPhotoPath);
 
                             final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
                             progressDialog.setMessage("업로드중...");
@@ -333,6 +332,7 @@ public class WriteClassActivity extends AppCompatActivity {
                                 public void onFailure(@NonNull Exception exception) {
                                     // Handle unsuccessful uploads
                                     Log.v("알림", "사진 업로드 실패");
+                                    exception.printStackTrace();
                                 }
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
