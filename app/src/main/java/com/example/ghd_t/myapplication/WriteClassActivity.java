@@ -45,8 +45,8 @@ import java.util.ArrayList;
 public class WriteClassActivity extends AppCompatActivity {
     private Spinner spinner_money_min, spinner_money_max;
     private ImageView img1, img2, img3, img4;
-    private Uri imgUri, photoURI, downloadUrl;
-    private String mCurrentPhotoPath;
+    private Uri imgUri, photoURI1,photoURI2,photoURI3,photoURI4, downloadUrl1, downloadUrl2, downloadUrl3,downloadUrl4;
+    private String mCurrentPhotoPath1, mCurrentPhotoPath2,mCurrentPhotoPath3,mCurrentPhotoPath4;
     private static final int FROM_CAMERA = 0;
     private static final int FROM_ALBUM = 1;
     private Button btn_write_class;
@@ -54,7 +54,8 @@ public class WriteClassActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseStorage storage;
-    private int flag = -1, containerImageView = -1;
+    private int containerImageView = -1;
+    private int[] flag = {-1,-1,-1,-1,-1};
 
 
     @Override
@@ -69,12 +70,10 @@ public class WriteClassActivity extends AppCompatActivity {
             public void onPermissionGranted() {
                 Toast.makeText(WriteClassActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                 Toast.makeText(WriteClassActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
             }
-
         };
 
         new TedPermission(this)
@@ -153,7 +152,6 @@ public class WriteClassActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_money_min.setAdapter(adapter);
         spinner_money_max.setAdapter(adapter);
-
     }
 
     private void makeDialog(){
@@ -164,14 +162,41 @@ public class WriteClassActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         // 사진 촬영 클릭
                         Log.v("알림", "다이얼로그 > 사진촬영 선택");
-                        flag = 0;
+
+                        switch (containerImageView){
+                            case 1:
+                                flag[1] = 0;
+                                break;
+                            case 2:
+                                flag[2] = 0;
+                                break;
+                            case 3:
+                                flag[3] = 0;
+                                break;
+                            case 4:
+                                flag[4] = 0;
+                                break;
+                        }
                         takePhoto();
                     }
                 }).setNeutralButton("앨범선택",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int id) {
                         Log.v("알림", "다이얼로그 > 앨범선택 선택");
-                        flag = 1;
+                        switch (containerImageView){
+                            case 1:
+                                flag[1] = 1;
+                                break;
+                            case 2:
+                                flag[2] = 1;
+                                break;
+                            case 3:
+                                flag[3] = 1;
+                                break;
+                            case 4:
+                                flag[4] = 1;
+                                break;
+                        }
                         //앨범에서 선택
                         selectAlbum();
                 }
@@ -247,8 +272,21 @@ public class WriteClassActivity extends AppCompatActivity {
         }
         Log.v("알림","storageDir 존재함 " + storageDir.toString());
         imageFile = new File(storageDir,imgFileName);
-        mCurrentPhotoPath = imageFile.getAbsolutePath();
 
+        switch (containerImageView){
+            case 1:
+                mCurrentPhotoPath1 = imageFile.getAbsolutePath();
+                break;
+            case 2:
+                mCurrentPhotoPath2 = imageFile.getAbsolutePath();
+                break;
+            case 3:
+                mCurrentPhotoPath3 = imageFile.getAbsolutePath();
+                break;
+            case 4:
+                mCurrentPhotoPath4 = imageFile.getAbsolutePath();
+                break;
+        }
         return imageFile;
     }
 
@@ -265,9 +303,31 @@ public class WriteClassActivity extends AppCompatActivity {
 
     public void galleryAddPic(){
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
+        File f1, f2, f3,f4 = null;
+        Uri contentUri1, contentUri2, contentUri3,contentUri4;
+        switch (containerImageView){
+            case 1:
+                f1 = new File(mCurrentPhotoPath1);
+                contentUri1 = Uri.fromFile(f1);
+                mediaScanIntent.setData(contentUri1);
+                break;
+            case 2:
+                f2 = new File(mCurrentPhotoPath2);
+                contentUri2 = Uri.fromFile(f2);
+                mediaScanIntent.setData(contentUri2);
+                break;
+            case 3:
+                f3 = new File(mCurrentPhotoPath3);
+                contentUri3 = Uri.fromFile(f3);
+                mediaScanIntent.setData(contentUri3);
+                break;
+            case 4:
+                f4 = new File(mCurrentPhotoPath4);
+                contentUri4 = Uri.fromFile(f4);
+                mediaScanIntent.setData(contentUri4);
+                break;
+        }
+
         sendBroadcast(mediaScanIntent);
         Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
     }
@@ -285,19 +345,26 @@ public class WriteClassActivity extends AppCompatActivity {
                 //앨범에서 가져오기
                 if(data.getData()!=null){
                     try{
-                        photoURI = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                        Bitmap bitmap;
                         switch (containerImageView){
                             case 1:
+                                photoURI1 = data.getData();
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI1);
                                 img1.setImageBitmap(bitmap);
                                 break;
                             case 2:
+                                photoURI2 = data.getData();
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI2);
                                 img2.setImageBitmap(bitmap);
                                 break;
                             case 3:
+                                photoURI3 = data.getData();
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI3);
                                 img3.setImageBitmap(bitmap);
                                 break;
                             case 4:
+                                photoURI4 = data.getData();
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI4);
                                 img4.setImageBitmap(bitmap);
                                 break;
                         }
@@ -338,6 +405,147 @@ public class WriteClassActivity extends AppCompatActivity {
         }
     }
 
+    public void sendDB(){
+        //DB에 등록하기
+        final String cu = mAuth.getUid();
+        String filename = cu + "_" + System.currentTimeMillis();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
+
+        UploadTask uploadTask1, uploadTask2, uploadTask3, uploadTask4;
+        Uri file1 = null, file2 = null, file3 = null, file4 = null;
+
+        if(flag[1] == 0){
+            //사진촬영
+            file1 = Uri.fromFile(new File(mCurrentPhotoPath1));
+        }else if(flag[1] ==1){
+            //앨범선택
+            file1 = photoURI1;
+        }
+        uploadTask1 = storageRef.putFile(file1);
+        Log.v("알림","file1 : " + file1);
+
+        if(flag[2] == 0){
+            //사진촬영
+            file2 = Uri.fromFile(new File(mCurrentPhotoPath2));
+        }else if(flag[2] ==1){
+            //앨범선택
+            file2 = photoURI2;
+        }
+        uploadTask2 = storageRef.putFile(file2);
+        Log.v("알림","file2 : " + file2);
+
+        if(flag[3] == 0){
+            //사진촬영
+            file3 = Uri.fromFile(new File(mCurrentPhotoPath3));
+        }else if(flag[3] ==1){
+            //앨범선택
+            file3 = photoURI3;
+        }
+        uploadTask3 = storageRef.putFile(file3);
+        Log.v("알림","file3 : " + file3);
+
+        if(flag[4] == 0){
+            //사진촬영
+            file4 = Uri.fromFile(new File(mCurrentPhotoPath4));
+        }else if(flag[4] ==1){
+            //앨범선택
+            file4 = photoURI4;
+        }
+        uploadTask4 = storageRef.putFile(file4);
+        Log.v("알림","file4 : " + file4);
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
+        progressDialog.setMessage("업로드중...");
+        progressDialog.show();
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask1.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle unsuccessful uploads
+                Log.v("알림", "사진 업로드 실패 _ 1");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                downloadUrl1 = taskSnapshot.getDownloadUrl();
+                Log.v("알림", "사진 업로드 성공1 " + downloadUrl1);
+            }
+        });
+
+        uploadTask2.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle unsuccessful uploads
+                Log.v("알림", "사진 업로드 실패 _ 2");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                downloadUrl2 = taskSnapshot.getDownloadUrl();
+                Log.v("알림", "사진 업로드 성공2 " + downloadUrl2);
+            }
+        });
+
+        uploadTask3.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle unsuccessful uploads
+                Log.v("알림", "사진 업로드 실패 _ 3");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                downloadUrl3 = taskSnapshot.getDownloadUrl();
+                Log.v("알림", "사진 업로드 성공3 " + downloadUrl3);
+            }
+        });
+
+        uploadTask4.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.v("알림", "사진 업로드 실패 _4");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+
+                downloadUrl4 = taskSnapshot.getDownloadUrl();
+                Log.v("알림", "사진 업로드 성공4 " + downloadUrl4);
+
+            }
+        });
+
+        long ct = System.currentTimeMillis();
+        //현재시간
+        String ct_str = Long.toString(ct);
+        String tmp ="임시유알엘";
+
+        if(downloadUrl1 != null && downloadUrl2 != null && downloadUrl3 != null && downloadUrl4 != null){
+            WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
+                    write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
+                    downloadUrl1.toString(),downloadUrl2.toString(),downloadUrl3.toString(),downloadUrl4.toString());
+            mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
+            Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
+
+        }else{
+            Log.v("알림", "NULL인 항목이 있음 ");
+        }
+
+
+        //저장 성공 후 프로그레스 창 종료
+        progressDialog.dismiss();
+        Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
+        startActivity(intent);
+        Log.v("알림","작성 완료 homeFragment로 이동");
+    }
+
     public void makeConfirmDialog(){
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
         alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시하시겠습니까?").setCancelable(
@@ -350,59 +558,8 @@ public class WriteClassActivity extends AppCompatActivity {
                                 || write_class_person.getText().length() == 0){
                             Toast.makeText(WriteClassActivity.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else {
-                            //DB에 등록하기
-                            final String cu = mAuth.getUid();
-                            String filename = cu + "_" + System.currentTimeMillis();
-                            StorageReference storageRef = storage.getReferenceFromUrl("gs://ireh-950523.appspot.com/").child("WriteClassImage/" + filename);
-
-                            UploadTask uploadTask;
-                            Uri file = null;
-                            if(flag ==0){
-                                //사진촬영
-                                 file = Uri.fromFile(new File(mCurrentPhotoPath));
-                            }else if(flag==1){
-                                //앨범선택
-                               file = photoURI;
-                            }
-                            uploadTask = storageRef.putFile(file);
-
-                            final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
-                            progressDialog.setMessage("업로드중...");
-                            progressDialog.show();
-
-                            // Register observers to listen for when the download is done or if it fails
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    Log.v("알림", "사진 업로드 실패");
-                                    exception.printStackTrace();
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-
-                                    downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.v("알림", "사진 업로드 성공 " + downloadUrl);
-
-                                    long ct = System.currentTimeMillis();
-                                    //현재시간
-                                    String ct_str = Long.toString(ct);
-                                    String tmp ="임시유알엘";
-                                    WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
-                                            write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
-                                            downloadUrl.toString(),tmp,tmp,tmp);
-                                    mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
-                                    Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
-
-                                    //저장 성공 후 프로그레스 창 종료
-                                    progressDialog.dismiss();
-                                    Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    Log.v("알림","작성 완료 homeFragment로 이동");
-                                }
-                            });
+                            //서버에 전송
+                            sendDB();
                         }
                     }
                 }).setNegativeButton("아니오",
