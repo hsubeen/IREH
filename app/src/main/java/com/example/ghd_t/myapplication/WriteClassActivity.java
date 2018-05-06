@@ -541,9 +541,13 @@ public class WriteClassActivity extends AppCompatActivity {
                 }
             }, 1500);
         }else{
-            Log.v("알림", "NULL인 항목이 있음 ");
-            //progressDialog.dismiss();
-            Toast.makeText(WriteClassActivity.this, "서버에 사진을 업로드중입니다. 잠시 후 시도해주세요.", Toast.LENGTH_LONG).show();
+            Log.v("알림", "NULL인 항목이 있음 " + img1.getDrawable());
+            if(flag[1]==-1 || flag[2] ==-1 || flag[3]==-1 || flag[4] == -1){
+                Toast.makeText(WriteClassActivity.this, "모든 사진을 업로드해주세요.", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(WriteClassActivity.this, "서버에 사진을 업로드중입니다. \n잠시 후 시도해주세요.", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 

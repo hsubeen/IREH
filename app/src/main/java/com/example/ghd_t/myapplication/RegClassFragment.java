@@ -47,7 +47,7 @@ public class RegClassFragment extends Fragment {
     private DatabaseReference mDatabase1, mDatabase2;
     private Button btn_write_class;
     private String address,brandname,field,phone,weburl, title, contents, money_min, money_max;
-    private BrandListItemData data_brandlist_1,data_brandlist_2,data_brandlist_3;
+    private BrandListItemData data_brandlist_data;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
     public RegClassFragment() {
@@ -67,9 +67,9 @@ public class RegClassFragment extends Fragment {
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
         View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
         home_brand_list = (ListView) view.findViewById(R.id.reg_class_my);
+
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
-
 
 
         //브랜드 정보
@@ -93,7 +93,7 @@ public class RegClassFragment extends Fragment {
                 Log.v("알림", "field " + field);
                 Log.v("알림", "phone " + phone);
                 Log.v("알림", "weburl " + weburl);
-                makeData();
+                makeClassData();
             }
 
             @Override
@@ -103,34 +103,26 @@ public class RegClassFragment extends Fragment {
         });
 
 
-        /*
-*
-* mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase2.child(cu).addValueEventListener(new ValueEventListener() {
+
+
+        btn_write_class = view.findViewById(R.id.write_class);
+        btn_write_class.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
-                title = dataSnapshot.child("title").getValue(String.class);
-                contents = dataSnapshot.child("contents").getValue(String.class);
-                money_min = dataSnapshot.child("money_min").getValue(String.class);
-                money_max = dataSnapshot.child("money_max").getValue(String.class);
+            public void onClick(View view) {
 
-
-                Log.v("알림", "title " + title);
-                Log.v("알림", "contents " + contents);
-                Log.v("알림", "money_min " + money_min);
-                Log.v("알림", "money_max " + money_max);
-                if(flag==1)
-                    makeData();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("에러", "Read failed");
+                Intent intent = new Intent(view.getContext(), WriteClassActivity.class);
+                startActivity(intent);
+                Log.v("알림","글쓰기 창으로 전환");
             }
         });
-*/
 
+
+        return view;
+    }
+
+    void makeClassData(){
+
+        final String cu = mAuth.getUid();
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
         mDatabase2.child(cu).addChildEventListener(new ChildEventListener() {
@@ -148,6 +140,7 @@ public class RegClassFragment extends Fragment {
                 Log.v("알림", "contents " + contents);
                 Log.v("알림", "money_min " + money_min);
                 Log.v("알림", "money_max " + money_max);
+                makeData();
             }
 
             @Override
@@ -170,33 +163,11 @@ public class RegClassFragment extends Fragment {
                 Log.e("에러", "mDatabase2_onChildAdded " + databaseError.getMessage());
             }
         });
-
-
-
-        btn_write_class = view.findViewById(R.id.write_class);
-        btn_write_class.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(view.getContext(), WriteClassActivity.class);
-                startActivity(intent);
-                Log.v("알림","글쓰기 창으로 전환");
-            }
-        });
-
-
-        return view;
     }
-
     void makeData(){
-        Drawable temp = getResources().getDrawable(R.drawable.temp);
-        data_brandlist_1 = new BrandListItemData(temp, brandname, address, "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000" ,"90,000");
-        data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000","90,000");
-        data_brandlist_3 = new BrandListItemData(temp, "브레드엔케이크","서울시 양천구","빵만들러와요!", "20,000","90,000");
-
-        data_brandlist.add(data_brandlist_1);
-        data_brandlist.add(data_brandlist_2);
-        data_brandlist.add(data_brandlist_3);
+        Drawable temp = getResources().getDrawable(R.drawable.add);
+        data_brandlist_data = new BrandListItemData(temp, title, address, contents, money_min ,money_max);
+        data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
     }
