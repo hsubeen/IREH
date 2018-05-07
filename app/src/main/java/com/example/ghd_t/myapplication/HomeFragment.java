@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
     private GPSInfo gps;
     private Spinner spinner_field, spinner_field2;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase1, mDatabase2, mDatabase3;
+    private DatabaseReference mDatabase2, mDatabase3;
     private String uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_homelist_data;
     private ListView home_brand_list;
@@ -328,6 +328,7 @@ public class HomeFragment extends Fragment {
 
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -347,18 +348,6 @@ public class HomeFragment extends Fragment {
         controlListview();
     }
 
-    private Drawable LoadImageFromWebOperations(String url)
-    {
-        try
-        {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        }catch (Exception e) {
-            System.out.println("Exc="+e);
-            return null;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,

@@ -26,6 +26,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -181,8 +183,29 @@ public class RegClassFragment extends Fragment {
         });
     }
     void makeData(){
-        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.add);
-        Bitmap bitmap = drawable.getBitmap();
+        Thread mThread = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(uri);
+                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
         data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
