@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.renderscript.ScriptGroup;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -266,7 +268,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    //
+
     void makeClassData(String user){
 
         //모집글정보
@@ -315,21 +317,47 @@ public class HomeFragment extends Fragment {
 
     //서버에서 받은 데이터를 리스트뷰에 추가
     void makeData(){
+        Thread mThread = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(uri);
+                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
 
-        Glide.with(getContext()).asBitmap().load(uri)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        bitmap = resource;
-                    }
-                });
-
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
         data_homelist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);
 
         controlListview();
+    }
+
+    private Drawable LoadImageFromWebOperations(String url)
+    {
+        try
+        {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        }catch (Exception e) {
+            System.out.println("Exc="+e);
+            return null;
+        }
     }
 
     @Override
@@ -374,6 +402,5 @@ public class HomeFragment extends Fragment {
             isPermission = true;
         }
     }
-
 
 }

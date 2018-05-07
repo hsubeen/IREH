@@ -3,6 +3,8 @@ package com.example.ghd_t.myapplication;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -179,7 +181,8 @@ public class RegClassFragment extends Fragment {
         });
     }
     void makeData(){
-
+        BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.add);
+        Bitmap bitmap = drawable.getBitmap();
         data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
