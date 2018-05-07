@@ -80,15 +80,14 @@ public class HomeFragment extends Fragment {
 
                 for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
                     //브랜드 인증 한 유저값만 가져오기
-                    Object obj = objSnapshot.getKey();
-                    Log.v("알림", "브랜드 인증한 유저" + obj);
+                    final Object user = objSnapshot.getKey();
+                    Log.v("알림", "브랜드 인증한 유저 " + user);
 
                     //브랜드 정보
-                    mDatabase1 = FirebaseDatabase.getInstance().getReference("Regclass");
-                    mDatabase1.child(obj.toString()).addValueEventListener(new ValueEventListener() {
+
+                    mDatabase3.child(user.toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
                             address = dataSnapshot.child("address").getValue(String.class);
                             brandname = dataSnapshot.child("brandname").getValue(String.class);
                             field = dataSnapshot.child("field").getValue(String.class);
@@ -104,7 +103,7 @@ public class HomeFragment extends Fragment {
                             Log.v("알림", "field " + field);
                             Log.v("알림", "phone " + phone);
                             Log.v("알림", "weburl " + weburl);
-                            makeClassData();
+                            makeClassData(user.toString());
                         }
 
                         @Override
@@ -122,7 +121,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
 
 
         btn_gps = view.findViewById(R.id.gps);
@@ -214,8 +212,9 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+
+    // 리스트뷰 스크롤 상태에 따른 imageview visibility 조절
     void controlListview(){
-        // 리스트뷰 스크롤 상태에 따른 imageview visibility 조절
         home_brand_list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -247,12 +246,13 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    void makeClassData(){
 
-        final String cu = mAuth.getUid();
+    //
+    void makeClassData(String user){
+
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase2.child(cu).addChildEventListener(new ChildEventListener() {
+        mDatabase2.child(user).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
@@ -293,6 +293,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    //서버에서 받은 데이터를 리스트뷰에 추가
     void makeData(){
 
         Drawable temp = getResources().getDrawable(R.drawable.add);
