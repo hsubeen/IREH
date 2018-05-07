@@ -21,6 +21,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +48,12 @@ public class HomeFragment extends Fragment {
     private Button btn_gps;
     private GPSInfo gps;
     private Spinner spinner_field, spinner_field2;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase1, mDatabase2, mDatabase3;
+    private String address,brandname,field,phone,weburl, title, contents, money_min, money_max;
+    private BrandListItemData data_homelist_data;
+    private ListView home_brand_list;
+    ArrayList<BrandListItemData> home_brandlist = new ArrayList<>();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,12 +64,67 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         img = (ImageView) view.findViewById(R.id.home_image);
-        
+        home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
+
+        mAuth = FirebaseAuth.getInstance();
+        final String cu = mAuth.getUid();
+
+        mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
+        mDatabase3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
+                    //브랜드 인증 한 유저값만 가져오기
+                    Object obj = objSnapshot.getKey();
+                    Log.v("알림", "브랜드 인증한 유저" + obj);
+
+                    //브랜드 정보
+                    mDatabase1 = FirebaseDatabase.getInstance().getReference("Regclass");
+                    mDatabase1.child(obj.toString()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
+                            address = dataSnapshot.child("address").getValue(String.class);
+                            brandname = dataSnapshot.child("brandname").getValue(String.class);
+                            field = dataSnapshot.child("field").getValue(String.class);
+                            phone = dataSnapshot.child("phone").getValue(String.class);
+                            weburl = dataSnapshot.child("weburl").getValue(String.class);
+
+                            //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+                            String address_arr[] = address.split(" ");
+                            address = address_arr[1] + " " + address_arr[2];
+
+                            Log.v("알림", "address " + address);
+                            Log.v("알림", "brandname " + brandname);
+                            Log.v("알림", "field " + field);
+                            Log.v("알림", "phone " + phone);
+                            Log.v("알림", "weburl " + weburl);
+                            makeClassData();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e("에러", "Read failed");
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
         btn_gps = view.findViewById(R.id.gps);
         btn_gps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +166,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        callPermission();  // 권한 요청을 해야 함
+        // 권한 요청을 해야 함
+        callPermission();
 
 
         // 분야 선택하는 Spinner선언과 event listener 구현 -> 지역 선택
@@ -142,34 +211,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        return view;
+    }
 
-
-        final ListView home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
-        ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
-        BrandListItemData data_brandlist_1 = new BrandListItemData(temp, "엔플레노", "서울시 노원구", "안녕하세요. 이것은 열심히 쥐어 짜는 것입니다. 안녕하시죠???", "180,000","90,000" );
-        BrandListItemData data_brandlist_2 = new BrandListItemData(temp, "뚜비네","경기도 성남시","안녕하세요! 여기는 뚜비공간이에요. 놀러오세요.", "30,000","90,000");
-        BrandListItemData data_brandlist_3 = new BrandListItemData(temp, "브레드엔케이크","서울시 양천구","빵만들러와요!", "20,000","90,000");
-
-        data_brandlist.add(data_brandlist_1);
-        data_brandlist.add(data_brandlist_2);
-        data_brandlist.add(data_brandlist_3);
-
-        data_brandlist.add(data_brandlist_1);
-        data_brandlist.add(data_brandlist_2);
-        data_brandlist.add(data_brandlist_3);
-
-        data_brandlist.add(data_brandlist_1);
-        data_brandlist.add(data_brandlist_2);
-        data_brandlist.add(data_brandlist_3);
-
-        data_brandlist.add(data_brandlist_1);
-        data_brandlist.add(data_brandlist_2);
-        data_brandlist.add(data_brandlist_3);
-
-
-        ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
-        home_brand_list.setAdapter(adapter_homebrand);
-
+    void controlListview(){
         // 리스트뷰 스크롤 상태에 따른 imageview visibility 조절
         home_brand_list.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -197,14 +242,66 @@ public class HomeFragment extends Fragment {
                     Log.v("알림","home list idle. image없애기");
                 }
             }
-
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
             }
         });
+    }
+    void makeClassData(){
 
-        return view;
+        final String cu = mAuth.getUid();
+        //모집글정보
+        mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
+        mDatabase2.child(cu).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
+
+                title = dataSnapshot.child("title").getValue(String.class);
+                contents = dataSnapshot.child("contents").getValue(String.class);
+                money_min = dataSnapshot.child("money_min").getValue(String.class);
+                money_max = dataSnapshot.child("money_max").getValue(String.class);
+
+
+                Log.v("알림", "title " + title);
+                Log.v("알림", "contents " + contents);
+                Log.v("알림", "money_min " + money_min);
+                Log.v("알림", "money_max " + money_max);
+
+                makeData();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.v("알림", "mDatabase2_onChildAdded " + s);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.v("알림", "mDatabase2_onChildAdded " + s);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("에러", "mDatabase2_onChildAdded " + databaseError.getMessage());
+            }
+        });
+    }
+
+    void makeData(){
+
+        Drawable temp = getResources().getDrawable(R.drawable.add);
+        data_homelist_data = new BrandListItemData(temp, title, address, contents, money_min ,money_max);
+        ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
+        home_brandlist.add(data_homelist_data);
+        home_brand_list.setAdapter(adapter_homebrand);
+
+        controlListview();
     }
 
     @Override
