@@ -328,7 +328,12 @@ public class WriteClassActivity extends AppCompatActivity {
                         Bitmap bitmap;
                         //받은 URI를 photoURI에 저장 한 후, Bitmap을 받아 각 이미지뷰에 설정.
                         photoURI = data.getData();
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = 4;
+
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
+                        bitmap= Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+
                         file = photoURI;
                         uploadTask = storageRef.putFile(file);
 
@@ -421,13 +426,19 @@ public class WriteClassActivity extends AppCompatActivity {
                     Log.v("알림", "FROM_CAMERA 처리");
                     //촬영한 사진 갤러리에 저장
                     galleryAddPic();
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),  imgUri);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+
+                    options.inSampleSize = 4;
                     file = Uri.fromFile(new File(mCurrentPhotoPath));
                     uploadTask = storageRef.putFile(file);
 
                     //이미지뷰에 따라 처리
                     switch (containerImageView){
                         case 1:
-                            img1.setImageURI(imgUri);
+                            //img1.setImageURI(imgUri);
+                            img1.setImageBitmap(bitmap);
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -445,7 +456,8 @@ public class WriteClassActivity extends AppCompatActivity {
                             });
                             break;
                         case 2:
-                            img2.setImageURI(imgUri);
+                            //img2.setImageURI(imgUri);
+                            img2.setImageBitmap(bitmap);
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -463,7 +475,8 @@ public class WriteClassActivity extends AppCompatActivity {
                             });
                             break;
                         case 3:
-                            img3.setImageURI(imgUri);
+                            //img3.setImageURI(imgUri);
+                            img3.setImageBitmap(bitmap);
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -481,7 +494,8 @@ public class WriteClassActivity extends AppCompatActivity {
                             });
                             break;
                         case 4:
-                            img4.setImageURI(imgUri);
+                            //img4.setImageURI(imgUri);
+                            img4.setImageBitmap(bitmap);
                             // Register observers to listen for when the download is done or if it fails
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -537,10 +551,8 @@ public class WriteClassActivity extends AppCompatActivity {
                 @Override public void run()
                 {
                     // DB등록 성공 1.5초 후 MainActivity로 전환
-                    Intent intent = new Intent(WriteClassActivity.this, MainActivity.class);
-                    Log.v("알림","클래스 모집 글 게시 완료, MainActivity로 이동");
                     alert.dismiss();
-                    startActivity(intent);
+                    finish();
                 }
             }, 1500);
 

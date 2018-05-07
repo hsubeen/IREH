@@ -1,7 +1,9 @@
 package com.example.ghd_t.myapplication;
 
 
+import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -86,20 +88,9 @@ public class HomeFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         Log.v("알림", "onattach");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.v("알림", "oncreate");
-        Drawable temp = getResources().getDrawable(R.drawable.temp);
-
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        img = (ImageView) view.findViewById(R.id.home_image);
-        home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
-
         mAuth = FirebaseAuth.getInstance();
+
+
 
         mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
         mDatabase3.addValueEventListener(new ValueEventListener() {
@@ -125,11 +116,6 @@ public class HomeFragment extends Fragment {
                             String address_arr[] = address.split(" ");
                             address = address_arr[1] + " " + address_arr[2];
 
-                            Log.v("알림", "address " + address);
-                            Log.v("알림", "brandname " + brandname);
-                            Log.v("알림", "field " + field);
-                            Log.v("알림", "phone " + phone);
-                            Log.v("알림", "weburl " + weburl);
                             makeClassData(user.toString());
                         }
 
@@ -138,16 +124,26 @@ public class HomeFragment extends Fragment {
                             Log.e("에러", "Read failed");
                         }
                     });
-
-
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        Log.v("알림", "oncreate");
+        Drawable temp = getResources().getDrawable(R.drawable.temp);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        img = (ImageView) view.findViewById(R.id.home_image);
+        home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
 
 
         btn_gps = view.findViewById(R.id.gps);

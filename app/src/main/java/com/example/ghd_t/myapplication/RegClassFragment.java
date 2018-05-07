@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,7 @@ public class RegClassFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
+
                 address = dataSnapshot.child("address").getValue(String.class);
                 brandname = dataSnapshot.child("brandname").getValue(String.class);
                 field = dataSnapshot.child("field").getValue(String.class);
@@ -79,11 +81,6 @@ public class RegClassFragment extends Fragment {
                 String address_arr[] = address.split(" ");
                 address = address_arr[1] + " " + address_arr[2];
 
-                Log.v("알림", "address " + address);
-                Log.v("알림", "brandname " + brandname);
-                Log.v("알림", "field " + field);
-                Log.v("알림", "phone " + phone);
-                Log.v("알림", "weburl " + weburl);
                 makeClassData();
             }
 
@@ -147,11 +144,6 @@ public class RegClassFragment extends Fragment {
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
                 uri = dataSnapshot.child("img1").getValue(String.class);
 
-                Log.v("알림", "title " + title);
-                Log.v("알림", "contents " + contents);
-                Log.v("알림", "money_min " + money_min);
-                Log.v("알림", "money_max " + money_max);
-                Log.v("알림", "uri " + uri);
                 runThread();
                 makeData();
             }
@@ -180,31 +172,31 @@ public class RegClassFragment extends Fragment {
 
 
     void makeData(){
-//        Thread mThread = new Thread(){
-//            @Override
-//            public void run() {
-//                try{
-//                    URL url = new URL(uri);
-//                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-//                    conn.setDoInput(true);
-//                    conn.connect();
-//
-//                    InputStream is = conn.getInputStream();
-//                    bitmap = BitmapFactory.decodeStream(is);
-//                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-//                }catch (IOException e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        mThread.start();
-//        try{
-//            mThread.join();
-//        }catch (InterruptedException e){
-//            e.printStackTrace();
-//        }
-        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_brandlist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
+        Thread mThread = new Thread(){
+            @Override
+            public void run() {
+                try{
+                    URL url = new URL(uri);
+                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        mThread.start();
+        try{
+            mThread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        //Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
+        data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);

@@ -1,10 +1,12 @@
 package com.example.ghd_t.myapplication;
 
+import java.io.Serializable;
+
 /**
  * Created by ghd-t on 2018-04-24.
  */
 
-public class BrandAuthData {
+public class BrandAuthData implements Serializable {
     String brandname;
     String weburl;
     String phone;
