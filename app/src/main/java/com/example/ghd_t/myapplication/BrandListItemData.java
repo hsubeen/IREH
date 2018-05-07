@@ -1,6 +1,8 @@
 package com.example.ghd_t.myapplication;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.widget.ImageView;
 
 /**
@@ -9,7 +11,7 @@ import android.widget.ImageView;
 
 public class BrandListItemData {
 
-    private Drawable icon;
+    private Bitmap icon;
     private String brand_title;
     private String brand_areaname;
     private String brand_info;
@@ -18,7 +20,7 @@ public class BrandListItemData {
 
 
 
-    public BrandListItemData(Drawable icon, String brand_title, String brand_areaname, String brand_info, String brand_priceinfo_min, String brand_priceinfo_max) {
+    public BrandListItemData(Bitmap icon, String brand_title, String brand_areaname, String brand_info, String brand_priceinfo_min, String brand_priceinfo_max) {
         this.icon = icon;
         this.brand_title = brand_title;
         this.brand_areaname = brand_areaname;
@@ -28,11 +30,11 @@ public class BrandListItemData {
         this.brand_priceinfo_max = brand_priceinfo_max;
     }
 
-    public Drawable getIcon() {
+    public Bitmap getIcon() {
         return icon;
     }
 
-    public void setIcon(Drawable icon) {
+    public void setIcon(Bitmap icon) {
         this.icon = icon;
     }
 

@@ -1,32 +1,16 @@
 package com.example.ghd_t.myapplication;
 
-
-import android.app.AlertDialog;
-import android.arch.lifecycle.LifecycleOwner;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,8 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -43,10 +29,11 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class RegClassFragment extends Fragment {
+    private Bitmap bitmap;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase1, mDatabase2;
     private Button btn_write_class;
-    private String address,brandname,field,phone,weburl, title, contents, money_min, money_max;
+    private String uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_brandlist_data;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
@@ -117,9 +104,34 @@ public class RegClassFragment extends Fragment {
         });
 
 
+
+
         return view;
     }
-
+    void runThread(){
+        Thread mThread = new Thread(){
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                try {
+                    URL url = new URL(uri);
+                    conn = (HttpURLConnection)
+                            url.openConnection();
+                    conn.setDoInput(true);
+                    conn.setConnectTimeout(8000);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    bitmap = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally{
+                    if(conn!=null)
+                        conn.disconnect();
+                }
+            }
+        };
+        mThread.start();
+    }
     void makeClassData(){
 
         final String cu = mAuth.getUid();
@@ -134,12 +146,14 @@ public class RegClassFragment extends Fragment {
                 contents = dataSnapshot.child("contents").getValue(String.class);
                 money_min = dataSnapshot.child("money_min").getValue(String.class);
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
-
+                uri = dataSnapshot.child("img1").getValue(String.class);
 
                 Log.v("알림", "title " + title);
                 Log.v("알림", "contents " + contents);
                 Log.v("알림", "money_min " + money_min);
                 Log.v("알림", "money_max " + money_max);
+                Log.v("알림", "uri " + uri);
+                runThread();
                 makeData();
             }
 
@@ -165,10 +179,13 @@ public class RegClassFragment extends Fragment {
         });
     }
     void makeData(){
-        Drawable temp = getResources().getDrawable(R.drawable.add);
-        data_brandlist_data = new BrandListItemData(temp, title, address, contents, money_min ,money_max);
+
+        data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
     }
+
+
+
 }

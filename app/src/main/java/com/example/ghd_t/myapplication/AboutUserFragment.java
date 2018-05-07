@@ -67,6 +67,7 @@ public class AboutUserFragment extends Fragment {
                 try{
                     //uri정보를 통해 Bitmap으로 변환하여 보여줌
                     URL url = new URL(user.getPhotoUrl().toString());
+                    Log.v("알림","사용자 프로필 uri " + user.getPhotoUrl().toString());
                     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                     conn.setDoInput(true);
                     conn.connect();

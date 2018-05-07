@@ -3,6 +3,7 @@ package com.example.ghd_t.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_priceinfo_min = (TextView) view.findViewById(R.id.brand_priceinfo_min);
         final TextView brand_priceinfo_max = (TextView) view.findViewById(R.id.brand_priceinfo_max);
 
-        brand_photo.setImageDrawable(listviewitem.getIcon());
+        brand_photo.setImageBitmap(listviewitem.getIcon());
         brand_title.setText(listviewitem.getBrand_title());
         brand_areaname.setText(listviewitem.getBrand_areaname());
         brand_info.setText(listviewitem.getBrand_fieldname());

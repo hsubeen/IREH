@@ -2,13 +2,19 @@ package com.example.ghd_t.myapplication;
 
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +27,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,17 +38,27 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.net.ssl.HttpsURLConnection;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-
+    private Bitmap bitmap;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
     private boolean isAccessFineLocation = false;
@@ -50,7 +70,7 @@ public class HomeFragment extends Fragment {
     private Spinner spinner_field, spinner_field2;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase1, mDatabase2, mDatabase3;
-    private String address,brandname,field,phone,weburl, title, contents, money_min, money_max;
+    private String uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_homelist_data;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> home_brandlist = new ArrayList<>();
@@ -71,7 +91,6 @@ public class HomeFragment extends Fragment {
         home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
 
         mAuth = FirebaseAuth.getInstance();
-        final String cu = mAuth.getUid();
 
         mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
         mDatabase3.addValueEventListener(new ValueEventListener() {
@@ -84,7 +103,6 @@ public class HomeFragment extends Fragment {
                     Log.v("알림", "브랜드 인증한 유저 " + user);
 
                     //브랜드 정보
-
                     mDatabase3.child(user.toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -209,6 +227,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -261,12 +280,13 @@ public class HomeFragment extends Fragment {
                 contents = dataSnapshot.child("contents").getValue(String.class);
                 money_min = dataSnapshot.child("money_min").getValue(String.class);
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
-
+                uri = dataSnapshot.child("img1").getValue(String.class);
 
                 Log.v("알림", "title " + title);
                 Log.v("알림", "contents " + contents);
                 Log.v("알림", "money_min " + money_min);
                 Log.v("알림", "money_max " + money_max);
+                Log.v("알림", "uri  " + uri);
 
                 makeData();
             }
@@ -296,8 +316,15 @@ public class HomeFragment extends Fragment {
     //서버에서 받은 데이터를 리스트뷰에 추가
     void makeData(){
 
-        Drawable temp = getResources().getDrawable(R.drawable.add);
-        data_homelist_data = new BrandListItemData(temp, title, address, contents, money_min ,money_max);
+        Glide.with(getContext()).asBitmap().load(uri)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        bitmap = resource;
+                    }
+                });
+
+        data_homelist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);
@@ -347,7 +374,6 @@ public class HomeFragment extends Fragment {
             isPermission = true;
         }
     }
-
 
 
 }
