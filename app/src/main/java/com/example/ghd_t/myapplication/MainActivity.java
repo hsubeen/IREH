@@ -140,28 +140,6 @@ public class MainActivity extends FragmentActivity {
         adapter.addFragment(homeFragment);
         adapter.addFragment(msgFragment);
 
-//
-//        //클래스 추가 정보가 있으면 게시글 작성페이지로 전환
-//        mDatabase.child("Regclass").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                dataSnapshot.getValue();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Log.v("알림", "Single ValueEventListener : " + snapshot.getValue());
-//                    if(snapshot.getValue() == null){
-//                        //브랜드를 추가한 정보가 없음
-//                        adapter.addFragment(regclassFragment);
-//                    }else{
-//                        //브랜드를 추가한 정보가 있음
-//                        Log.v("알림", "정보있음" + snapshot.getValue());
-//                        adapter.addFragment(homeFragment);
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        });
 
         adapter.addFragment(regclassFragment);
         adapter.addFragment(aboutuserFragment);

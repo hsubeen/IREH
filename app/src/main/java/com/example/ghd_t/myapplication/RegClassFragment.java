@@ -3,8 +3,7 @@ package com.example.ghd_t.myapplication;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -93,9 +93,6 @@ public class RegClassFragment extends Fragment {
             }
         });
 
-
-
-
         btn_write_class = view.findViewById(R.id.write_class);
         btn_write_class.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +103,6 @@ public class RegClassFragment extends Fragment {
                 Log.v("알림","글쓰기 창으로 전환");
             }
         });
-
-
 
 
         return view;
@@ -182,31 +177,34 @@ public class RegClassFragment extends Fragment {
             }
         });
     }
-    void makeData(){
-        Thread mThread = new Thread(){
-            @Override
-            public void run() {
-                try{
-                    URL url = new URL(uri);
-                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
 
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-        try{
-            mThread.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
+
+    void makeData(){
+//        Thread mThread = new Thread(){
+//            @Override
+//            public void run() {
+//                try{
+//                    URL url = new URL(uri);
+//                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+//                    conn.setDoInput(true);
+//                    conn.connect();
+//
+//                    InputStream is = conn.getInputStream();
+//                    bitmap = BitmapFactory.decodeStream(is);
+//                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+//                }catch (IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        mThread.start();
+//        try{
+//            mThread.join();
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
+        data_brandlist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
@@ -214,4 +212,7 @@ public class RegClassFragment extends Fragment {
 
 
 
+
+
 }
+

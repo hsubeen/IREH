@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -82,10 +83,16 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.v("알림", "onattach");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        Log.v("알림", "oncreate");
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -340,6 +347,7 @@ public class HomeFragment extends Fragment {
         }catch (InterruptedException e){
             e.printStackTrace();
         }
+        //Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
         data_homelist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
