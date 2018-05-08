@@ -328,11 +328,8 @@ public class WriteClassActivity extends AppCompatActivity {
                         Bitmap bitmap;
                         //받은 URI를 photoURI에 저장 한 후, Bitmap을 받아 각 이미지뷰에 설정.
                         photoURI = data.getData();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inSampleSize = 4;
 
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoURI);
-                        bitmap= Bitmap.createScaledBitmap(bitmap, 300, 300, true);
 
                         file = photoURI;
                         uploadTask = storageRef.putFile(file);
@@ -428,7 +425,7 @@ public class WriteClassActivity extends AppCompatActivity {
                     galleryAddPic();
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),  imgUri);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
 
                     options.inSampleSize = 4;
                     file = Uri.fromFile(new File(mCurrentPhotoPath));
@@ -524,27 +521,26 @@ public class WriteClassActivity extends AppCompatActivity {
     //입력한 모든 정보를 한번에 DB로 전송 -> 모집 글 작성 완료
     public void sendDB(){
         final String cu = mAuth.getUid();
-        //final ProgressDialog progressDialog = new ProgressDialog(WriteClassActivity.this,R.style.MyAlertDialogStyle);
-        //progressDialog.setMessage("업로드중...");
-        //progressDialog.show();
 
         long ct = System.currentTimeMillis();
         //현재시간
         String ct_str = Long.toString(ct);
 
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
+        alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시했습니다.").setCancelable(
+                false);
+        final AlertDialog alert = alt_bld.create();
+        alert.show();
         if(downloadUrl1 != null && downloadUrl2 != null && downloadUrl3 != null && downloadUrl4 != null){
             WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
                     write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
                     downloadUrl1.toString(),downloadUrl2.toString(),downloadUrl3.toString(),downloadUrl4.toString());
+
+
+
             mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
             Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
 
-
-            AlertDialog.Builder alt_bld = new AlertDialog.Builder(WriteClassActivity.this, R.style.MyAlertDialogStyle);
-            alt_bld.setTitle("작성 완료").setIcon(R.drawable.check_dialog_64).setMessage("글을 게시했습니다.").setCancelable(
-                    false);
-            final AlertDialog alert = alt_bld.create();
-            alert.show();
 
             new Handler().postDelayed(new Runnable()
             {
@@ -554,14 +550,15 @@ public class WriteClassActivity extends AppCompatActivity {
                     alert.dismiss();
                     finish();
                 }
-            }, 1500);
+            }, 3000);
 
         }else{
-            Log.v("알림", "NULL인 항목이 있음 " + img1.getDrawable());
             if(flag[1]==-1 || flag[2] ==-1 || flag[3]==-1 || flag[4] == -1){
                 Toast.makeText(WriteClassActivity.this, "모든 사진을 업로드해주세요.", Toast.LENGTH_LONG).show();
+                alert.dismiss();
             }else{
                 Toast.makeText(WriteClassActivity.this, "서버에 사진을 업로드중입니다. \n잠시 후 시도해주세요.", Toast.LENGTH_LONG).show();
+                alert.dismiss();
             }
 
         }

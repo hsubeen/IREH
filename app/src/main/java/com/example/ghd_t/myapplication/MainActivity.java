@@ -16,12 +16,16 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.security.MessageDigest;
 
@@ -32,7 +36,7 @@ public class MainActivity extends FragmentActivity {
     MsgFragment msgFragment;
     RegClassFragment regclassFragment;
     AboutUserFragment aboutuserFragment;
-
+    private FirebaseStorage storage;
     int menu_here;
     MenuItem menu_prev;
 
@@ -68,6 +72,7 @@ public class MainActivity extends FragmentActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);  //클릭 시 움직이는 모양 없애기. 하단 네비게이션 바 고정

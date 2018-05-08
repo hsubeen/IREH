@@ -3,8 +3,11 @@ package com.example.ghd_t.myapplication;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -14,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -41,6 +50,7 @@ public class RegClassFragment extends Fragment {
     private String uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_brandlist_data;
     private ListView home_brand_list;
+    private FirebaseStorage storage;
     ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
     public RegClassFragment() {
         // Required empty public constructor
@@ -60,9 +70,12 @@ public class RegClassFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
         home_brand_list = (ListView) view.findViewById(R.id.reg_class_my);
 
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
-
 
         //브랜드 정보
         mDatabase1 = FirebaseDatabase.getInstance().getReference("Regclass");
@@ -100,33 +113,7 @@ public class RegClassFragment extends Fragment {
                 Log.v("알림","글쓰기 창으로 전환");
             }
         });
-
-
         return view;
-    }
-    void runThread(){
-        Thread mThread = new Thread(){
-            @Override
-            public void run() {
-                HttpURLConnection conn = null;
-                try {
-                    URL url = new URL(uri);
-                    conn = (HttpURLConnection)
-                            url.openConnection();
-                    conn.setDoInput(true);
-                    conn.setConnectTimeout(8000);
-                    conn.connect();
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally{
-                    if(conn!=null)
-                        conn.disconnect();
-                }
-            }
-        };
-        mThread.start();
     }
     void makeClassData(){
 
@@ -144,7 +131,6 @@ public class RegClassFragment extends Fragment {
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
                 uri = dataSnapshot.child("img1").getValue(String.class);
 
-                runThread();
                 makeData();
             }
 
@@ -176,6 +162,7 @@ public class RegClassFragment extends Fragment {
             @Override
             public void run() {
                 try{
+                    Log.v("알림","Reg_thread 시작");
                     URL url = new URL(uri);
                     HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
                     conn.setDoInput(true);
@@ -183,7 +170,6 @@ public class RegClassFragment extends Fragment {
 
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
                 }catch (IOException e){
                     e.printStackTrace();
                 }

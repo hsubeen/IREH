@@ -84,10 +84,17 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.v("알림", "onattach");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        Log.v("알림", "oncreate");
+        Drawable temp = getResources().getDrawable(R.drawable.temp);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        img = (ImageView) view.findViewById(R.id.home_image);
+        home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -131,19 +138,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.v("알림", "oncreate");
-        Drawable temp = getResources().getDrawable(R.drawable.temp);
-
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        img = (ImageView) view.findViewById(R.id.home_image);
-        home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
 
 
         btn_gps = view.findViewById(R.id.gps);
@@ -231,7 +225,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
 
         return view;
     }
@@ -324,6 +317,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 try{
+                    Log.v("알림","Home_thread 시작");
                     URL url = new URL(uri);
                     HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
                     conn.setDoInput(true);
@@ -331,7 +325,6 @@ public class HomeFragment extends Fragment {
 
                     InputStream is = conn.getInputStream();
                     bitmap = BitmapFactory.decodeStream(is);
-                    bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -352,18 +345,15 @@ public class HomeFragment extends Fragment {
         controlListview();
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if (requestCode == PERMISSIONS_ACCESS_FINE_LOCATION
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
             isAccessFineLocation = true;
 
         } else if (requestCode == PERMISSIONS_ACCESS_COARSE_LOCATION
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
             isAccessCoarseLocation = true;
         }
 
@@ -378,7 +368,6 @@ public class HomeFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
 
             requestPermissions(
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -395,5 +384,4 @@ public class HomeFragment extends Fragment {
             isPermission = true;
         }
     }
-
 }
