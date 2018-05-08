@@ -150,10 +150,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                //Google SignIn 실패
                 Log.v("알림", result.isSuccess() +" Google Sign In failed. Because : " + result.getStatus().toString());
                 if(result.getStatus().getStatusCode() == 7){
+                    //NETWORK_ERROR
                     Toast.makeText(LoginActivity.this, "네트워크를 연결상태를 확인해주세요", Toast.LENGTH_SHORT).show();
                 }
-
-                Log.v("알림", "하.." + result.getStatus().getStatusCode() + " " + result.getStatus().getStatusMessage());
             }
         }
     }

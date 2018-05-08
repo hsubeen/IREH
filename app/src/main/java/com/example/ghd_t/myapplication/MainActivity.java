@@ -32,6 +32,7 @@ import java.security.MessageDigest;
 public class MainActivity extends FragmentActivity {
     BottomNavigationView bottomNavigationView;
 
+
     HomeFragment homeFragment;
     MsgFragment msgFragment;
     RegClassFragment regclassFragment;

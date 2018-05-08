@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -16,8 +18,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.renderscript.ScriptGroup;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -90,14 +96,15 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.v("알림", "oncreate");
+
+        //폰트 적용
+        Typeface typeface = ResourcesCompat.getFont(getContext(),R.font.nanumsquarel);
         Drawable temp = getResources().getDrawable(R.drawable.temp);
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         img = (ImageView) view.findViewById(R.id.home_image);
         home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
         mAuth = FirebaseAuth.getInstance();
-
-
 
         mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
         mDatabase3.addValueEventListener(new ValueEventListener() {
@@ -141,6 +148,7 @@ public class HomeFragment extends Fragment {
 
 
         btn_gps = view.findViewById(R.id.gps);
+        btn_gps.setTypeface(typeface);
         btn_gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,9 +196,29 @@ public class HomeFragment extends Fragment {
         // 분야 선택하는 Spinner선언과 event listener 구현 -> 지역 선택
         spinner_field = (Spinner) view.findViewById(R.id.spinner_field);
         String[] str = getResources().getStringArray(R.array.spinnerArray_forSearch);
-        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str);
+        final ArrayAdapter<String> adapter= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                Typeface externalFont=Typeface.createFromAsset(getContext().getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v =super.getDropDownView(position, convertView, parent);
+
+                Typeface externalFont=Typeface.createFromAsset(getContext().getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+                v.setBackgroundColor(Color.WHITE);
+                ((TextView) v).setTextColor(Color.BLACK);
+
+                return v;
+            }
+        };
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner_field.setAdapter(adapter);
         spinner_field.setAdapter(adapter);
 
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -209,7 +237,28 @@ public class HomeFragment extends Fragment {
         // 분야 선택하는 Spinner선언과 event listener 구현 -> 분야 선택
         spinner_field2 = (Spinner) view.findViewById(R.id.spinner_field2);
         String[] str2 = getResources().getStringArray(R.array.spinnerArray_forSearch2);
-        final ArrayAdapter<String> adapter2= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str2);
+        final ArrayAdapter<String> adapter2= new ArrayAdapter<String>(getContext(),R.layout.spinner_item,str2){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                Typeface externalFont=Typeface.createFromAsset(getContext().getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View v =super.getDropDownView(position, convertView, parent);
+
+                Typeface externalFont=Typeface.createFromAsset(getContext().getAssets(), "font/nanumsquarel.ttf");
+                ((TextView) v).setTypeface(externalFont);
+                v.setBackgroundColor(Color.WHITE);
+                ((TextView) v).setTextColor(Color.BLACK);
+
+                return v;
+            }
+        };
         adapter2.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field2.setAdapter(adapter2);
 
@@ -313,31 +362,33 @@ public class HomeFragment extends Fragment {
 
     //서버에서 받은 데이터를 리스트뷰에 추가
     void makeData(){
-        Thread mThread = new Thread(){
-            @Override
-            public void run() {
-                try{
-                    Log.v("알림","Home_thread 시작");
-                    URL url = new URL(uri);
-                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
+//        Thread mThread = new Thread(){
+//            @Override
+//            public void run() {
+//                try{
+//                    Log.v("알림","Home_thread 시작");
+//                    URL url = new URL(uri);
+//                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+//                    conn.setDoInput(true);
+//                    conn.connect();
+//
+//                    InputStream is = conn.getInputStream();
+//                    bitmap = BitmapFactory.decodeStream(is);
+//                }catch (IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        mThread.start();
+//        try{
+//            mThread.join();
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
 
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-        try{
-            mThread.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        //Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_homelist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
+        //이 부분은 Firebase storage 사용량때문에 임시..
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
+        data_homelist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);

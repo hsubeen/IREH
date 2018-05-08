@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -41,17 +44,10 @@ public class BrandAuth extends Activity{
     private EditText brand_name, brand_web, brand_phone;
     private Button brand_address,send_class_info;
     private Spinner spinner_field;
+    private BrandAuthData data;
 
     public BrandAuth() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.v("알림","RegClassFragment의 onResume호출됨");
-        brand_address_content.setText(AddressData.getInstance().getAddress());
-        Log.v("알림","받은 데이터 : " + AddressData.getInstance().getAddress());
     }
 
     //브랜드인증 글 작성 중 뒤로가기 버튼 눌렸을 때
@@ -73,15 +69,22 @@ public class BrandAuth extends Activity{
         return true;
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brand_auth);
         // Inflate the layout for this fragment
-        Log.v("알림","RegClassFragment의 onCreateView호출됨");
+        Log.v("알림","BrandAuth.java onCreateView호출됨");
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String cu = mAuth.getUid();
+        Log.v("알림", "BrandAuth.java current user " + cu);
+
+        //현재 로그인한 사용자의 브랜드 인증 정보를 SharedPreferences를 통해 가져옴
+        SharedPreferences mPref = getSharedPreferences("BrandAuth",0);
+        String address = mPref.getString("address","");
+        Log.v("알림", "address " + address);
 
         brandname = (TextView) findViewById(R.id.brand_name_text);
         brandweb = (TextView) findViewById(R.id.brand_web_text);
@@ -237,6 +240,7 @@ public class BrandAuth extends Activity{
                 // DB등록 성공 1.5초 후 MainActivity로 전환
                 Intent intent = new Intent(BrandAuth.this, MainActivity.class);
                 Log.v("알림","클래스정보 추가 완료, MainActivity로 이동");
+                finish();
                 startActivity(intent);
             }
         }, 1500);

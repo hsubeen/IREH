@@ -1,25 +1,20 @@
 package com.example.ghd_t.myapplication;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,31 +22,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-
-import javax.net.ssl.HttpsURLConnection;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RegClassFragment extends Fragment {
-    private Bitmap bitmap;
-    private FirebaseAuth mAuth;
     private DatabaseReference mDatabase1, mDatabase2;
     private Button btn_write_class;
     private String uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_brandlist_data;
     private ListView home_brand_list;
-    private FirebaseStorage storage;
+    private FirebaseAuth mAuth;
     ArrayList<BrandListItemData> data_brandlist = new ArrayList<>();
+
+
+
     public RegClassFragment() {
         // Required empty public constructor
     }
@@ -68,14 +55,13 @@ public class RegClassFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.v("알림","RegClassFragment의 onCreateView호출됨");
         View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
-        home_brand_list = (ListView) view.findViewById(R.id.reg_class_my);
+        mAuth = FirebaseAuth.getInstance();
+        final String cu = mAuth.getUid();
 
+        home_brand_list = (ListView) view.findViewById(R.id.reg_class_my);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        mAuth = FirebaseAuth.getInstance();
-        final String cu = mAuth.getUid();
 
         //브랜드 정보
         mDatabase1 = FirebaseDatabase.getInstance().getReference("Regclass");
@@ -90,10 +76,22 @@ public class RegClassFragment extends Fragment {
                 phone = dataSnapshot.child("phone").getValue(String.class);
                 weburl = dataSnapshot.child("weburl").getValue(String.class);
 
-                //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
-                String address_arr[] = address.split(" ");
-                address = address_arr[1] + " " + address_arr[2];
 
+                //현재 로그인한 유저의 브랜드 인증 정보를 SharedPreferences로 저장
+                SharedPreferences mPrefs = getContext().getSharedPreferences("BrandAuth",0);
+                SharedPreferences.Editor mEdit = mPrefs.edit();
+                mEdit.putString("address",address);
+                mEdit.putString("brandname",brandname);
+                mEdit.putString("field",field);
+                mEdit.putString("phone",phone);
+                mEdit.putString("weburl",weburl);
+                mEdit.commit();
+
+                //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+                if(address!=null) {
+                    String address_arr[] = address.split(" ");
+                    address = address_arr[1] + " " + address_arr[2];
+                }
                 makeClassData();
             }
 
@@ -158,39 +156,37 @@ public class RegClassFragment extends Fragment {
 
 
     void makeData(){
-        Thread mThread = new Thread(){
-            @Override
-            public void run() {
-                try{
-                    Log.v("알림","Reg_thread 시작");
-                    URL url = new URL(uri);
-                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
-                    conn.setDoInput(true);
-                    conn.connect();
+//        Thread mThread = new Thread(){
+//            @Override
+//            public void run() {
+//                try{
+//                    Log.v("알림","Reg_thread 시작");
+//                    URL url = new URL(uri);
+//                    HttpsURLConnection conn = (HttpsURLConnection)url.openConnection();
+//                    conn.setDoInput(true);
+//                    conn.connect();
+//
+//                    InputStream is = conn.getInputStream();
+//                    bitmap = BitmapFactory.decodeStream(is);
+//                }catch (IOException e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//        mThread.start();
+//        try{
+//            mThread.join();
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
 
-                    InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        mThread.start();
-        try{
-            mThread.join();
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-        //Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_brandlist_data = new BrandListItemData(bitmap, title, address, contents, money_min ,money_max);
+        //이 부분은 Firebase storage 사용량때문에 임시..
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
+        data_brandlist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);
     }
-
-
-
-
 
 }
 
