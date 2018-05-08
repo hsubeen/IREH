@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -158,18 +159,25 @@ public class AboutUserFragment extends Fragment {
                         final EditText et = new EditText(getContext());
                         et.setSingleLine(true);
                         et.setTypeface(typeface);
+
+                        FrameLayout container = new FrameLayout(getContext());
+                        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                        et.setLayoutParams(params);
+                        container.addView(et);
                         final AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext(),R.style.MyAlertDialogStyle);
                         alt_bld.setTitle("닉네임 변경").setMessage("변경할 닉네임을 입력하세요").setIcon(R.drawable.check_dialog_64).setCancelable(
-                                false).setView(et).setPositiveButton("확인",
+                                false).setView(container).setPositiveButton("확인",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         String value = et.getText().toString();
+
                                         user_name.setText(value);
                                         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
                                         Map<String , Object> newvalue = new HashMap<>();
                                         newvalue.put("/userName/", value);
                                         mDatabase.child(uid).updateChildren(newvalue);
-
                                     }
                                 });
                         AlertDialog alert = alt_bld.create();
