@@ -168,8 +168,8 @@ public class AboutUserFragment extends Fragment {
                         tv.setTypeface(typeface);
                         et.setTypeface(typeface);
                         tv.setText("닉네임은 2~8글자만 등록할 수 있습니다.");
-
                         value = "";
+
                         LinearLayout container = new LinearLayout(getContext());
                         LinearLayout.LayoutParams params = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
@@ -180,8 +180,10 @@ public class AboutUserFragment extends Fragment {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                                 if(et.getText().length() >= 2 && et.getText().length() <= 8){
+                                    //editText내용이 2글자~8글자 일 때만 확인 버튼 허용
                                     button.setEnabled(true);
                                 }else{
+                                    //아니면 disable
                                     button.setEnabled(false);
                                 }
                             }
@@ -196,6 +198,7 @@ public class AboutUserFragment extends Fragment {
                         container.setOrientation(LinearLayout.VERTICAL);
                         container.addView(et);
                         container.addView(tv);
+
                         final AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext(),R.style.MyAlertDialogStyle);
                         alt_bld.setTitle("닉네임 변경").setMessage("변경할 닉네임을 입력하세요").setIcon(R.drawable.check_dialog_64).setCancelable(
                         false).setView(container).setPositiveButton("확인",
@@ -203,24 +206,23 @@ public class AboutUserFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 value = et.getText().toString();
                                 user_name.setText(value);
+
+                                //닉네임 수정하는 부분
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Users");
                                 Map<String , Object> newvalue = new HashMap<>();
                                 newvalue.put("/userName/", value);
                                 mDatabase.child(uid).updateChildren(newvalue);
-
                             }
                         }).setNegativeButton("취소", null);
                         final AlertDialog alert = alt_bld.create();
                         alert.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialog) {
-                                if(value.length() < 2)
-                                {
-                                    button = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+                                //다이얼로그 보여질 때는 editText에 내용이 0글자. disable 상태로 시작.
+                               button = alert.getButton(AlertDialog.BUTTON_POSITIVE);
                                     if (button != null) {
                                         button.setEnabled(false);
                                     }
-                                }
                             }
                         });
                         alert.show();
