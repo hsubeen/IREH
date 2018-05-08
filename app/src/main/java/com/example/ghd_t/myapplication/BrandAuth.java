@@ -81,10 +81,6 @@ public class BrandAuth extends Activity{
         String cu = mAuth.getUid();
         Log.v("알림", "BrandAuth.java current user " + cu);
 
-        //현재 로그인한 사용자의 브랜드 인증 정보를 SharedPreferences를 통해 가져옴
-        SharedPreferences mPref = getSharedPreferences("BrandAuth",0);
-        String address = mPref.getString("address","");
-        Log.v("알림", "address " + address);
 
         brandname = (TextView) findViewById(R.id.brand_name_text);
         brandweb = (TextView) findViewById(R.id.brand_web_text);
@@ -180,6 +176,26 @@ public class BrandAuth extends Activity{
                 makeDialog();
             }
         });
+
+
+        //현재 로그인한 사용자의 브랜드 인증 정보를 SharedPreferences를 통해 가져옴
+        SharedPreferences mPref = getSharedPreferences("BrandAuth",0);
+        String cu_brand = mPref.getString("brandname","");
+        String cu_web = mPref.getString("weburl", "");
+        String cu_addr = mPref.getString("address", "");
+        String cu_field = mPref.getString("field","");
+        String cu_phone = mPref.getString("phone","");
+
+        if(mPref.getInt("exists",0) == 1){
+            info_text.setText("등록한 브랜드 정보를 조회/수정합니다.");
+            brand_name.setText(cu_brand);
+            brand_web.setText(cu_web);
+            Log.v("알림", "address " + cu_addr);
+            brand_address_content.setText(cu_addr);
+            spinner_field.setSelection(3);
+            brand_phone.setText(cu_phone);
+            send_class_info.setText("수정 요청");
+        }
 
     }
 

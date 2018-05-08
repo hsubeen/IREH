@@ -76,15 +76,19 @@ public class RegClassFragment extends Fragment {
                 phone = dataSnapshot.child("phone").getValue(String.class);
                 weburl = dataSnapshot.child("weburl").getValue(String.class);
 
-
-                //현재 로그인한 유저의 브랜드 인증 정보를 SharedPreferences로 저장
                 SharedPreferences mPrefs = getContext().getSharedPreferences("BrandAuth",0);
                 SharedPreferences.Editor mEdit = mPrefs.edit();
-                mEdit.putString("address",address);
-                mEdit.putString("brandname",brandname);
-                mEdit.putString("field",field);
-                mEdit.putString("phone",phone);
-                mEdit.putString("weburl",weburl);
+                if(dataSnapshot.getValue()==null){
+                    mEdit.putInt("exists",0);
+                }else{
+                    mEdit.putInt("exists",1);
+                    //현재 로그인한 유저의 브랜드 인증 정보를 SharedPreferences로 저장
+                    mEdit.putString("address",address);
+                    mEdit.putString("brandname",brandname);
+                    mEdit.putString("field",field);
+                    mEdit.putString("phone",phone);
+                    mEdit.putString("weburl",weburl);
+                }
                 mEdit.commit();
 
                 //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
