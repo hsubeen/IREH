@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class RegClassFragment extends Fragment {
-    private DatabaseReference mDatabase1, mDatabase2;
+    private DatabaseReference mDatabase1, mDatabase2,mDatabase3;
     private Button btn_write_class;
     private String uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max;
     private BrandListItemData data_brandlist_data;
@@ -63,6 +63,23 @@ public class RegClassFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        SharedPreferences mPrefs = getContext().getSharedPreferences("BrandAuth",0);
+        final SharedPreferences.Editor mEdit = mPrefs.edit();
+
+        mDatabase3 = FirebaseDatabase.getInstance().getReference("Users");
+        mDatabase3.child(cu).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mEdit.putString("userID",cu);
+                mEdit.putString("userName", dataSnapshot.child("userName").getValue(String.class));
+                mEdit.commit();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("에러", "Read failed");
+            }
+        });
+
         //브랜드 정보
         mDatabase1 = FirebaseDatabase.getInstance().getReference("Regclass");
         mDatabase1.child(cu).addValueEventListener(new ValueEventListener() {
@@ -76,8 +93,7 @@ public class RegClassFragment extends Fragment {
                 phone = dataSnapshot.child("phone").getValue(String.class);
                 weburl = dataSnapshot.child("weburl").getValue(String.class);
 
-                SharedPreferences mPrefs = getContext().getSharedPreferences("BrandAuth",0);
-                SharedPreferences.Editor mEdit = mPrefs.edit();
+
                 if(dataSnapshot.getValue()==null){
                     mEdit.putInt("exists",0);
                 }else{

@@ -1,29 +1,43 @@
 package com.example.ghd_t.myapplication;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -35,7 +49,9 @@ public class AboutUserFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-
+    private TextView user_name;
+    private String cu, uid;
+    private Typeface typeface;
     Bitmap bitmap;
 
     public AboutUserFragment() {
@@ -49,14 +65,12 @@ public class AboutUserFragment extends Fragment {
         // Inflate the layout for this fragment
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        uid = mAuth.getUid();
         final FirebaseUser user = mAuth.getCurrentUser();
-
+        typeface = ResourcesCompat.getFont(getContext(),R.font.nanumsquarel);
         View view = inflater.inflate(R.layout.fragment_about_user, container, false);
         final ListView search_reservation_list = (ListView) view.findViewById(R.id.search_reservation);
         final ListView user_info_list = (ListView) view.findViewById(R.id.user_info);
-
 
         //접속한 사용자 프로필 이미지띄우기
         CircularImageView user_profile = view.findViewById(R.id.user_profile);
@@ -96,9 +110,13 @@ public class AboutUserFragment extends Fragment {
             e.printStackTrace();
         }
 
-        TextView user_name = view.findViewById(R.id.user_name);
+        user_name = view.findViewById(R.id.user_name);
+
+
+        SharedPreferences mPref = getContext().getSharedPreferences("BrandAuth",0);
+        cu = mPref.getString("userName","");
         //현재 로그인한 사용자 이름으로 setting
-        user_name.setText(user.getDisplayName());
+        user_name.setText(cu);
 
         final ArrayList<SearchReservationItemData> data_reservation = new ArrayList<>();
         ArrayList<UserInfoItemData> data_userinfo = new ArrayList<>();
@@ -129,11 +147,34 @@ public class AboutUserFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.v("알림","선택된 position " + i);
-                if(i==1){
-                    //브랜드 인증하지 않았으면 인증창으로 가기
-                    //인
-                    Intent intent = new Intent(getActivity(), BrandAuth.class);
-                    startActivity(intent);
+                switch (i){
+                    case 1:
+                        //브랜드 인증 정보
+                        Intent intent = new Intent(getActivity(), BrandAuth.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        //닉네임 변경
+                        final EditText et = new EditText(getContext());
+                        et.setSingleLine(true);
+                        et.setTypeface(typeface);
+                        final AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext(),R.style.MyAlertDialogStyle);
+                        alt_bld.setTitle("닉네임 변경").setMessage("변경할 닉네임을 입력하세요").setIcon(R.drawable.check_dialog_64).setCancelable(
+                                false).setView(et).setPositiveButton("확인",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        String value = et.getText().toString();
+                                        user_name.setText(value);
+                                        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                                        Map<String , Object> newvalue = new HashMap<>();
+                                        newvalue.put("/userName/", value);
+                                        mDatabase.child(uid).updateChildren(newvalue);
+
+                                    }
+                                });
+                        AlertDialog alert = alt_bld.create();
+                        alert.show();
+                        break;
                 }
             }
         });

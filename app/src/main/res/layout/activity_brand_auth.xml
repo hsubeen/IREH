@@ -152,6 +152,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/btn_maincolor"
                 android:fontFamily="@font/nanumsquarel"
+                android:textSize="13dp"
                 android:text="주소 검색" />
         </LinearLayout>
 
@@ -170,7 +171,7 @@
             android:padding="8dp"/>
 
         <Button
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:fontFamily="@font/nanumsquarel"
             android:id="@+id/btn_send_class_info"
             android:layout_width="match_parent"

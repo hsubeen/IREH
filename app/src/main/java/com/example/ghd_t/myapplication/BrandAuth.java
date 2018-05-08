@@ -186,13 +186,14 @@ public class BrandAuth extends Activity{
         String cu_field = mPref.getString("field","");
         String cu_phone = mPref.getString("phone","");
 
+        //브랜드 인증 정보가 있을 때, 조회/수정할 수 있도록
         if(mPref.getInt("exists",0) == 1){
             info_text.setText("등록한 브랜드 정보를 조회/수정합니다.");
             brand_name.setText(cu_brand);
             brand_web.setText(cu_web);
             Log.v("알림", "address " + cu_addr);
             brand_address_content.setText(cu_addr);
-            spinner_field.setSelection(3);
+            //spinner_field.setSelection(3);
             brand_phone.setText(cu_phone);
             send_class_info.setText("수정 요청");
         }
