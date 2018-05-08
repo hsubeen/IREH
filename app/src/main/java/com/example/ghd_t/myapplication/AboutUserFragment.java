@@ -11,16 +11,21 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.siyamed.shapeimageview.CircularImageView;
@@ -51,8 +56,9 @@ public class AboutUserFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private TextView user_name;
-    private String cu, uid;
+    private String cu, uid, value;
     private Typeface typeface;
+    private Button button;
     Bitmap bitmap;
 
     public AboutUserFragment() {
@@ -157,30 +163,66 @@ public class AboutUserFragment extends Fragment {
                     case 2:
                         //닉네임 변경
                         final EditText et = new EditText(getContext());
+                        final TextView tv = new TextView(getContext());
                         et.setSingleLine(true);
+                        tv.setTypeface(typeface);
                         et.setTypeface(typeface);
+                        tv.setText("닉네임은 2~8글자만 등록할 수 있습니다.");
 
-                        FrameLayout container = new FrameLayout(getContext());
-                        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        value = "";
+                        LinearLayout container = new LinearLayout(getContext());
+                        LinearLayout.LayoutParams params = new  LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         params.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
                         params.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+                        tv.setLayoutParams(params);
                         et.setLayoutParams(params);
+                        et.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                if(et.getText().length() >= 2 && et.getText().length() <= 8){
+                                    button.setEnabled(true);
+                                }else{
+                                    button.setEnabled(false);
+                                }
+                            }
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                            }
+                        });
+                        container.setOrientation(LinearLayout.VERTICAL);
                         container.addView(et);
+                        container.addView(tv);
                         final AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext(),R.style.MyAlertDialogStyle);
                         alt_bld.setTitle("닉네임 변경").setMessage("변경할 닉네임을 입력하세요").setIcon(R.drawable.check_dialog_64).setCancelable(
                         false).setView(container).setPositiveButton("확인",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                String value = et.getText().toString();
-
+                                value = et.getText().toString();
                                 user_name.setText(value);
                                 mDatabase = FirebaseDatabase.getInstance().getReference("Users");
                                 Map<String , Object> newvalue = new HashMap<>();
                                 newvalue.put("/userName/", value);
                                 mDatabase.child(uid).updateChildren(newvalue);
+
                             }
                         }).setNegativeButton("취소", null);
-                        AlertDialog alert = alt_bld.create();
+                        final AlertDialog alert = alt_bld.create();
+                        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                if(value.length() < 2)
+                                {
+                                    button = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+                                    if (button != null) {
+                                        button.setEnabled(false);
+                                    }
+                                }
+                            }
+                        });
                         alert.show();
                         break;
                 }
