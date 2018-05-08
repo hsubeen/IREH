@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/info_text"
-            android:paddingTop="60dp"
+            android:paddingTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -128,24 +128,28 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="5dp"
+            android:paddingBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/addr_text"
                 android:layout_width="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="25dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/maincolor"
                 android:text="주소"
                 android:textSize="16dp"
                 android:textStyle="bold"
                 android:paddingBottom="8dp"/>
-
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
             <Button
-                android:layout_marginLeft="20dp"
                 android:id="@+id/edit_address"
                 android:layout_width="wrap_content"
-                android:layout_height="37dp"
+                android:layout_height="30dp"
                 android:background="@drawable/btn_maincolor"
                 android:fontFamily="@font/nanumsquarel"
                 android:text="주소 검색" />
@@ -166,7 +170,7 @@
             android:padding="8dp"/>
 
         <Button
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/nanumsquarel"
             android:id="@+id/btn_send_class_info"
             android:layout_width="match_parent"
