@@ -44,7 +44,7 @@
             android:paddingTop="10dp"
             android:layout_marginBottom="10dp"
             android:textStyle="bold"
-            android:textSize="17dp"
+            android:textSize="20dp"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,6 +60,81 @@
             슈퍼맨이 돌아왔다!! 승재네 이야기 히히. 파프리카 또띠아를 사오라고 하셨어요.
             네네 그런거 같네요..ㅎㅎㅎ.."/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/maincolor"
+                    android:text="인원"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:paddingBottom="8dp"
+                    android:layout_marginRight="10dp"/>
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/maincolor"
+                    android:id="@+id/class_person"
+                    android:paddingBottom="8dp"
+                    android:layout_marginRight="10dp"/>
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/maincolor"
+                    android:text="명"
+                    android:paddingBottom="8dp"
+                    android:layout_marginRight="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/maincolor"
+                    android:text="요금"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:paddingBottom="8dp"
+                    android:layout_marginRight="10dp"/>
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/money_min"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/maincolor"
+                    android:paddingBottom="8dp"
+                    android:text=" ~ "
+                    android:layout_marginRight="10dp"/>
+                <TextView
+                    android:fontFamily="@font/nanumsquarel"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/money_max"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+        </LinearLayout>
         <LinearLayout
             android:padding="10dp"
             android:layout_marginTop="10dp"
