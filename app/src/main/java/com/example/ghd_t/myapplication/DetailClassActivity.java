@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class DetailClassActivity extends AppCompatActivity {
-    private TextView class_title, class_detail, class_name, class_field, class_address, class_web;
+    private TextView class_title, class_content, class_name, class_field, class_address, class_web;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private Object writeClass_index = null;
@@ -27,12 +27,12 @@ public class DetailClassActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String index = intent.getStringExtra("Index");
-
+        Log.v("알림", "선택된 글 INDEX " + index);
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
 
         class_title = findViewById(R.id.class_title);
-        class_detail = findViewById(R.id.class_detail);
+        class_content = findViewById(R.id.class_content);
         class_name = findViewById(R.id.class_name);
         class_field = findViewById(R.id.class_field);
         class_address = findViewById(R.id.class_address);
@@ -40,19 +40,12 @@ public class DetailClassActivity extends AppCompatActivity {
 
         //모집 글 정보 불러오기
         mDatabase = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.child(index).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
-                    writeClass_index = objSnapshot.getKey();
-                    Log.v("알림","게시글 번호 : " + writeClass_index);
-                    if(writeClass_index == null){
-                        Toast.makeText(getApplicationContext(),"게시글을 불러올 수 없습니다.", Toast.LENGTH_LONG).show();
-                    }else{
-                        findWriteClass();
-                    }
-
-                }
+                //불러온 정보 setting
+                class_title.setText(dataSnapshot.child("title").getValue(String.class));
+                class_content.setText(dataSnapshot.child("contents").getValue(String.class));
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -61,33 +54,33 @@ public class DetailClassActivity extends AppCompatActivity {
 
 
     }
-    void findWriteClass(){
-        //게시글 번호 찾아 title 찾기
-        mDatabase.child(writeClass_index.toString()).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "get childeren : " + dataSnapshot.getValue());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    void findWriteClass(){
+//        //게시글 번호 찾아 title 찾기
+//        mDatabase.child(writeClass_index.toString()).addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                Log.v("알림", "get childeren : " + dataSnapshot.getValue());
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 }

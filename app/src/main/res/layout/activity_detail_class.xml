@@ -55,7 +55,7 @@
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/class_detail"
+            android:id="@+id/class_content"
             android:text="안녕하세요~~~! 낄낄 길게 길게ㅔ 적어볼게요.
             슈퍼맨이 돌아왔다!! 승재네 이야기 히히. 파프리카 또띠아를 사오라고 하셨어요.
             네네 그런거 같네요..ㅎㅎㅎ.."/>
