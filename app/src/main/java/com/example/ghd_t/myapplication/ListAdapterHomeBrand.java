@@ -65,24 +65,25 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_info = (TextView) view.findViewById(R.id.brand_info);
         final TextView brand_priceinfo_min = (TextView) view.findViewById(R.id.brand_priceinfo_min);
         final TextView brand_priceinfo_max = (TextView) view.findViewById(R.id.brand_priceinfo_max);
-
+        final TextView brand_index = (TextView)view.findViewById(R.id.brand_index);
         brand_photo.setImageBitmap(listviewitem.getIcon());
         brand_title.setText(listviewitem.getBrand_title());
         brand_areaname.setText(listviewitem.getBrand_areaname());
         brand_info.setText(listviewitem.getBrand_fieldname());
         brand_priceinfo_min.setText(listviewitem.getBrand_priceinfo_min());
         brand_priceinfo_max.setText(listviewitem.getBrand_priceinfo_max());
+        brand_index.setText(listviewitem.getIndex());
 
         // layout 자체에 대한 클릭 이벤트.
         view.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), brand_title.getText().toString() + listviewitem.getIndex(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), brand_title.getText().toString() + brand_index.getText().toString(), Toast.LENGTH_SHORT).show();
                 Log.v("알림", "home_brandlist 클릭");
 
                 //리스트 클릭 시 DetailClassActivity로 전환
                 Intent intent = new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("Index", listviewitem.getIndex());
+                intent.putExtra("Index", brand_index.getText().toString());
                 v.getContext().startActivity(intent);
             }
         });

@@ -99,11 +99,12 @@ public class HomeFragment extends Fragment {
 
         //폰트 적용
         Typeface typeface = ResourcesCompat.getFont(getContext(),R.font.nanumsquarel);
-        Drawable temp = getResources().getDrawable(R.drawable.temp);
+
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         img = (ImageView) view.findViewById(R.id.home_image);
         home_brand_list = (ListView) view.findViewById(R.id.home_brandlist);
+
         mAuth = FirebaseAuth.getInstance();
 
         mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
@@ -275,6 +276,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -389,6 +391,7 @@ public class HomeFragment extends Fragment {
         //이 부분은 Firebase storage 사용량때문에 임시..
         icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
         data_homelist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max, index);
+        Log.v("알림","index설정 완료 " + data_homelist_data.getIndex());
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);
