@@ -17,17 +17,18 @@ public class BrandListItemData {
     private String brand_info;
     private String brand_priceinfo_min;
     private String brand_priceinfo_max;
+    private String index;
 
 
 
-    public BrandListItemData(Bitmap icon, String brand_title, String brand_areaname, String brand_info, String brand_priceinfo_min, String brand_priceinfo_max) {
+    public BrandListItemData(Bitmap icon, String brand_title, String brand_areaname, String brand_info, String brand_priceinfo_min, String brand_priceinfo_max,String index) {
         this.icon = icon;
         this.brand_title = brand_title;
         this.brand_areaname = brand_areaname;
-
         this.brand_info = brand_info;
         this.brand_priceinfo_min = brand_priceinfo_min;
         this.brand_priceinfo_max = brand_priceinfo_max;
+        this.index = index;
     }
 
     public Bitmap getIcon() {
@@ -76,5 +77,13 @@ public class BrandListItemData {
 
     public void setBrand_priceinfo_max(String brand_priceinfo_max) {
         this.brand_priceinfo_max = brand_priceinfo_max;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
     }
 }

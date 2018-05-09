@@ -15,8 +15,9 @@ public class WriteClassData {
     String img2;
     String img3;
     String img4;
+    String cu;
 
-    public WriteClassData(String title, String contents, String person, String money_min, String money_max, String img1, String img2, String img3, String img4) {
+    public WriteClassData(String title, String contents, String person, String money_min, String money_max, String img1, String img2, String img3, String img4,String cu) {
         this.title = title;
         this.contents = contents;
         this.person = person;
@@ -26,6 +27,7 @@ public class WriteClassData {
         this.img2 = img2;
         this.img3 = img3;
         this.img4 = img4;
+        this.cu = cu;
     }
 
     public String getTitle() {
@@ -99,4 +101,14 @@ public class WriteClassData {
     public void setImg4(String img4) {
         this.img4 = img4;
     }
+
+
+    public String getCu() {
+        return cu;
+    }
+
+    public void setCu(String cu) {
+        this.cu = cu;
+    }
+
 }

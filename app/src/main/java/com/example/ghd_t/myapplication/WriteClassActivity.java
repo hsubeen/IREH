@@ -557,13 +557,12 @@ public class WriteClassActivity extends AppCompatActivity {
         final AlertDialog alert = alt_bld.create();
         alert.show();
         if(downloadUrl1 != null && downloadUrl2 != null && downloadUrl3 != null && downloadUrl4 != null){
+
             WriteClassData writeClassData = new WriteClassData(write_class_title.getText().toString(), write_class_content.getText().toString(),
-                    write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
-                    downloadUrl1.toString(),downloadUrl2.toString(),downloadUrl3.toString(),downloadUrl4.toString());
+            write_class_person.getText().toString(), spinner_money_min.getSelectedItem().toString(), spinner_money_max.getSelectedItem().toString(),
+            downloadUrl1.toString(),downloadUrl2.toString(),downloadUrl3.toString(),downloadUrl4.toString(), cu);
 
-
-
-            mDatabase.child("WriteClass").child(cu).child(ct_str).setValue(writeClassData);
+            mDatabase.child("WriteClass").child(ct_str).setValue(writeClassData);
             Log.v("알림", "작성 내용 데이터베이스 저장 성공 ");
 
 

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class RegClassFragment extends Fragment {
     private DatabaseReference mDatabase1, mDatabase2,mDatabase3;
     private Button btn_write_class;
-    private String uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max;
+    private String cu, uri, address,brandname,field,phone,weburl, title, contents, money_min, money_max,index;
     private BrandListItemData data_brandlist_data;
     private ListView home_brand_list;
     private FirebaseAuth mAuth;
@@ -135,21 +135,28 @@ public class RegClassFragment extends Fragment {
     }
     void makeClassData(){
 
-        final String cu = mAuth.getUid();
+        cu = mAuth.getUid();
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase2.child(cu).addChildEventListener(new ChildEventListener() {
+        mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
+                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
+                //현재 로그인 한 유저가 쓴 글만 보여지도록
+                Log.v("알림", "cu db " + dataSnapshot.child("cu").getValue(String.class));
+                Log.v("알림", "cu " +cu);
+                if(cu.equals(dataSnapshot.child("cu").getValue(String.class))){
+                    Log.v("알림", "데이터 생성 " + cu);
+                    title = dataSnapshot.child("title").getValue(String.class);
+                    contents = dataSnapshot.child("contents").getValue(String.class);
+                    money_min = dataSnapshot.child("money_min").getValue(String.class);
+                    money_max = dataSnapshot.child("money_max").getValue(String.class);
+                    uri = dataSnapshot.child("img1").getValue(String.class);
+                    index = dataSnapshot.getKey();
 
-                title = dataSnapshot.child("title").getValue(String.class);
-                contents = dataSnapshot.child("contents").getValue(String.class);
-                money_min = dataSnapshot.child("money_min").getValue(String.class);
-                money_max = dataSnapshot.child("money_max").getValue(String.class);
-                uri = dataSnapshot.child("img1").getValue(String.class);
+                    makeData();
+                }
 
-                makeData();
             }
 
             @Override
@@ -202,7 +209,7 @@ public class RegClassFragment extends Fragment {
 
         //이 부분은 Firebase storage 사용량때문에 임시..
         Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_brandlist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
+        data_brandlist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max,index);
         data_brandlist.add(data_brandlist_data);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, data_brandlist);
         home_brand_list.setAdapter(adapter_homebrand);

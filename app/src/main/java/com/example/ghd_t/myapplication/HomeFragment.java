@@ -69,7 +69,7 @@ import javax.net.ssl.HttpsURLConnection;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-    private Bitmap bitmap;
+    private Bitmap bitmap, icon;
     private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
     private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
     private boolean isAccessFineLocation = false;
@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment {
     private Spinner spinner_field, spinner_field2;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase2, mDatabase3;
-    private String uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max;
+    private String uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max, index;
     private BrandListItemData data_homelist_data;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> home_brandlist = new ArrayList<>();
@@ -318,7 +318,7 @@ public class HomeFragment extends Fragment {
 
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase2.child(user).addChildEventListener(new ChildEventListener() {
+        mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
@@ -328,13 +328,13 @@ public class HomeFragment extends Fragment {
                 money_min = dataSnapshot.child("money_min").getValue(String.class);
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
                 uri = dataSnapshot.child("img1").getValue(String.class);
-
+                index = dataSnapshot.getKey();
                 Log.v("알림", "title " + title);
                 Log.v("알림", "contents " + contents);
                 Log.v("알림", "money_min " + money_min);
                 Log.v("알림", "money_max " + money_max);
                 Log.v("알림", "uri  " + uri);
-
+                Log.v("알림", "index   " + index);
                 makeData();
             }
 
@@ -387,8 +387,8 @@ public class HomeFragment extends Fragment {
 //        }
 
         //이 부분은 Firebase storage 사용량때문에 임시..
-        Bitmap icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_homelist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max);
+        icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
+        data_homelist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max, index);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);

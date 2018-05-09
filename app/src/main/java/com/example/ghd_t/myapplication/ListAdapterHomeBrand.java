@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
  */
 
 public class ListAdapterHomeBrand extends BaseAdapter{
-
+    private BrandListItemData listviewitem;
     private ArrayList<BrandListItemData> data = new ArrayList<>();
     private LayoutInflater inflater;
     private int layout;
@@ -57,7 +57,7 @@ public class ListAdapterHomeBrand extends BaseAdapter{
             view =inflater.inflate(layout,viewGroup,false);
             view.setClickable(true);
         }
-        BrandListItemData listviewitem = data.get(i);
+        listviewitem = data.get(i);
 
         final ImageView brand_photo = (ImageView) view.findViewById(R.id.brand_photo);
         final TextView brand_title = (TextView) view.findViewById(R.id.brand_title);
@@ -77,11 +77,13 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         view.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), brand_title.getText().toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), brand_title.getText().toString() + listviewitem.getIndex(), Toast.LENGTH_SHORT).show();
                 Log.v("알림", "home_brandlist 클릭");
 
                 //리스트 클릭 시 DetailClassActivity로 전환
-                v.getContext().startActivity(new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                Intent intent = new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("Index", listviewitem.getIndex());
+                v.getContext().startActivity(intent);
             }
         });
 
