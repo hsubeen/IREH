@@ -21,9 +21,9 @@ import java.util.Date;
 
 public class DetailClassActivity extends AppCompatActivity {
     private TextView class_phone,class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
-    private DatabaseReference mDatabase1, mDatabase2, mDatabase3, mDatabase4;
+    private DatabaseReference mDatabase1, mDatabase2, mDatabase3, mDatabase4, mDatabase5;
     private FirebaseAuth mAuth;
-    private String index, writepersonId,ct_str, chatRoomIndex;
+    private String index, writepersonId,ct_str, chatRoomIndex, participantName;
     private Button btn_reservation, btn_chat, btn_modify, btn_delete;
     private int findFlag = -1;
     @Override
@@ -133,16 +133,29 @@ public class DetailClassActivity extends AppCompatActivity {
                                 Log.v("알림", "내가 속한 채팅방 없음 / 생성 완료");
                             }
                         }
-
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
 
-                Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
-                intent.putExtra("chatPartner", class_name.getText().toString());
-                startActivity(intent);
+                mDatabase5 = FirebaseDatabase.getInstance().getReference("Users");
+                mDatabase5.child(writepersonId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        participantName = dataSnapshot.child("userName").getValue().toString();
+
+                        Log.v("알림",".. " + dataSnapshot.getValue() + " " + participantName);
+                        //글쓴이의 name을 구해 ChatActivity로 전달
+                        Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
+                        intent.putExtra("chatPartner", participantName);
+                        startActivity(intent);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
             }
         });
     }

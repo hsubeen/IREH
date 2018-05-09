@@ -84,12 +84,12 @@ public class MsgFragment extends Fragment {
 
     //참여자 id찾은 후 name을 찾아 name으로 setting
     void setChatParticipantName(){
-        mDatabase = FirebaseDatabase.getInstance().getReference("Regclass");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         mDatabase.child(participantId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.v("알림",".. " + dataSnapshot.getValue());
-                participantName = dataSnapshot.child("brandname").getValue().toString();
+                participantName = dataSnapshot.child("userName").getValue().toString();
                 makeData();
             }
             @Override

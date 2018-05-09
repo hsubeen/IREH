@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -36,6 +37,7 @@ public class ChatActivity extends Activity {
         //대화상대 이름 설정
         Intent intent = getIntent();
         chatPartner = intent.getStringExtra("chatPartner");
+        Log.v("알림","intent전달 완료 잘 받았음 " +chatPartner);
         msg_name.setText(chatPartner);
 
         chatList.setAdapter(chatAdapter);
