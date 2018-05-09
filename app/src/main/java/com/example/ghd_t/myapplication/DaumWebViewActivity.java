@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 public class DaumWebViewActivity extends AppCompatActivity {
     private WebView daum_webView;
-    private TextView daum_result;
     private Handler handler;
     String address;
 
@@ -49,7 +48,6 @@ public class DaumWebViewActivity extends AppCompatActivity {
         // web client 를 chrome 으로 설정
         daum_webView.setWebChromeClient(new WebChromeClient());
         // webview url load
-        //daum_webView.loadUrl("http://192.168.25.59:80/daum_address.php");
         daum_webView.loadUrl("http://49.236.136.74/daum_address.php");
     }
 
@@ -63,11 +61,8 @@ public class DaumWebViewActivity extends AppCompatActivity {
                     address = String.format(" %s %s", arg2, arg3);
                     AddressData.getInstance().setAddress(address);
 
-                    //ad.setAddress(address);
-
                     Log.v("알림","주소 저장 완료 : " + AddressData.getInstance().getAddress());
-                    //daum_result.setText(String.format("(%s) %s %s", arg1, arg2, arg3));
-                    // WebView를 초기화 하지않으면 재사용할 수 없음
+                    //WebView를 초기화 하지않으면 재사용할 수 없음
                     init_webView();
                     finish();
                 }

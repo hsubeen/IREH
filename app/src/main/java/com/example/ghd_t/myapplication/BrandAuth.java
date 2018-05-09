@@ -33,6 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by ghd-t on 2018-04-24.
  */
@@ -44,10 +47,30 @@ public class BrandAuth extends Activity{
     private EditText brand_name, brand_web, brand_phone;
     private Button brand_address,send_class_info;
     private Spinner spinner_field;
-    private BrandAuthData data;
-
+    private SharedPreferences mPref;
+    private String cu_addr,cu_brand,cu_web,cu_field,cu_phone;
+    int editFlag = 0;
     public BrandAuth() {
         // Required empty public constructor
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(mPref.getInt("exists",0) == 1 && editFlag == 0){
+            //주소정보 있음. 불러오기
+            Log.v("알림","이미 정보가 있습니다. 주소를 불러옵니다.");
+            editFlag = 1;
+            brand_address_content.setText(cu_addr);
+        }else if(mPref.getInt("exists",0) == 1 && editFlag==1){
+            Log.v("알림","주소를 수정합니다.");
+            brand_address_content.setText(AddressData.getInstance().getAddress());
+        }else if (mPref.getInt("exists",0) == 0){
+            Log.v("알림","webview로부터 주소정보를 생성합니다.");
+            brand_address_content.setText(AddressData.getInstance().getAddress());
+        }
+
     }
 
     //브랜드인증 글 작성 중 뒤로가기 버튼 눌렸을 때
@@ -75,12 +98,9 @@ public class BrandAuth extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brand_auth);
         // Inflate the layout for this fragment
-        Log.v("알림","BrandAuth.java onCreateView호출됨");
 
         mAuth = FirebaseAuth.getInstance();
         String cu = mAuth.getUid();
-        Log.v("알림", "BrandAuth.java current user " + cu);
-
 
         brandname = (TextView) findViewById(R.id.brand_name_text);
         brandweb = (TextView) findViewById(R.id.brand_web_text);
@@ -140,7 +160,6 @@ public class BrandAuth extends Activity{
         };
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         spinner_field.setAdapter(adapter);
-
         spinner_field.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -173,31 +192,30 @@ public class BrandAuth extends Activity{
         send_class_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                makeDialog();
+                    makeDialog();
             }
         });
 
 
-        //현재 로그인한 사용자의 브랜드 인증 정보를 SharedPreferences를 통해 가져옴
-        SharedPreferences mPref = getSharedPreferences("BrandAuth",0);
-        String cu_brand = mPref.getString("brandname","");
-        String cu_web = mPref.getString("weburl", "");
-        String cu_addr = mPref.getString("address", "");
-        String cu_field = mPref.getString("field","");
-        String cu_phone = mPref.getString("phone","");
+        // 현재 로그인한 사용자의 브랜드 인증 정보를 SharedPreferences를 통해 가져옴
+        mPref = getSharedPreferences("BrandAuth",0);
+        cu_brand = mPref.getString("brandname","");
+        cu_web = mPref.getString("weburl", "");
+        cu_addr = mPref.getString("address", "");
+        cu_field = mPref.getString("field","");
+        cu_phone = mPref.getString("phone","");
 
-        //브랜드 인증 정보가 있을 때, 조회/수정할 수 있도록
+        // 브랜드 인증 정보가 있을 때, 조회/수정할 수 있도록
         if(mPref.getInt("exists",0) == 1){
             info_text.setText("등록한 브랜드 정보를 조회/수정합니다.");
             brand_name.setText(cu_brand);
             brand_web.setText(cu_web);
             Log.v("알림", "address " + cu_addr);
-            brand_address_content.setText(cu_addr);
+
             //spinner_field.setSelection(3);
             brand_phone.setText(cu_phone);
             send_class_info.setText("수정 요청");
         }
-
     }
 
     private void makeDialog(){
@@ -208,22 +226,38 @@ public class BrandAuth extends Activity{
                     public void onClick(DialogInterface dialog, int id) {
                         // 네 클릭
 
+                        // 모두 입력되었는지 확인. 입력되어있지 않다면
                         if(brand_name.getText().length()==0
                                 || brand_web.getText().length() == 0
                                 || brand_phone.getText().length() == 0
                                 || brand_address_content.getText().length() == 0
                                 || spinner_field.getSelectedItemId() == 0){
-                            Log.v("알림","선택된 spinner item id : " + spinner_field.getSelectedItemId());
                             Toast.makeText(BrandAuth.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else{
                         // 현재 로그인한 사용자의 Uid
                         String cu = mAuth.getUid();
-                        // 작성한 클래스정보를 RegClassData에 담기
-                        BrandAuthData regClassData = new BrandAuthData(brand_name.getText().toString(), brand_web.getText().toString(), brand_phone.getText().toString(),
-                                spinner_field.getSelectedItem().toString(), brand_address_content.getText().toString());
 
-                        // DB에 등록
-                        mDatabase.child("Regclass").child(cu).setValue(regClassData);
+                        // 브랜드 인증 정보가 있다면
+                        if(mPref.getInt("exists",0) == 1){
+                            //수정
+                            mDatabase = FirebaseDatabase.getInstance().getReference("Regclass");
+                            Map<String , Object> newvalue = new HashMap<>();
+                            newvalue.put("/address/", brand_address_content.getText().toString());
+                            newvalue.put("/brandname/",brand_name.getText().toString());
+                            newvalue.put("/field/", spinner_field.getSelectedItem().toString());
+                            newvalue.put("/phone/", brand_phone.getText().toString());
+                            newvalue.put("/weburl/", brand_web.getText().toString());
+                            mDatabase.child(cu).updateChildren(newvalue);
+                        }else{
+                            // 브랜드 인증 정보가 없다면 새로 생성
+                            // 작성한 클래스정보를 RegClassData에 담기
+                            BrandAuthData regClassData = new BrandAuthData(brand_name.getText().toString(), brand_web.getText().toString(), brand_phone.getText().toString(),
+                                    spinner_field.getSelectedItem().toString(), brand_address_content.getText().toString());
+
+                            // DB에 등록
+                            mDatabase.child("Regclass").child(cu).setValue(regClassData);
+                        }
+
                         // 등록완료 알림창 발생
                         makeConfirmDialog();
                         }
@@ -242,7 +276,6 @@ public class BrandAuth extends Activity{
     // DB등록 완료 후 알림창
     private void makeConfirmDialog(){
         AlertDialog.Builder alt_bld2 = new AlertDialog.Builder(BrandAuth.this,R.style.MyAlertDialogStyle);
-        //alt_bld2.setMessage("\n\n                  인증되었습니다\n\n");
 
         alt_bld2.setIcon(R.drawable.check_dialog_64).setTitle("인증요청 성공").setMessage("인증되었습니다").setCancelable(
                 false);
