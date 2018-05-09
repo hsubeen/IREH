@@ -1,7 +1,9 @@
 package com.example.ghd_t.myapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -15,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -95,7 +99,27 @@ public class RegClassFragment extends Fragment {
 
 
                 if(dataSnapshot.getValue()==null){
+                    //브랜드 인증 정보 없음.
                     mEdit.putInt("exists",0);
+                    btn_write_class.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog.Builder alt_bld = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+                            alt_bld.setTitle("알림").setIcon(R.drawable.check_dialog_64)
+                            .setMessage("브랜드 인증을 받은 후 모집글을 작성할 수 있습니다.\n브랜드 인증창으로 이동하시겠습니까?").setCancelable(
+                            false).setPositiveButton("네",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // 브랜드 인증창으로 이동
+                                    Intent intent = new Intent(getActivity(), BrandAuth.class);
+                                    startActivity(intent);
+                                }
+                            }).setNegativeButton("아니오", null);
+                            AlertDialog alert = alt_bld.create();
+                            alert.show();
+                        }
+                    });
+
                 }else{
                     mEdit.putInt("exists",1);
                     //현재 로그인한 유저의 브랜드 인증 정보를 SharedPreferences로 저장
