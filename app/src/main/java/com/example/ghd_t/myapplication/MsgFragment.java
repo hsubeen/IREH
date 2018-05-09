@@ -63,7 +63,7 @@ public class MsgFragment extends Fragment {
 
                     if(cu.equals(user1) || cu.equals(user2)){
                         //내가 속한 채팅방 찾기
-                        Log.v("알림", "MsgFragment_채팅방 발견");
+                        //Log.v("알림", "MsgFragment_채팅방 발견");
                         makeData();
                     }
                 }

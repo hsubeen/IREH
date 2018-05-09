@@ -10,20 +10,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DetailClassActivity extends AppCompatActivity {
     private TextView class_phone,class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
     private DatabaseReference mDatabase1, mDatabase2, mDatabase3, mDatabase4;
     private FirebaseAuth mAuth;
-    private String index, writepersonId,ct_str;
+    private String index, writepersonId,ct_str, chatRoomIndex;
     private Button btn_reservation, btn_chat, btn_modify, btn_delete;
-
+    private int findFlag = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,34 +94,50 @@ public class DetailClassActivity extends AppCompatActivity {
 
                 //채팅방 없는지 확인 하고, 없으면 생성 아니면 기존챗방으로 이동!
                 mDatabase4 = FirebaseDatabase.getInstance().getReference("Chattings");
-                mDatabase4.addValueEventListener(new ValueEventListener() {
+                mDatabase4.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.v("알림", "null인가? " + dataSnapshot.getValue());
 
                         if(dataSnapshot.getValue()==null){
                             //채팅방 정보가 아예 없는 경우
                             Participants participants = new Participants(cu, writepersonId);
                             mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
-                            Log.v("알림", "채팅방 생성 완료");
-                        }
+                            Messages messages = new Messages("TIME_MESSAGE", getDate());
+                            mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
 
-                        for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
+                            Log.v("알림", "채팅방정보가 아예 없어서 생성 완료");
+                        }else{
+                            //채팅방 정보가 있는 경우 내가 속한 채팅방 모두 찾기
+                            for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
 
-                            String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
-                            String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
+                                chatRoomIndex = objSnapshot.getKey();
+                                Log.v("알림","채팅방 number " + chatRoomIndex);
+                                String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
+                                String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
-                            if(cu.equals(user1) || cu.equals(user2)){
-                                //내가 속한 채팅방 찾음.
-                                Log.v("알림", "Detailclass_채팅방 발견");
+                                Log.v("알림","user1 " + user1);
+                                Log.v("알림","user2 " + user2);
+                                if(cu.equals(user1) || cu.equals(user2)){
+                                    //내가 속한 채팅방 찾음.
+                                    findFlag=1;
+                                    Log.v("알림", "Detailclass_채팅방 발견");
 
-                            }else{
-                                //채팅방이 없음. 생성
+                                }
+                            }
+
+                            if(findFlag!=1){
+                                //내가 속한 채팅방이 없음. 생성
                                 Participants participants = new Participants(cu, writepersonId);
                                 mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
-                                Log.v("알림", "채팅방 생성 완료");
+
+                                Messages messages = new Messages("TIME_MESSAGE", getDate());
+                                mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
+                                Log.v("알림", "내가속한 채팅방이 없어서 생성 완료");
                             }
+
                         }
+
+
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -153,30 +171,16 @@ public class DetailClassActivity extends AppCompatActivity {
         });
     }
 
-    private class Participants {
 
-        private String user1;
-        private String user2;
 
-        public Participants(String user1, String user2) {
-            this.user1 = user1;
-            this.user2 = user2;
-        }
-        public String getUser1() {
-            return user1;
-        }
-
-        public void setUser1(String user1) {
-            this.user1 = user1;
-        }
-
-        public String getUser2() {
-            return user2;
-        }
-
-        public void setUser2(String user2) {
-            this.user2 = user2;
-        }
-
+    private String getDate(){
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String nowTime = sdf.format(date);
+        Log.v("알림","현재시간 " + nowTime);
+        return nowTime;
     }
+
+
 }
