@@ -69,11 +69,12 @@ public class ListAdapterMsg extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), msg_name.getText().toString(),Toast.LENGTH_SHORT).show();
                 Log.v("알림", "msg 내용 클릭");
 
-                // list 클릭 시 채팅창으로 넘어감
-                v.getContext().startActivity(new Intent(v.getContext(),ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                //대화상대 이름을 intent를 통해 ChatActivity로 전달
+                Intent intent = new Intent(v.getContext(),ChatActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("chatPartner", msg_name.getText().toString());
+                v.getContext().startActivity(intent);
             }
         });
 
