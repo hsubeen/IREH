@@ -22,7 +22,7 @@ public class DetailClassActivity extends AppCompatActivity {
     private DatabaseReference mDatabase1, mDatabase2;
     private FirebaseAuth mAuth;
     private String index, writepersonId;
-    private Button btn_reservation, btn_chat;
+    private Button btn_reservation, btn_chat, btn_modify, btn_delete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,11 @@ public class DetailClassActivity extends AppCompatActivity {
         class_person = findViewById(R.id.class_person);
         money_min = findViewById(R.id.money_min);
         money_max = findViewById(R.id.money_max);
+
         btn_chat = findViewById(R.id.btn_chat);
         btn_reservation = findViewById(R.id.btn_reservation);
+        btn_delete = findViewById(R.id.btn_delete);
+        btn_modify = findViewById(R.id.btn_modify);
 
         //모집 글 정보 불러오기
         mDatabase1 = FirebaseDatabase.getInstance().getReference("WriteClass");
@@ -62,17 +65,29 @@ public class DetailClassActivity extends AppCompatActivity {
                 class_person.setText(dataSnapshot.child("person").getValue(String.class));
 
                 makeBrandData();
+
+                if(cu.equals(writepersonId)){
+                    //본인이 쓴 글. 예약과 문의 버튼 없애기
+                    btn_reservation.setVisibility(View.GONE);
+                    btn_chat.setVisibility(View.GONE);
+                    btn_delete.setVisibility(View.VISIBLE);
+                    btn_modify.setVisibility(View.VISIBLE);
+                    Toast.makeText(DetailClassActivity.this, "어머 내가 쓴 글이다",Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
 
+
+        //1:1문의 클릭
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
-                
+                intent.putExtra("chatPartner", class_name.getText().toString());
                 startActivity(intent);
             }
         });

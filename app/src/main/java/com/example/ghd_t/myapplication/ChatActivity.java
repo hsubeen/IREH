@@ -1,6 +1,7 @@
 package com.example.ghd_t.myapplication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChatActivity extends Activity {
@@ -17,6 +19,8 @@ public class ChatActivity extends Activity {
     private ListAdapterChat chatAdapter;
     private ImageButton send_msg;
     private EditText chat_message;
+    private String chatPartner;
+    private TextView msg_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +29,14 @@ public class ChatActivity extends Activity {
 
         chatAdapter = new ListAdapterChat();
         chatList = (ListView)findViewById(R.id.chat_list);
-
+        msg_name = (TextView)findViewById(R.id.msg_name);
         send_msg = (ImageButton)findViewById(R.id.chat_btn);
         chat_message = (EditText)findViewById(R.id.chat_message);
 
+        //대화상대 이름 설정
+        Intent intent = getIntent();
+        chatPartner = intent.getStringExtra("chatPartner");
+        msg_name.setText(chatPartner);
 
         chatList.setAdapter(chatAdapter);
         chatAdapter.add("2017/03/02",2);

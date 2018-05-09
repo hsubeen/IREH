@@ -248,7 +248,30 @@
                 android:text="1:1 문의"/>
 
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:fontFamily="@font/nanumsquarel"
+                android:layout_alignParentLeft="true"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_modify"
+                android:background="@drawable/btn_maincolor"
+                android:visibility="gone"
+                android:text="수정"/>
+            <Button
+                android:fontFamily="@font/nanumsquarel"
+                android:layout_alignParentRight="true"
+                android:layout_gravity=""
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete"
+                android:background="@drawable/btn_redcolor"
+                android:visibility="gone"
+                android:text="삭제"/>
 
+        </RelativeLayout>
 
     </LinearLayout>
 
