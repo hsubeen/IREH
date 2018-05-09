@@ -19,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DetailClassActivity extends AppCompatActivity {
     private TextView class_phone,class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
-    private DatabaseReference mDatabase1, mDatabase2;
+    private DatabaseReference mDatabase1, mDatabase2, mDatabase3;
     private FirebaseAuth mAuth;
     private String index, writepersonId;
     private Button btn_reservation, btn_chat, btn_modify, btn_delete;
@@ -33,6 +33,7 @@ public class DetailClassActivity extends AppCompatActivity {
         index = intent.getStringExtra("Index");
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase3 = FirebaseDatabase.getInstance().getReference();
         final String cu = mAuth.getUid();
 
         class_phone = findViewById(R.id.class_phone);
@@ -85,7 +86,15 @@ public class DetailClassActivity extends AppCompatActivity {
         btn_chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //현재시간
+                long ct = System.currentTimeMillis();
+                String ct_str = Long.toString(ct);
 
+                //채팅방 생성
+                Participants participants = new Participants(cu, writepersonId);
+                mDatabase3.child("chattings").child(ct_str).child("participants").setValue(participants);
+
+                Log.v("알림", "채팅방 생성 완료");
                 Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
                 intent.putExtra("chatPartner", class_name.getText().toString());
                 startActivity(intent);
@@ -111,5 +120,32 @@ public class DetailClassActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private class Participants {
+
+        private String user1;
+        private String user2;
+
+        public Participants(String user1, String user2) {
+            this.user1 = user1;
+            this.user2 = user2;
+        }
+        public String getUser1() {
+            return user1;
+        }
+
+        public void setUser1(String user1) {
+            this.user1 = user1;
+        }
+
+        public String getUser2() {
+            return user2;
+        }
+
+        public void setUser2(String user2) {
+            this.user2 = user2;
+        }
+
     }
 }
