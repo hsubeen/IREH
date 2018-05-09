@@ -112,6 +112,7 @@ public class ListAdapterChat extends BaseAdapter{
             leftView.setVisibility(View.GONE);
         } else if(arrayList.get(position).type == 2){
             // 날짜
+            text.setTextColor(context.getResources().getColor(R.color.black));
             text.setBackgroundResource(R.color.white);
             layout.setGravity(Gravity.CENTER);
             rightView.setVisibility(View.VISIBLE);
