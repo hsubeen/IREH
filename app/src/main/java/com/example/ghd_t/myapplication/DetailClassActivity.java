@@ -104,15 +104,14 @@ public class DetailClassActivity extends AppCompatActivity {
                             Participants participants = new Participants(cu, writepersonId);
                             mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
                             Messages messages = new Messages("TIME_MESSAGE", getDate());
-                            mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
+                            mDatabase3.child("Chattings").child(ct_str).child("messages").push().setValue(messages);
 
                             Log.v("알림", "채팅방이 아예 없음. 생성 완료");
                         }else{
                             //채팅방 정보가 있는 경우 내가 속한 채팅방 모두 찾기
                             for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
 
-                                chatRoomIndex = objSnapshot.getKey();
-                                Log.v("알림","채팅방 number " + chatRoomIndex);
+
                                 String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                                 String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
@@ -120,6 +119,9 @@ public class DetailClassActivity extends AppCompatActivity {
                                     //내가 속한 채팅방 찾음.
                                     findFlag=1;
                                     Log.v("알림", "내가 속한 채팅방 발견");
+                                    chatRoomIndex = objSnapshot.getKey();
+                                    Log.v("알림","채팅방 number " + chatRoomIndex);
+                                    findName();
                                 }
                             }
 
@@ -129,33 +131,39 @@ public class DetailClassActivity extends AppCompatActivity {
                                 mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
 
                                 Messages messages = new Messages("TIME_MESSAGE", getDate());
-                                mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
+                                mDatabase3.child("Chattings").child(ct_str).child("messages").push().setValue(messages);
                                 Log.v("알림", "내가 속한 채팅방 없음 / 생성 완료");
                             }
+
                         }
+
+
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
 
-                mDatabase5 = FirebaseDatabase.getInstance().getReference("Users");
-                mDatabase5.child(writepersonId).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        participantName = dataSnapshot.child("userName").getValue().toString();
 
-                        Log.v("알림",".. " + dataSnapshot.getValue() + " " + participantName);
-                        //글쓴이의 name을 구해 ChatActivity로 전달
-                        Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
-                        intent.putExtra("chatPartner", participantName);
-                        startActivity(intent);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+            }
+        });
+    }
 
+    void findName(){
+        mDatabase5 = FirebaseDatabase.getInstance().getReference("Users");
+        mDatabase5.child(writepersonId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                participantName = dataSnapshot.child("userName").getValue().toString();
+
+                //글쓴이의 name을 구해 ChatActivity로 전달
+                Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
+                intent.putExtra("chatPartner", participantName);
+                intent.putExtra("chatRoomIndex",chatRoomIndex);
+                startActivity(intent);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
     }

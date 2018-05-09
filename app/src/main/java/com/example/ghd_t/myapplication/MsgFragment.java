@@ -34,7 +34,7 @@ public class MsgFragment extends Fragment {
     private ArrayList<MsgItemData> data_msg;
     private ListAdapterMsg adapter_msg;
     private ListView msg_list;
-    private String participantId,participantName;
+    private String participantId,participantName,chatRoomIndex;
     Drawable temp;
     public MsgFragment() {
         // Required empty public constructor
@@ -59,6 +59,9 @@ public class MsgFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
+
+                    chatRoomIndex = objSnapshot.getKey();
+                    Log.v("알림","= chatRoomIndex " + chatRoomIndex);
                     String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                     String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
@@ -101,6 +104,7 @@ public class MsgFragment extends Fragment {
     //listdata만들기
     void makeData(){
         data_msg_data = new MsgItemData(temp, participantName, "문의 있네요!");
+        Log.v("알림", "데이터 생성하는 중 chatRoomIndex" + chatRoomIndex);
         data_msg.add(data_msg_data);
         adapter_msg = new ListAdapterMsg(getContext(), R.layout.msg_listview_item, data_msg);
         msg_list.setAdapter(adapter_msg);

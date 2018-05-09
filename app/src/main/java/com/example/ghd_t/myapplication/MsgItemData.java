@@ -17,6 +17,7 @@ public class MsgItemData {
         this.msg_content = msg_content;
     }
 
+
     public Drawable getMsg_photo() {
         return msg_photo;
     }

@@ -21,15 +21,23 @@
             android:src="@drawable/user_profile_default"/>
 
         <TextView
-            android:textSize="15dp"
-            android:paddingLeft="10dp"
+        android:textSize="15dp"
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:text="임시이름"
+        android:id="@+id/msg_name"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"/>
+
+        <TextView
             android:textColor="@color/black"
-            android:text="임시이름"
-            android:id="@+id/msg_name"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
+            android:text=""
+            android:id="@+id/msg_chatRoomIndex"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:visibility="gone"/>
     </LinearLayout>
 
 

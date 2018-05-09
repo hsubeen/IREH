@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class ListAdapterMsg extends BaseAdapter {
 
     private ArrayList<MsgItemData> data = new ArrayList<>();
+    private MsgItemData listviewitem;
     private LayoutInflater inflater;
     private int layout;
 
@@ -54,15 +55,17 @@ public class ListAdapterMsg extends BaseAdapter {
             view = inflater.inflate(layout,viewGroup,false);
             view.setClickable(true);
         }
-        MsgItemData listviewitem = data.get(i);
+        listviewitem = data.get(i);
 
         final ImageView msg_photo = (ImageView) view.findViewById(R.id.msg_photo);
         final TextView msg_name = (TextView) view.findViewById(R.id.msg_name);
         final TextView msg_content = (TextView) view.findViewById(R.id.msg_content);
+        final TextView msg_chatRoomIndex = (TextView) view.findViewById(R.id.msg_chatRoomIndex);
+
         final View v = view;
-        msg_photo.setImageDrawable(data.get(i).getMsg_photo());
-        msg_name.setText(data.get(i).getMsg_name());
-        msg_content.setText(data.get(i).getMsg_content());
+        msg_photo.setImageDrawable(listviewitem.getMsg_photo());
+        msg_name.setText(listviewitem.getMsg_name());
+        msg_content.setText(listviewitem.getMsg_content());
 
 
         // layout 자체에 대한 클릭 이벤트.
