@@ -66,6 +66,7 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         final TextView brand_priceinfo_min = (TextView) view.findViewById(R.id.brand_priceinfo_min);
         final TextView brand_priceinfo_max = (TextView) view.findViewById(R.id.brand_priceinfo_max);
         final TextView brand_index = (TextView)view.findViewById(R.id.brand_index);
+
         brand_photo.setImageBitmap(listviewitem.getIcon());
         brand_title.setText(listviewitem.getBrand_title());
         brand_areaname.setText(listviewitem.getBrand_areaname());
@@ -78,9 +79,6 @@ public class ListAdapterHomeBrand extends BaseAdapter{
         view.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), brand_title.getText().toString() + brand_index.getText().toString(), Toast.LENGTH_SHORT).show();
-                Log.v("알림", "home_brandlist 클릭");
-
                 //리스트 클릭 시 DetailClassActivity로 전환
                 Intent intent = new Intent(v.getContext(),DetailClassActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("Index", brand_index.getText().toString());

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ public class DetailClassActivity extends AppCompatActivity {
     private DatabaseReference mDatabase1, mDatabase2;
     private FirebaseAuth mAuth;
     private String index, writepersonId;
+    private Button btn_reservation, btn_chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +31,6 @@ public class DetailClassActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         index = intent.getStringExtra("Index");
-        Log.v("알림", "선택된 글 INDEX " + index);
 
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
@@ -43,6 +45,8 @@ public class DetailClassActivity extends AppCompatActivity {
         class_person = findViewById(R.id.class_person);
         money_min = findViewById(R.id.money_min);
         money_max = findViewById(R.id.money_max);
+        btn_chat = findViewById(R.id.btn_chat);
+        btn_reservation = findViewById(R.id.btn_reservation);
 
         //모집 글 정보 불러오기
         mDatabase1 = FirebaseDatabase.getInstance().getReference("WriteClass");
@@ -64,11 +68,18 @@ public class DetailClassActivity extends AppCompatActivity {
             }
         });
 
-
+        btn_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
+                
+                startActivity(intent);
+            }
+        });
     }
 
     void makeBrandData(){
-
+        //클래스 정보 불러오기
         mDatabase2 = FirebaseDatabase.getInstance().getReference("Regclass");
         mDatabase2.child(writepersonId).addValueEventListener(new ValueEventListener() {
             @Override

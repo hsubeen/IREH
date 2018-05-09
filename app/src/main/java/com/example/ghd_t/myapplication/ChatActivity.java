@@ -1,18 +1,22 @@
 package com.example.ghd_t.myapplication;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class ChatActivity extends Activity {
 
-    ListView chatList;
-    ListAdapterChat chatAdapter;
-    ImageButton send_msg;
+    private ListView chatList;
+    private ListAdapterChat chatAdapter;
+    private ImageButton send_msg;
+    private EditText chat_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,8 @@ public class ChatActivity extends Activity {
         chatList = (ListView)findViewById(R.id.chat_list);
 
         send_msg = (ImageButton)findViewById(R.id.chat_btn);
+        chat_message = (EditText)findViewById(R.id.chat_message);
+
 
         chatList.setAdapter(chatAdapter);
         chatAdapter.add("2017/03/02",2);
