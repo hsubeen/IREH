@@ -34,6 +34,7 @@ public class MsgFragment extends Fragment {
     private ArrayList<MsgItemData> data_msg;
     private ListAdapterMsg adapter_msg;
     private ListView msg_list;
+    private String participantId,participantName;
     Drawable temp;
     public MsgFragment() {
         // Required empty public constructor
@@ -61,22 +62,45 @@ public class MsgFragment extends Fragment {
                     String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                     String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
-                    if(cu.equals(user1) || cu.equals(user2)){
+                    if(cu.equals(user1)){
                         //내가 속한 채팅방 찾기
-                        //Log.v("알림", "MsgFragment_채팅방 발견");
-                        makeData();
+                        participantId = user2;
+                        setChatParticipantName();
+
+                    }else if(cu.equals(user2)){
+                        participantId = user1;
+                        setChatParticipantName();
                     }
                 }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
         return view;
     }
 
+    //참여자 id찾은 후 name을 찾아 name으로 setting
+    void setChatParticipantName(){
+        mDatabase = FirebaseDatabase.getInstance().getReference("Regclass");
+        mDatabase.child(participantId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.v("알림",".. " + dataSnapshot.getValue());
+                participantName = dataSnapshot.child("brandname").getValue().toString();
+                makeData();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    //listdata만들기
     void makeData(){
-        data_msg_data = new MsgItemData(temp, "햄찌씨", "문의 있네요!");
+        data_msg_data = new MsgItemData(temp, participantName, "문의 있네요!");
         data_msg.add(data_msg_data);
         adapter_msg = new ListAdapterMsg(getContext(), R.layout.msg_listview_item, data_msg);
         msg_list.setAdapter(adapter_msg);

@@ -100,12 +100,13 @@ public class DetailClassActivity extends AppCompatActivity {
 
                         if(dataSnapshot.getValue()==null){
                             //채팅방 정보가 아예 없는 경우
+                            //user1은 나(채팅 신청한사람) , user2는 글쓴이(모집 글 올린사람)
                             Participants participants = new Participants(cu, writepersonId);
                             mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
                             Messages messages = new Messages("TIME_MESSAGE", getDate());
                             mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
 
-                            Log.v("알림", "채팅방정보가 아예 없어서 생성 완료");
+                            Log.v("알림", "채팅방이 아예 없음. 생성 완료");
                         }else{
                             //채팅방 정보가 있는 경우 내가 속한 채팅방 모두 찾기
                             for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
@@ -115,13 +116,10 @@ public class DetailClassActivity extends AppCompatActivity {
                                 String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                                 String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
-                                Log.v("알림","user1 " + user1);
-                                Log.v("알림","user2 " + user2);
                                 if(cu.equals(user1) || cu.equals(user2)){
                                     //내가 속한 채팅방 찾음.
                                     findFlag=1;
-                                    Log.v("알림", "Detailclass_채팅방 발견");
-
+                                    Log.v("알림", "내가 속한 채팅방 발견");
                                 }
                             }
 
@@ -132,11 +130,9 @@ public class DetailClassActivity extends AppCompatActivity {
 
                                 Messages messages = new Messages("TIME_MESSAGE", getDate());
                                 mDatabase3.child("Chattings").child(ct_str).child("messages").setValue(messages);
-                                Log.v("알림", "내가속한 채팅방이 없어서 생성 완료");
+                                Log.v("알림", "내가 속한 채팅방 없음 / 생성 완료");
                             }
-
                         }
-
 
                     }
                     @Override
