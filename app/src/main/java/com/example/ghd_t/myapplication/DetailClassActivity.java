@@ -19,9 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DetailClassActivity extends AppCompatActivity {
     private TextView class_phone,class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
-    private DatabaseReference mDatabase1, mDatabase2, mDatabase3;
+    private DatabaseReference mDatabase1, mDatabase2, mDatabase3, mDatabase4;
     private FirebaseAuth mAuth;
-    private String index, writepersonId;
+    private String index, writepersonId,ct_str;
     private Button btn_reservation, btn_chat, btn_modify, btn_delete;
 
     @Override
@@ -88,13 +88,44 @@ public class DetailClassActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //현재시간
                 long ct = System.currentTimeMillis();
-                String ct_str = Long.toString(ct);
+                ct_str = Long.toString(ct);
 
-                //채팅방 생성
-                Participants participants = new Participants(cu, writepersonId);
-                mDatabase3.child("chattings").child(ct_str).child("participants").setValue(participants);
+                //채팅방 없는지 확인 하고, 없으면 생성 아니면 기존챗방으로 이동!
+                mDatabase4 = FirebaseDatabase.getInstance().getReference("Chattings");
+                mDatabase4.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.v("알림", "null인가? " + dataSnapshot.getValue());
 
-                Log.v("알림", "채팅방 생성 완료");
+                        if(dataSnapshot.getValue()==null){
+                            //채팅방 정보가 아예 없는 경우
+                            Participants participants = new Participants(cu, writepersonId);
+                            mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
+                            Log.v("알림", "채팅방 생성 완료");
+                        }
+
+                        for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
+
+                            String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
+                            String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
+
+                            if(cu.equals(user1) || cu.equals(user2)){
+                                //내가 속한 채팅방 찾음.
+                                Log.v("알림", "Detailclass_채팅방 발견");
+
+                            }else{
+                                //채팅방이 없음. 생성
+                                Participants participants = new Participants(cu, writepersonId);
+                                mDatabase3.child("Chattings").child(ct_str).child("participants").setValue(participants);
+                                Log.v("알림", "채팅방 생성 완료");
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
                 Intent intent = new Intent(DetailClassActivity.this, ChatActivity.class);
                 intent.putExtra("chatPartner", class_name.getText().toString());
                 startActivity(intent);

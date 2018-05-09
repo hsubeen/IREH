@@ -50,14 +50,12 @@ public class RegClassFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.v("알림","받은 데이터 : " + AddressData.getInstance().getAddress());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.v("알림","RegClassFragment의 onCreateView호출됨");
         View view = inflater.inflate(R.layout.fragment_reg_class, container, false);
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
@@ -165,12 +163,8 @@ public class RegClassFragment extends Fragment {
         mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
                 //현재 로그인 한 유저가 쓴 글만 보여지도록
-                Log.v("알림", "cu db " + dataSnapshot.child("cu").getValue(String.class));
-                Log.v("알림", "cu " +cu);
                 if(cu.equals(dataSnapshot.child("cu").getValue(String.class))){
-                    Log.v("알림", "데이터 생성 " + cu);
                     title = dataSnapshot.child("title").getValue(String.class);
                     contents = dataSnapshot.child("contents").getValue(String.class);
                     money_min = dataSnapshot.child("money_min").getValue(String.class);

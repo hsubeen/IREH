@@ -322,7 +322,6 @@ public class HomeFragment extends Fragment {
         mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getValue());
 
                 title = dataSnapshot.child("title").getValue(String.class);
                 contents = dataSnapshot.child("contents").getValue(String.class);
@@ -330,12 +329,6 @@ public class HomeFragment extends Fragment {
                 money_max = dataSnapshot.child("money_max").getValue(String.class);
                 uri = dataSnapshot.child("img1").getValue(String.class);
                 index = dataSnapshot.getKey();
-                Log.v("알림", "title " + title);
-                Log.v("알림", "contents " + contents);
-                Log.v("알림", "money_min " + money_min);
-                Log.v("알림", "money_max " + money_max);
-                Log.v("알림", "uri  " + uri);
-                Log.v("알림", "index   " + index);
                 makeData();
             }
 
