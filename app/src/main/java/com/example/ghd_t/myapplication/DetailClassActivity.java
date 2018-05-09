@@ -17,8 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DetailClassActivity extends AppCompatActivity {
     private TextView class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mDatabase1, mDatabase2;
     private FirebaseAuth mAuth;
+    private String index, writepersonId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class DetailClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_class);
 
         Intent intent = getIntent();
-        String index = intent.getStringExtra("Index");
+        index = intent.getStringExtra("Index");
         Log.v("알림", "선택된 글 INDEX " + index);
 
         mAuth = FirebaseAuth.getInstance();
@@ -43,11 +44,12 @@ public class DetailClassActivity extends AppCompatActivity {
         money_max = findViewById(R.id.money_max);
 
         //모집 글 정보 불러오기
-        mDatabase = FirebaseDatabase.getInstance().getReference("WriteClass");
-        mDatabase.child(index).addValueEventListener(new ValueEventListener() {
+        mDatabase1 = FirebaseDatabase.getInstance().getReference("WriteClass");
+        mDatabase1.child(index).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //불러온 정보 setting
+                writepersonId = dataSnapshot.child("cu").getValue(String.class);
                 class_title.setText(dataSnapshot.child("title").getValue(String.class));
                 class_content.setText(dataSnapshot.child("contents").getValue(String.class));
                 money_min.setText(dataSnapshot.child("money_min").getValue(String.class));
@@ -58,5 +60,8 @@ public class DetailClassActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+        mDatabase2 = FirebaseDatabase.getInstance().getReference("Regclass");
+
     }
 }

@@ -98,7 +98,7 @@ public class BrandAuth extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brand_auth);
         // Inflate the layout for this fragment
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         String cu = mAuth.getUid();
 
@@ -234,32 +234,31 @@ public class BrandAuth extends Activity{
                                 || spinner_field.getSelectedItemId() == 0){
                             Toast.makeText(BrandAuth.this,"모든 정보를 입력해주세요", Toast.LENGTH_LONG).show();
                         }else{
-                        // 현재 로그인한 사용자의 Uid
-                        String cu = mAuth.getUid();
+                            // 현재 로그인한 사용자의 Uid
+                            String cu = mAuth.getUid();
 
-                        // 브랜드 인증 정보가 있다면
-                        if(mPref.getInt("exists",0) == 1){
-                            //수정
-                            mDatabase = FirebaseDatabase.getInstance().getReference("Regclass");
-                            Map<String , Object> newvalue = new HashMap<>();
-                            newvalue.put("/address/", brand_address_content.getText().toString());
-                            newvalue.put("/brandname/",brand_name.getText().toString());
-                            newvalue.put("/field/", spinner_field.getSelectedItem().toString());
-                            newvalue.put("/phone/", brand_phone.getText().toString());
-                            newvalue.put("/weburl/", brand_web.getText().toString());
-                            mDatabase.child(cu).updateChildren(newvalue);
-                        }else{
-                            // 브랜드 인증 정보가 없다면 새로 생성
-                            // 작성한 클래스정보를 RegClassData에 담기
-                            BrandAuthData regClassData = new BrandAuthData(brand_name.getText().toString(), brand_web.getText().toString(), brand_phone.getText().toString(),
-                                    spinner_field.getSelectedItem().toString(), brand_address_content.getText().toString());
+                            // 브랜드 인증 정보가 있다면
+                            if(mPref.getInt("exists",0) == 1){
+                                //수정
+                                mDatabase = FirebaseDatabase.getInstance().getReference("Regclass");
+                                Map<String , Object> newvalue = new HashMap<>();
+                                newvalue.put("/address/", brand_address_content.getText().toString());
+                                newvalue.put("/brandname/",brand_name.getText().toString());
+                                newvalue.put("/field/", spinner_field.getSelectedItem().toString());
+                                newvalue.put("/phone/", brand_phone.getText().toString());
+                                newvalue.put("/weburl/", brand_web.getText().toString());
+                                mDatabase.child(cu).updateChildren(newvalue);
+                            }else if(mPref.getInt("exists",0) == 0){
+                                // 브랜드 인증 정보가 없다면 새로 생성
+                                // 작성한 클래스정보를 RegClassData에 담기
+                                BrandAuthData regClassData = new BrandAuthData(brand_name.getText().toString(), brand_web.getText().toString(), brand_phone.getText().toString(),
+                                        spinner_field.getSelectedItem().toString(), brand_address_content.getText().toString());
+                                // DB에 등록
+                                mDatabase.child("Regclass").child(cu).setValue(regClassData);
+                            }
 
-                            // DB에 등록
-                            mDatabase.child("Regclass").child(cu).setValue(regClassData);
-                        }
-
-                        // 등록완료 알림창 발생
-                        makeConfirmDialog();
+                            // 등록완료 알림창 발생
+                            makeConfirmDialog();
                         }
                     }
                 }).setNegativeButton("아니오",
