@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class DetailClassActivity extends AppCompatActivity {
-    private TextView class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
+    private TextView class_phone,class_title, class_content, class_name, class_field, class_address, class_web, class_person, money_min, money_max;
     private DatabaseReference mDatabase1, mDatabase2;
     private FirebaseAuth mAuth;
     private String index, writepersonId;
@@ -33,6 +33,7 @@ public class DetailClassActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         final String cu = mAuth.getUid();
 
+        class_phone = findViewById(R.id.class_phone);
         class_title = findViewById(R.id.class_title);
         class_content = findViewById(R.id.class_content);
         class_name = findViewById(R.id.class_name);
@@ -55,13 +56,34 @@ public class DetailClassActivity extends AppCompatActivity {
                 money_min.setText(dataSnapshot.child("money_min").getValue(String.class));
                 money_max.setText(dataSnapshot.child("money_max").getValue(String.class));
                 class_person.setText(dataSnapshot.child("person").getValue(String.class));
+
+                makeBrandData();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
 
-        mDatabase2 = FirebaseDatabase.getInstance().getReference("Regclass");
 
+    }
+
+    void makeBrandData(){
+
+        mDatabase2 = FirebaseDatabase.getInstance().getReference("Regclass");
+        mDatabase2.child(writepersonId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                class_name.setText(dataSnapshot.child("brandname").getValue(String.class));
+                class_field.setText(dataSnapshot.child("field").getValue(String.class));
+                class_web.setText(dataSnapshot.child("weburl").getValue(String.class));
+                class_phone.setText(dataSnapshot.child("phone").getValue(String.class));
+                class_address.setText(dataSnapshot.child("address").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
