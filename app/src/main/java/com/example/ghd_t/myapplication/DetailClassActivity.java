@@ -95,7 +95,7 @@ public class DetailClassActivity extends AppCompatActivity {
                 //채팅방 없는지 확인 하고, 없으면 생성 아니면 기존챗방으로 이동!
                 mDatabase4 = FirebaseDatabase.getInstance().getReference("Chattings");
                 mDatabase4.addListenerForSingleValueEvent(new ValueEventListener() {
-                    
+
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -112,12 +112,13 @@ public class DetailClassActivity extends AppCompatActivity {
                             //채팅방 정보가 있는 경우 내가 속한 채팅방 모두 찾기
                             for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
 
-
                                 String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                                 String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
-                                if(cu.equals(user1) || cu.equals(user2)){
-                                    //내가 속한 채팅방 찾음.
+                                //if(cu.equals(user1) || cu.equals(user2))
+                                if((cu.equals(user1) && writepersonId.equals(user2))
+                                || (cu.equals(user2) && writepersonId.equals(user1))){
+                                    //나와 글쓴이가 속한 채팅방 찾음.
                                     findFlag=1;
                                     Log.v("알림", "내가 속한 채팅방 발견");
                                     chatRoomIndex = objSnapshot.getKey();
