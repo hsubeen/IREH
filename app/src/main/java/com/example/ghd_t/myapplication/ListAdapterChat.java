@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 /**
@@ -18,15 +20,15 @@ import java.util.ArrayList;
 
 public class ListAdapterChat extends BaseAdapter{
     private ArrayList<ListContents> arrayList;
-
+    private FirebaseAuth mAuth;
     public class ListContents{
 
-        String msg;
-        int type;
-        ListContents(String msg,int type)
+        String contents;
+        String userId;
+        ListContents(String contents,String userId)
         {
-            this.msg = msg;
-            this.type = type;
+            this.contents = contents;
+            this.userId = userId;
         }
     }
 
@@ -35,8 +37,8 @@ public class ListAdapterChat extends BaseAdapter{
         arrayList = new ArrayList();
     }
 
-    public void add(String msg,int type){
-        arrayList.add(new ListContents(msg,type));
+    public void add(String contents,String userId){
+        arrayList.add(new ListContents(contents,userId));
     }
 
     public void remove(int i){
@@ -62,6 +64,9 @@ public class ListAdapterChat extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
         final int position = i;
         final Context context = viewGroup.getContext();
+
+        mAuth = FirebaseAuth.getInstance();
+        final String cu = mAuth.getUid();
 
         TextView text = null;
         ChatHolder holder = null;
@@ -94,23 +99,23 @@ public class ListAdapterChat extends BaseAdapter{
             rightView = holder.rightView;
         }
 
-        text.setText(arrayList.get(position).msg);
+        text.setText(arrayList.get(position).contents);
 
-        if(arrayList.get(position).type == 0){
+        if(!arrayList.get(position).userId.equals(cu) &&!arrayList.get(position).userId.equals("TIME_MESSAGE") ){
             // 받은메세지
             text.setBackgroundResource(R.drawable.yellowmsg);
             text.setTextColor(view.getResources().getColor(R.color.black));
             layout.setGravity(Gravity.LEFT);
             rightView.setVisibility(View.GONE);
             leftView.setVisibility(View.GONE);
-        } else if(arrayList.get(position).type ==1 ){
+        } else if(arrayList.get(position).userId.equals(cu)){
             // 보낸메세지
             text.setBackgroundResource(R.drawable.bluemsg);
             text.setTextColor(view.getResources().getColor(R.color.white));
             layout.setGravity(Gravity.RIGHT);
             rightView.setVisibility(View.GONE);
             leftView.setVisibility(View.GONE);
-        } else if(arrayList.get(position).type == 2){
+        } else if(arrayList.get(position).userId.equals("TIME_MESSAGE")){
             // 날짜
             text.setTextColor(context.getResources().getColor(R.color.black));
             text.setBackgroundResource(R.color.white);

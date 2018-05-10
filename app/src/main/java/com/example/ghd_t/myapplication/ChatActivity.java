@@ -36,6 +36,7 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.activity_chat);
 
         mAuth = FirebaseAuth.getInstance();
+        final String cu = mAuth.getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         chatAdapter = new ListAdapterChat();
@@ -75,22 +76,19 @@ public class ChatActivity extends Activity {
 //            public void onCancelled(DatabaseError databaseError) { }
 //        });
 
-
-
-
-//        chatAdapter.add("2017/03/02",2);
-//        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ 나ㅗㅇㄹ까 어디까지 길어질까??????!!!",0);
-//        chatAdapter.add("안녕",1);
-//        chatAdapter.add("ㅋㅋㅋ",1);
-//        chatAdapter.add("2017/03/03",2);
-//        chatAdapter.add("안녕하세요!!!",0);
-//        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",0);
-//        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ",0);
-//        chatAdapter.add("안녕",1);
-//        chatAdapter.add("ㅋㅋㅋ",1);
-//        chatAdapter.add("안녕하세요!!!",0);
-//        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",0);
-//        chatAdapter.add("2017/03/04",2);
+        chatAdapter.add("2017/03/02","TIME_MESSAGE");
+        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ 나ㅗㅇㄹ까 어디까지 길어질까??????!!!",cu);
+        chatAdapter.add("안녕","x");
+        chatAdapter.add("ㅋㅋㅋ","x");
+        chatAdapter.add("2017/03/03","TIME_MESSAGE");
+        chatAdapter.add("안녕하세요!!!",cu);
+        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
+        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ",cu);
+        chatAdapter.add("안녕","x");
+        chatAdapter.add("ㅋㅋㅋ","x");
+        chatAdapter.add("안녕하세요!!!",cu);
+        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
+        chatAdapter.add("2017/03/04","TIME_MESSAGE");
 
 
         send_msg.setOnClickListener(new View.OnClickListener() {
