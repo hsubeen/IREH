@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -55,12 +57,12 @@ public class ChatActivity extends Activity {
 
         chatList.setAdapter(chatAdapter);
 
-
+//
 //        mDatabase.child("Chattings").addChildEventListener(new ChildEventListener() {  // message는 child의 이벤트를 수신합니다.
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 //                ChatData chatData = dataSnapshot.getValue(ChatData.class);  // chatData를 가져오고
-//                adapter.add(chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
+//                chatAdapter.add(chatData.getUserName() + ": " + chatData.getMessage());  // adapter에 추가합니다.
 //            }
 //
 //            @Override
@@ -76,25 +78,29 @@ public class ChatActivity extends Activity {
 //            public void onCancelled(DatabaseError databaseError) { }
 //        });
 
-        chatAdapter.add("2017/03/02","TIME_MESSAGE");
-        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ 나ㅗㅇㄹ까 어디까지 길어질까??????!!!",cu);
-        chatAdapter.add("안녕","x");
-        chatAdapter.add("ㅋㅋㅋ","x");
-        chatAdapter.add("2017/03/03","TIME_MESSAGE");
-        chatAdapter.add("안녕하세요!!!",cu);
-        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
-        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ",cu);
-        chatAdapter.add("안녕","x");
-        chatAdapter.add("ㅋㅋㅋ","x");
-        chatAdapter.add("안녕하세요!!!",cu);
-        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
-        chatAdapter.add("2017/03/04","TIME_MESSAGE");
+//        chatAdapter.add("2017/03/02","TIME_MESSAGE");
+//        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ 나ㅗㅇㄹ까 어디까지 길어질까??????!!!",cu);
+//        chatAdapter.add("안녕","x");
+//        chatAdapter.add("ㅋㅋㅋ","x");
+//        chatAdapter.add("2017/03/03","TIME_MESSAGE");
+//        chatAdapter.add("안녕하세요!!!",cu);
+//        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
+//        chatAdapter.add("긴 내용이 필요하다!! 어떻게 ㅎ면 긴 내용ㅇ",cu);
+//        chatAdapter.add("안녕","x");
+//        chatAdapter.add("ㅋㅋㅋ","x");
+//        chatAdapter.add("안녕하세요!!!",cu);
+//        chatAdapter.add("zㅋㅋㅋㅋ 반갑네용 히히!!!",cu);
+//        chatAdapter.add("2017/03/04","TIME_MESSAGE");
 
-
+        //채팅 메세지 보내기
         send_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "메세지 전송",Toast.LENGTH_SHORT).show();
+                ChatData chatData = new ChatData(chat_message.getText().toString(), cu);
+                //채팅 전송
+                mDatabase.child("Chattings").child(chatRoomIndex).child("messages").push().setValue(chatData);
+                Toast.makeText(view.getContext(), chat_message.getText().toString() + " 전송",Toast.LENGTH_SHORT).show();
+                chat_message.setText("");
             }
         });
 
