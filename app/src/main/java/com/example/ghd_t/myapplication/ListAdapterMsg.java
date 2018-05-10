@@ -26,8 +26,6 @@ public class ListAdapterMsg extends BaseAdapter {
     private MsgItemData listviewitem;
     private LayoutInflater inflater;
     private int layout;
-    private ImageView msg_photo;
-    private TextView msg_name, msg_content, msg_chatRoomIndex;
     public ListAdapterMsg(Context context, int layout, ArrayList<MsgItemData> data){
         this.inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.data=data;
@@ -60,20 +58,19 @@ public class ListAdapterMsg extends BaseAdapter {
 
         listviewitem = data.get(i);
 
-        msg_photo = (ImageView) view.findViewById(R.id.msg_photo);
-        msg_name = (TextView) view.findViewById(R.id.msg_name);
-        msg_content = (TextView) view.findViewById(R.id.msg_content);
-        msg_chatRoomIndex = (TextView) view.findViewById(R.id.msg_chatRoomIndex);
+
+
+        final ImageView msg_photo = (ImageView) view.findViewById(R.id.msg_photo);
+        final TextView msg_name = (TextView) view.findViewById(R.id.msg_name);
+        final TextView msg_content = (TextView) view.findViewById(R.id.msg_content);
+        final TextView msg_chatRoomIndex = (TextView) view.findViewById(R.id.msg_chatRoomIndex);
 
         msg_photo.setImageDrawable(listviewitem.getMsg_photo());
         msg_name.setText(listviewitem.getMsg_name());
         msg_content.setText(listviewitem.getMsg_content());
         msg_chatRoomIndex.setText(listviewitem.getMsg_chatRoomIndex());
-        Log.v("아뭐야","? " + listviewitem.getMsg_chatRoomIndex());
 
        //layout 자체에 대한 클릭 이벤트.
-
-
         view.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
