@@ -95,6 +95,7 @@ public class DetailClassActivity extends AppCompatActivity {
                 //채팅방 없는지 확인 하고, 없으면 생성 아니면 기존챗방으로 이동!
                 mDatabase4 = FirebaseDatabase.getInstance().getReference("Chattings");
                 mDatabase4.addListenerForSingleValueEvent(new ValueEventListener() {
+                    
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 

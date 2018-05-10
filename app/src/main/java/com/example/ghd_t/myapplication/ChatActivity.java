@@ -26,7 +26,7 @@ public class ChatActivity extends Activity {
     private ImageButton send_msg;
     private EditText chat_message;
     private String chatPartner, chatRoomIndex;
-    private TextView msg_name;
+    private TextView msg_name, msg_chatRoomIndex;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
@@ -43,6 +43,7 @@ public class ChatActivity extends Activity {
         msg_name = (TextView)findViewById(R.id.msg_name);
         send_msg = (ImageButton)findViewById(R.id.chat_btn);
         chat_message = (EditText)findViewById(R.id.chat_message);
+        msg_chatRoomIndex = (TextView)findViewById(R.id.msg_chatRoomIndex);
 
         //대화상대 이름 설정
         Intent intent = getIntent();

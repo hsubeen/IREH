@@ -87,14 +87,12 @@ public class RegClassFragment extends Fragment {
         mDatabase1.child(cu).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.v("알림", "datasnapshot value : " + dataSnapshot.getValue());
 
                 address = dataSnapshot.child("address").getValue(String.class);
                 brandname = dataSnapshot.child("brandname").getValue(String.class);
                 field = dataSnapshot.child("field").getValue(String.class);
                 phone = dataSnapshot.child("phone").getValue(String.class);
                 weburl = dataSnapshot.child("weburl").getValue(String.class);
-
 
                 if(dataSnapshot.getValue()==null){
                     //브랜드 인증 정보 없음.
@@ -150,7 +148,6 @@ public class RegClassFragment extends Fragment {
 
                 Intent intent = new Intent(view.getContext(), WriteClassActivity.class);
                 startActivity(intent);
-                Log.v("알림","글쓰기 창으로 전환");
             }
         });
         return view;
@@ -179,22 +176,22 @@ public class RegClassFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + s);
+                //Log.v("알림", "mDatabase2_onChildAdded " + s);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getKey());
+                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getKey());
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + s);
+                //Log.v("알림", "mDatabase2_onChildAdded " + s);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("에러", "mDatabase2_onChildAdded " + databaseError.getMessage());
+                Log.e("에러", "mDatabase_onChildAdded " + databaseError.getMessage());
             }
         });
     }

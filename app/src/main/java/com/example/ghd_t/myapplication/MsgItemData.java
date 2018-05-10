@@ -10,13 +10,22 @@ public class MsgItemData {
     private Drawable msg_photo;
     private String msg_name;
     private String msg_content;
+    private String msg_chatRoomIndex;
 
-    public MsgItemData(Drawable msg_photo, String msg_name, String msg_content) {
+    public MsgItemData(Drawable msg_photo, String msg_name, String msg_content, String msg_chatRoomIndex) {
         this.msg_photo = msg_photo;
         this.msg_name = msg_name;
         this.msg_content = msg_content;
+        this.msg_chatRoomIndex = msg_chatRoomIndex;
     }
 
+    public String getMsg_chatRoomIndex() {
+        return msg_chatRoomIndex;
+    }
+
+    public void setMsg_chatRoomIndex(String msg_chatRoomIndex) {
+        this.msg_chatRoomIndex = msg_chatRoomIndex;
+    }
 
     public Drawable getMsg_photo() {
         return msg_photo;

@@ -37,6 +37,13 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/msg_chatRoomIndex"
+                android:text="임시"/>
+
+            <TextView
                 android:text="임시내용입니다."
                 android:textColor="@color/black"
                 android:layout_width="match_parent"

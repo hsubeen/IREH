@@ -1,7 +1,6 @@
 package com.example.ghd_t.myapplication;
 
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,18 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 
@@ -36,10 +31,10 @@ public class MsgFragment extends Fragment {
     private ListView msg_list;
     private String participantId,participantName,chatRoomIndex;
     Drawable temp;
+
     public MsgFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,18 +56,18 @@ public class MsgFragment extends Fragment {
                 for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
 
                     chatRoomIndex = objSnapshot.getKey();
-                    Log.v("알림","= chatRoomIndex " + chatRoomIndex);
+                    Log.v("알림","현재 존재하는 chatRoomIndex " + chatRoomIndex);
                     String user1 = objSnapshot.child("participants").child("user1").getValue().toString();
                     String user2 = objSnapshot.child("participants").child("user2").getValue().toString();
 
                     if(cu.equals(user1)){
                         //내가 속한 채팅방 찾기
                         participantId = user2;
-                        setChatParticipantName();
+                        setChatParticipantName(chatRoomIndex);
 
                     }else if(cu.equals(user2)){
                         participantId = user1;
-                        setChatParticipantName();
+                        setChatParticipantName(chatRoomIndex);
                     }
                 }
 
@@ -86,14 +81,13 @@ public class MsgFragment extends Fragment {
     }
 
     //참여자 id찾은 후 name을 찾아 name으로 setting
-    void setChatParticipantName(){
+    void setChatParticipantName(final String chatRoomIndex_param){
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         mDatabase.child(participantId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.v("알림",".. " + dataSnapshot.getValue());
                 participantName = dataSnapshot.child("userName").getValue().toString();
-                makeData();
+                makeData(participantName, chatRoomIndex_param);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -102,11 +96,13 @@ public class MsgFragment extends Fragment {
     }
 
     //listdata만들기
-    void makeData(){
-        data_msg_data = new MsgItemData(temp, participantName, "문의 있네요!");
-        Log.v("알림", "데이터 생성하는 중 chatRoomIndex" + chatRoomIndex);
+    void makeData(String name, String chatRoomIndex_param){
+        Log.v("알림","list data 만들기 시작 " + name + " " + chatRoomIndex_param );
+        data_msg_data = new MsgItemData(temp, name, "문의 있네요!", chatRoomIndex_param);
         data_msg.add(data_msg_data);
         adapter_msg = new ListAdapterMsg(getContext(), R.layout.msg_listview_item, data_msg);
         msg_list.setAdapter(adapter_msg);
+
+
     }
 }

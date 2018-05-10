@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.renderscript.ScriptGroup;
+import android.service.autofill.Dataset;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment {
     private Spinner spinner_field, spinner_field2;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase2, mDatabase3;
-    private String uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max, index;
+    private String writePerson,uri,address,brandname,field,phone,weburl, title, contents, money_min, money_max, index, finaladdress;
     private BrandListItemData data_homelist_data;
     private ListView home_brand_list;
     ArrayList<BrandListItemData> home_brandlist = new ArrayList<>();
@@ -106,86 +107,88 @@ public class HomeFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
-        mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
-        mDatabase3.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+//        mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
+//        mDatabase3.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
+//                    //브랜드 인증 한 유저값만 가져오기
+//                    final Object user = objSnapshot.getKey();
+//                    Log.v("알림", "브랜드 인증한 유저 " + user);
+//
+//                    //브랜드 정보
+//                    mDatabase3.child(user.toString()).addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            address = dataSnapshot.child("address").getValue(String.class);
+//                            brandname = dataSnapshot.child("brandname").getValue(String.class);
+//                            field = dataSnapshot.child("field").getValue(String.class);
+//                            phone = dataSnapshot.child("phone").getValue(String.class);
+//                            weburl = dataSnapshot.child("weburl").getValue(String.class);
+//
+//                            //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+//                            String address_arr[] = address.split(" ");
+//                            address = address_arr[1] + " " + address_arr[2];
+//
+//                            makeClassData(user.toString());
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//                            Log.e("에러", "Read failed");
+//                        }
+//                    });
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-                for (DataSnapshot objSnapshot: dataSnapshot.getChildren()) {
-                    //브랜드 인증 한 유저값만 가져오기
-                    final Object user = objSnapshot.getKey();
-                    Log.v("알림", "브랜드 인증한 유저 " + user);
-
-                    //브랜드 정보
-                    mDatabase3.child(user.toString()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            address = dataSnapshot.child("address").getValue(String.class);
-                            brandname = dataSnapshot.child("brandname").getValue(String.class);
-                            field = dataSnapshot.child("field").getValue(String.class);
-                            phone = dataSnapshot.child("phone").getValue(String.class);
-                            weburl = dataSnapshot.child("weburl").getValue(String.class);
-
-                            //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
-                            String address_arr[] = address.split(" ");
-                            address = address_arr[1] + " " + address_arr[2];
-
-                            makeClassData(user.toString());
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.e("에러", "Read failed");
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+        //모집글 불러오기
+        makeClassData();
 
         btn_gps = view.findViewById(R.id.gps);
         btn_gps.setTypeface(typeface);
         btn_gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isPermission){
-                    callPermission();
-                    return;
-                }
+            if(!isPermission){
+                callPermission();
+                return;
+            }
 
-                gps = new GPSInfo(getContext());
+            gps = new GPSInfo(getContext());
 
-                // GPS 사용유무 가져오기
-                if (gps.isGetLocation()) {
+            // GPS 사용유무 가져오기
+            if (gps.isGetLocation()) {
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
+                double latitude = gps.getLatitude();
+                double longitude = gps.getLongitude();
 
-                    Geocoder gCoder = new Geocoder(getContext(), Locale.getDefault());
-                    List<Address> addr = null;
-                    try{
-                        addr = gCoder.getFromLocation(latitude,longitude,1);
-                        Address a = addr.get(0);
-                        for (int i=0;i <= a.getMaxAddressLineIndex();i++) {
-                            Log.v("알림", "AddressLine(" + i + ")" + a.getAddressLine(i) + "\n");
-                        }
-
-                    } catch (IOException e){
-                        e.printStackTrace();
+                Geocoder gCoder = new Geocoder(getContext(), Locale.getDefault());
+                List<Address> addr = null;
+                try{
+                    addr = gCoder.getFromLocation(latitude,longitude,1);
+                    Address a = addr.get(0);
+                    for (int i=0;i <= a.getMaxAddressLineIndex();i++) {
+                        Log.v("알림", "AddressLine(" + i + ")" + a.getAddressLine(i) + "\n");
                     }
-                    if (addr != null) {
-                        if (addr.size()==0) {
-                            Toast.makeText(getContext(),"주소정보 없음", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } else {
-                    // GPS 를 사용할수 없으므로
-                    gps.showSettingsAlert();
+
+                } catch (IOException e){
+                    e.printStackTrace();
                 }
+                if (addr != null) {
+                    if (addr.size()==0) {
+                        Toast.makeText(getContext(),"주소정보 없음", Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                // GPS 를 사용할수 없으므로
+                gps.showSettingsAlert();
+            }
             }
         });
 
@@ -291,21 +294,18 @@ public class HomeFragment extends Fragment {
                     spinner_field.setVisibility(View.VISIBLE);
                     spinner_field2.setVisibility(View.VISIBLE);
                     img.setVisibility(View.VISIBLE);
-                    Log.v("알림","home list 최상단. image띄우기");
                 } else if (!home_brand_list.canScrollVertically(1)) {
                     //최하단
                     btn_gps.setVisibility(View.GONE);
                     spinner_field.setVisibility(View.GONE);
                     spinner_field2.setVisibility(View.GONE);
                     img.setVisibility(View.GONE);
-                    Log.v("알림","home list 최하단. image없애기");
                 } else {
                     //idle
                     btn_gps.setVisibility(View.GONE);
                     spinner_field.setVisibility(View.GONE);
                     spinner_field2.setVisibility(View.GONE);
                     img.setVisibility(View.GONE);
-                    Log.v("알림","home list idle. image없애기");
                 }
             }
             @Override
@@ -315,36 +315,76 @@ public class HomeFragment extends Fragment {
     }
 
 
-    void makeClassData(String user){
+    //모집글 불러오기
+    void makeClassData(){
 
         //모집글정보
         mDatabase2 = FirebaseDatabase.getInstance().getReference("WriteClass");
         mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(final DataSnapshot dataSnapshot1, String s) {
 
-                title = dataSnapshot.child("title").getValue(String.class);
-                contents = dataSnapshot.child("contents").getValue(String.class);
-                money_min = dataSnapshot.child("money_min").getValue(String.class);
-                money_max = dataSnapshot.child("money_max").getValue(String.class);
-                uri = dataSnapshot.child("img1").getValue(String.class);
-                index = dataSnapshot.getKey();
-                makeData();
+                Log.v("알림","/.. " + dataSnapshot1.getValue());
+                writePerson = dataSnapshot1.child("cu").getValue(String.class);
+
+                mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
+                mDatabase3.child(writePerson).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        address = dataSnapshot.child("address").getValue(String.class);
+                        brandname = dataSnapshot.child("brandname").getValue(String.class);
+                        field = dataSnapshot.child("field").getValue(String.class);
+                        phone = dataSnapshot.child("phone").getValue(String.class);
+                        weburl = dataSnapshot.child("weburl").getValue(String.class);
+
+                        //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+                        String address_arr[] = dataSnapshot.child("address").getValue(String.class).split(" ");
+                        finaladdress = address_arr[1] + " " + address_arr[2];
+
+                        Log.v("데이터확인", " " +address+brandname+field+phone+weburl);
+
+                        title = dataSnapshot1.child("title").getValue(String.class);
+                        contents = dataSnapshot1.child("contents").getValue(String.class);
+                        money_min = dataSnapshot1.child("money_min").getValue(String.class);
+                        money_max = dataSnapshot1.child("money_max").getValue(String.class);
+                        uri = dataSnapshot1.child("img1").getValue(String.class);
+                        index = dataSnapshot1.getKey();
+                        Log.v("데이터생성", " " +title+finaladdress+contents+money_min+money_max+index);
+                        makeData(title,finaladdress,contents,money_min,money_max,index);
+                        //findClass();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("에러", "Read failed");
+                    }
+                });
+//
+//                title = dataSnapshot.child("title").getValue(String.class);
+//                contents = dataSnapshot.child("contents").getValue(String.class);
+//                money_min = dataSnapshot.child("money_min").getValue(String.class);
+//                money_max = dataSnapshot.child("money_max").getValue(String.class);
+//                uri = dataSnapshot.child("img1").getValue(String.class);
+//                index = dataSnapshot.getKey();
+//                Log.v("데이터생성", " " +title+finaladdress+contents+money_min+money_max+index);
+//                makeData(title,finaladdress,contents,money_min,money_max,index);
+//                //findClass();
+
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + s);
+                //Log.v("알림", "mDatabase2_onChildAdded " + s);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getKey());
+                //Log.v("알림", "mDatabase2_onChildAdded " + dataSnapshot.getKey());
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.v("알림", "mDatabase2_onChildAdded " + s);
+                //Log.v("알림", "mDatabase2_onChildAdded " + s);
             }
 
             @Override
@@ -354,8 +394,33 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    void findClass(){
+//        mDatabase3 = FirebaseDatabase.getInstance().getReference("Regclass");
+//        mDatabase3.child(writePerson).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                address = dataSnapshot.child("address").getValue(String.class);
+//                brandname = dataSnapshot.child("brandname").getValue(String.class);
+//                field = dataSnapshot.child("field").getValue(String.class);
+//                phone = dataSnapshot.child("phone").getValue(String.class);
+//                weburl = dataSnapshot.child("weburl").getValue(String.class);
+//
+//                //띄어쓰기 기준으로 문자열 자르기, (서울 용산구)
+//                String address_arr[] = dataSnapshot.child("address").getValue(String.class).split(" ");
+//                finaladdress = address_arr[1] + " " + address_arr[2];
+//                Log.v("알림", "주소 " + finaladdress);
+//
+//            }
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                    Log.e("에러", "Read failed");
+//                }
+//            });
+    }
+
     //서버에서 받은 데이터를 리스트뷰에 추가
-    void makeData(){
+    void makeData(String s_title,String s_finaladdress, String s_contents, String s_money_min, String s_money_max, String s_index){
 //        Thread mThread = new Thread(){
 //            @Override
 //            public void run() {
@@ -382,8 +447,7 @@ public class HomeFragment extends Fragment {
 
         //이 부분은 Firebase storage 사용량때문에 임시..
         icon = BitmapFactory.decodeResource(this.getResources(), R.drawable.add);
-        data_homelist_data = new BrandListItemData(icon, title, address, contents, money_min ,money_max, index);
-        Log.v("알림","index설정 완료 " + data_homelist_data.getIndex());
+        data_homelist_data = new BrandListItemData(icon, s_title, s_finaladdress, s_contents, s_money_min ,s_money_max, s_index);
         ListAdapterHomeBrand adapter_homebrand = new ListAdapterHomeBrand(getContext(), R.layout.brandlist_listview_item, home_brandlist);
         home_brandlist.add(data_homelist_data);
         home_brand_list.setAdapter(adapter_homebrand);
